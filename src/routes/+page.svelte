@@ -42,15 +42,16 @@
     avatar_src = await get_profile_picture();
   });
 
+  let gradient_ready = false;
+
   async function process_gradient() {
     if (avatar_element?.complete) {
       try {
         let colorThief = new ColorThief();
         let colors = await colorThief.getPaletteAsync(avatar_src, 2);
-        console.log(colors);
         if (colors && colors.length >= 2) {
           gradient = `linear-gradient(45deg, ${colors[0]}, ${colors[1]})`;
-          console.log(gradient);
+          gradient_ready = true;
         }
       } catch (error) {
         console.error("ColorThief error:", error);
@@ -61,7 +62,11 @@
 
 <div class="container">
   <div class="card">
-    <div class="avatar-border" style="--gradient: {gradient};">
+    <div
+      class="avatar-border"
+      class:ready={gradient_ready}
+      style="--gradient: {gradient};"
+    >
       <div class="avatar-container">
         {#if avatar_src}
           <img
@@ -95,6 +100,12 @@
     border-radius: 8px;
     background: var(--gradient);
     padding: 2px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .avatar-border.ready {
+    opacity: 1;
   }
 
   .avatar-container {
