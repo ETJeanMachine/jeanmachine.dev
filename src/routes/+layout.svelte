@@ -5,19 +5,20 @@
 </script>
 
 <div class="layout">
-  <h1 class="header">Eric Hamilton</h1>
   <nav class="global-nav">
     <md-filled-button href="/">Home</md-filled-button>
     <md-filled-button href="/blog">Blog</md-filled-button>
     <md-filled-button href="/projects">Projects</md-filled-button>
   </nav>
-  {@render children()}
+  <div class="content">
+    {@render children()}
+  </div>
 </div>
 
 <style>
   :root {
-    --md-sys-color-primary: slategray;
-    --md-sys-color-secondary: lightgray;
+    --md-sys-color-primary: slategrey;
+    --md-sys-color-secondary: slateblue;
   }
 
   :global(html, body) {
@@ -27,8 +28,10 @@
     font-family: "Noto Sans", sans-serif;
   }
 
-  .header {
-    text-align: center;
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .layout {
@@ -40,7 +43,8 @@
 
   .global-nav {
     display: flex;
-    justify-content: center;
+    justify-content: left;
+    margin: 10px;
     gap: 1rem;
   }
 </style>
