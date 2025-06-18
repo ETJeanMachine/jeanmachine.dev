@@ -1,6 +1,6 @@
-# sv
+# jeanmachine.dev
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+This is a repository for my personal website, and it is powered by Svelte. To be able to run this project, or to make a Svelte project of your own, check out [`sv`](https://github.com/sveltejs/cli).
 
 ## Creating a project
 
@@ -22,15 +22,15 @@ Once you've created a project and installed dependencies with `npm install` (or 
 yarn run dev
 
 # or start the server and open the app in a new browser tab
-yarn run dev -- --open
+yarn run dev --open
 ```
 
 ## Building
 
-To create a production version of your app:
+To create a production version of this app:
 
 ```bash
-npm run build
+yarn run build
 ```
 
 You can preview the production build with `npm run preview`.
