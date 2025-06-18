@@ -21,6 +21,10 @@
     --md-sys-color-secondary: slateblue;
   }
 
+  md-filled-button {
+    border-radius: 8px;
+  }
+
   :global(html, body) {
     margin: 0;
     padding: 0;
@@ -44,7 +48,7 @@
   .global-nav {
     display: flex;
     justify-content: left;
-    margin: 10px;
+    margin-bottom: 10px;
     gap: 1rem;
   }
 </style>

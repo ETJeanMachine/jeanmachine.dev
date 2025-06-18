@@ -1,4 +1,19 @@
 .card {
+    h1 {
+        font-size: 24px;
+        color: whitesmoke;
+        font-weight: bolder;
+        font-style: italic;
+    }
+    h2 {
+        font-size: 18px;
+        color: whitesmoke;
+        font-weight: bold;
+    }
+    h3 {
+        font-size: 16px;
+        color: whitesmoke;
+    }
     display: flex;
     font-family: "Noto Sans";
     flex-direction: row;
@@ -7,24 +22,6 @@
     border-radius: 8px;
     gap: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.card h1 {
-    font-size: 24px;
-    color: whitesmoke;
-    font-weight: bold;
-    font-style: italic;
-}
-
-.card h2 {
-    font-size: 18px;
-    color: whitesmoke;
-    font-weight: bold;
-}
-
-.card h3 {
-    font-size: 16px;
-    color: whitesmoke;
 }
 
 .container {
