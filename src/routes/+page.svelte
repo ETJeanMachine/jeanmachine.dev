@@ -30,11 +30,11 @@
 
   onMount(async () => {
     let profile = await get_profile(did);
-    console.log(profile)
+
     avatar_src = "https://corsproxy.io/?" + encodeURIComponent(profile.avatar);
   });
 
-  let gradient_ready = false;
+  let ready = false;
 
   async function process_gradient() {
     if (avatar_element?.complete) {
@@ -43,7 +43,7 @@
         let colors = await colorThief.getPaletteAsync(avatar_src, 2);
         if (colors && colors.length >= 2) {
           gradient = `linear-gradient(45deg, ${colors[0]}, ${colors[1]})`;
-          gradient_ready = true;
+          ready = true;
         }
       } catch (error) {
         console.error("ColorThief error:", error);
@@ -52,24 +52,18 @@
   }
 </script>
 
-<div class="container">
+<div class="container" class:ready>
   <div class="card">
-    <div
-      class="avatar-border"
-      class:ready={gradient_ready}
-      style="--gradient: {gradient};"
-    >
-      <div class="avatar-container">
-        {#if avatar_src}
-          <img
-            bind:this={avatar_element}
-            src={avatar_src}
-            crossorigin="anonymous"
-            on:load={() => void process_gradient()}
-            alt="Bluesky Avatar"
-          />
-        {/if}
-      </div>
+    <div class="avatar-container" style="--gradient: {gradient};">
+      {#if avatar_src}
+        <img
+          bind:this={avatar_element}
+          src={avatar_src}
+          crossorigin="anonymous"
+          on:load={() => void process_gradient()}
+          alt="Bluesky Avatar"
+        />
+      {/if}
     </div>
     <div>
       <h1>{name}</h1>
@@ -88,32 +82,28 @@
 </div>
 
 <style>
-  .avatar-border {
-    border-radius: 8px;
-    background: var(--gradient);
-    padding: 2px;
+  .container.ready {
+    opacity: 1;
+  }
+
+  .container {
     opacity: 0;
     transition: opacity 0.3s ease;
   }
 
-  .avatar-border.ready {
-    opacity: 1;
-  }
-
   .avatar-container {
+    background-image: var(--gradient);
+    max-height: 125px;
+    max-width: 125px;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    padding: 4px;
     border-radius: 8px;
-    overflow: hidden;
-    width: 125px;
-    height: 125px;
   }
 
-  .avatar-container img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .avatar-container > img {
+    max-height: 100%;
+    max-width: 100%;
+    border-radius: 4px;
   }
 
   .social-icons {
