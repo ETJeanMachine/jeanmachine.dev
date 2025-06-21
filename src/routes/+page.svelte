@@ -1,7 +1,5 @@
 <script lang="ts">
   import { onMount } from "svelte";
-
-  import "../styles/index.css";
   import { get_profile } from "$lib/utils/bsky";
 
   // svg logos
@@ -53,31 +51,51 @@
 </script>
 
 <div class="container" class:ready>
-  <div class="card">
-    <div class="avatar-container" style="--gradient: {gradient};">
-      {#if avatar_src}
-        <img
-          bind:this={avatar_element}
-          src={avatar_src}
-          crossorigin="anonymous"
-          on:load={() => void process_gradient()}
-          alt="Bluesky Avatar"
-        />
-      {/if}
-    </div>
-    <div>
-      <h1>{name}</h1>
-      <h3>{title}</h3>
-      <div class="social-icons">
-        <a href={github}><img alt="Github Logo" src={github_logo} /></a>
-        <a href={bsky}><img alt="Bluesky Logo" src={bsky_logo} /></a>
-        <a href={linkedin}><img alt="LinkedIn Logo" src={linkedin_logo} /></a>
-        <a href={email}><img alt="Email Logo" src={email_logo} /></a>
+  <div
+    style="display: flex; flex-direction: column; gap: 10px; min-width: 500px;"
+  >
+    <div class="card">
+      <div class="avatar-container" style="--gradient: {gradient};">
+        {#if avatar_src}
+          <img
+            bind:this={avatar_element}
+            src={avatar_src}
+            crossorigin="anonymous"
+            on:load={() => void process_gradient()}
+            alt="Bluesky Avatar"
+          />
+        {/if}
+      </div>
+      <div>
+        <h1>{name}</h1>
+        <h3>{title}</h3>
+        <div class="social-icons">
+          <a href={github}><img alt="Github Logo" src={github_logo} /></a>
+          <a href={bsky}><img alt="Bluesky Logo" src={bsky_logo} /></a>
+          <a href={linkedin}><img alt="LinkedIn Logo" src={linkedin_logo} /></a>
+          <a href={email}><img alt="Email Logo" src={email_logo} /></a>
+        </div>
       </div>
     </div>
+    <div class="card">More</div>
   </div>
   <div class="card">
-    <p>About Me</p>
+    <div>
+      <h1>About Me</h1>
+      <p>
+        My name's Eric, but I also go by Jean! I'm a software engineer from the
+        Pacific Northwest with a degree in Computer Science. I love building all
+        sorts of things, but in particular, the kinds of projects that get me
+        going are the things that I know will positively impact people's lives.
+      </p>
+      <p>
+        When I'm not coding, I enjoy biking, hiking, and attending city hall
+        meetings, reading municipal planning documents too. I keep informed on
+        what's going on in my community at all times - because I believe that
+        staying involved is what enables me to make a better impact on the
+        world.
+      </p>
+    </div>
   </div>
 </div>
 
@@ -95,14 +113,17 @@
     background-image: var(--gradient);
     max-height: 125px;
     max-width: 125px;
+    min-height: 125px;
+    min-width: 125px;
+    width: 125px;
     display: flex;
     padding: 4px;
     border-radius: 8px;
   }
 
   .avatar-container > img {
-    max-height: 100%;
-    max-width: 100%;
+    height: 100%;
+    width: 100%;
     border-radius: 4px;
   }
 

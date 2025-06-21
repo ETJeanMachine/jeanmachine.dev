@@ -2,6 +2,7 @@
   let { children } = $props();
   import "@material/web/button/filled-button.js";
   import "@material/web/button/outlined-button.js";
+  import "../styles/index.css";
 </script>
 
 <div class="layout">
