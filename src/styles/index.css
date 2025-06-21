@@ -15,7 +15,6 @@
         color: whitesmoke;
     }
     display: flex;
-    font-family: "Noto Sans";
     flex-direction: row;
     padding: 20px;
     background-color: slategrey;
