@@ -16,6 +16,8 @@
 </div>
 
 <style>
+  @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap");
+
   :root {
     --md-sys-color-primary: slategrey;
     --md-sys-color-secondary: slateblue;
@@ -23,13 +25,14 @@
 
   md-filled-button {
     border-radius: 8px;
+    font-family: "Noto Sans";
+    font-weight: 500;
   }
 
   :global(html, body) {
     margin: 0;
     padding: 0;
     background-color: dimgray;
-    font-family: "Noto Sans", sans-serif;
   }
 
   .content {
@@ -43,6 +46,7 @@
     color: whitesmoke;
     padding: 20px;
     box-sizing: border-box;
+    font-family: "Noto Sans";
   }
 
   .global-nav {
