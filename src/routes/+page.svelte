@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
 
   import "../styles/index.css";
+  import { get_profile } from "$lib/utils/bsky";
 
   // svg logos
   import github_logo from "$lib/icons/github.svg";
@@ -27,19 +28,10 @@
   let avatar_element: HTMLImageElement;
   let gradient = `linear-gradient(to right, #000000, #ffffff)`;
 
-  // gets my bluesky profile picture for the home page
-  async function get_profile_picture() {
-    const xrpc = api + "app.bsky.actor.getProfile?actor=" + did;
-    const response = await fetch(xrpc, {
-      method: "GET",
-    });
-    const data = await response.json();
-    const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(data.avatar);
-    return proxyUrl;
-  }
-
   onMount(async () => {
-    avatar_src = await get_profile_picture();
+    let profile = await get_profile(did);
+    console.log(profile)
+    avatar_src = "https://corsproxy.io/?" + encodeURIComponent(profile.avatar);
   });
 
   let gradient_ready = false;
