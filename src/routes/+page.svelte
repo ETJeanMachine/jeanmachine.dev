@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { get_profile } from "$lib/utils/bsky";
+  import { fetchRecentCommits } from "$lib/utils/github";
 
   // svg logos
   import github_logo from "$lib/icons/github.svg";
@@ -43,6 +44,10 @@
         console.error("ColorThief error:", error);
       }
     }
+    const commits = await fetchRecentCommits("etjeanmachine", 5);
+    commits.forEach((commit) => {
+      console.log(`${commit.repository}: ${commit.message}`);
+    });
   }
 </script>
 
@@ -95,39 +100,28 @@
 <style>
   .container {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     gap: 10px;
-    width: 100%;
-    max-width: 100vw;
-    box-sizing: border-box;
+    max-height: 600px;
   }
 
-  /* Desktop layout */
-  @media (min-width: 769px) {
+  .left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 0 0 auto;
+  }
+
+  .about-card {
+    flex: 1;
+    max-height: none;
+  }
+
+  /* Make it responsive */
+  @media (max-width: 768px) {
     .container {
-      flex-direction: row;
-      max-height: 600px;
-      align-items: flex-start;
-    }
-
-    .left-column {
-      display: flex;
       flex-direction: column;
-      gap: 10px;
-      flex: 0 0 auto;
-      min-width: 300px;
-      max-width: 400px;
-      width: 35%;
-    }
-
-    .profile-card,
-    .more-card {
-      width: 100%;
-    }
-
-    .about-card {
-      flex: 1;
-      min-width: 0; /* Important for flex items */
+      max-height: none;
     }
   }
 
