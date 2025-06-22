@@ -54,7 +54,7 @@
   <div
     style="display: flex; flex-direction: column; gap: 10px; min-width: 500px;"
   >
-    <div class="card">
+    <div class="card glass">
       <div class="avatar-container" style="--gradient: {gradient};">
         {#if avatar_src}
           <img
@@ -77,9 +77,9 @@
         </div>
       </div>
     </div>
-    <div class="card">More</div>
+    <div class="card glass">More</div>
   </div>
-  <div class="card">
+  <div class="card glass">
     <div>
       <h1>About Me</h1>
       <p>
@@ -136,11 +136,13 @@
     width: 24px;
     height: 24px;
     filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7482%)
-      hue-rotate(199deg) brightness(108%) contrast(107%);
+      hue-rotate(199deg) brightness(108%) contrast(107%)
+      drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.5));
   }
 
   .social-icons img:hover {
     filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7482%)
-      hue-rotate(199deg) brightness(108%) contrast(107%) invert(10%);
+      hue-rotate(199deg) brightness(108%) contrast(107%) invert(10%)
+      drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.5));
   }
 </style>

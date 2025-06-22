@@ -19,9 +19,11 @@
   </video>
   <main class="content">
     <nav class="global-nav">
-      <md-filled-button href="/">Home</md-filled-button>
-      <md-filled-button href="/blog">Blog</md-filled-button>
-      <md-filled-button href="/projects">Projects</md-filled-button>
+      <md-filled-button class="glass" href="/">Home</md-filled-button>
+      <md-filled-button class="glass" href="/blog">Blog</md-filled-button>
+      <md-filled-button class="glass" href="/projects"
+        >Projects</md-filled-button
+      >
     </nav>
     <div>
       {@render children()}
@@ -53,13 +55,12 @@
   @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap");
 
   :root {
-    --md-sys-color-primary: slategrey;
-    --md-sys-color-secondary: slateblue;
+    --md-sys-color-primary: none;
+    --md-sys-color-secondary: none;
   }
 
   md-filled-button {
-    border-radius: 8px;
-    color: whitesmoke;
+    color: black;
     font-family: "Noto Sans";
     font-weight: 550;
   }
@@ -93,6 +94,7 @@
     margin: 10px;
     min-height: 100vh;
     font-family: "Noto Sans";
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     color: whitesmoke;
     position: relative;
     display: flex;

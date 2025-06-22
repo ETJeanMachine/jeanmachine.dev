@@ -1,24 +1,19 @@
 .card {
     h1 {
         font-size: 24px;
-        color: whitesmoke;
         font-weight: bolder;
         font-style: italic;
     }
     h2 {
         font-size: 18px;
-        color: whitesmoke;
         font-weight: bold;
     }
     h3 {
         font-size: 16px;
-        color: whitesmoke;
     }
     display: flex;
     flex-direction: row;
     padding: 20px;
-    background-color: slategrey;
-    border-radius: 8px;
     gap: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -27,4 +22,15 @@
     display: flex;
     flex-direction: row;
     gap: 10px;
+}
+
+.glass {
+    position: relative;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(2px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 2rem;
+    box-shadow:
+        0 8px 32px rgba(31, 38, 135, 0.2),
+        inset 0 4px 20px rgba(255, 255, 255, 0.3);
 }
