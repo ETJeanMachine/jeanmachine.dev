@@ -10,10 +10,6 @@
   // @ts-ignore
   import ColorThief from "color-thief-ts";
 
-  // my bluesky DID (hardcoded)
-  const did = "did:plc:6vxtya3serxcwvcdk5e7psvv";
-  const api = "https://public.api.bsky.app/xrpc/";
-
   // easy to edit page components
   const name = "Eric Hamilton";
   const title = "Software Engineer, Caffeine Addict, Transit Enthusiast.";
@@ -27,8 +23,8 @@
   let gradient = `linear-gradient(to right, #000000, #ffffff)`;
 
   onMount(async () => {
+    const did = "did:plc:6vxtya3serxcwvcdk5e7psvv";
     let profile = await get_profile(did);
-
     avatar_src = "https://corsproxy.io/?" + encodeURIComponent(profile.avatar);
   });
 
@@ -50,63 +46,56 @@
   }
 </script>
 
-<div class="container" class:ready>
-  <div
-    style="display: flex; flex-direction: column; gap: 10px; min-width: 500px;"
-  >
-    <div class="card glass">
-      <div class="avatar-container" style="--gradient: {gradient};">
-        {#if avatar_src}
-          <img
-            bind:this={avatar_element}
-            src={avatar_src}
-            crossorigin="anonymous"
-            on:load={() => void process_gradient()}
-            alt="Bluesky Avatar"
-          />
-        {/if}
-      </div>
-      <div>
-        <h1>{name}</h1>
-        <h3>{title}</h3>
-        <div class="social-icons">
-          <a href={github}><img alt="Github Logo" src={github_logo} /></a>
-          <a href={bsky}><img alt="Bluesky Logo" src={bsky_logo} /></a>
-          <a href={linkedin}><img alt="LinkedIn Logo" src={linkedin_logo} /></a>
-          <a href={email}><img alt="Email Logo" src={email_logo} /></a>
-        </div>
-      </div>
-    </div>
-    <div class="card glass">More</div>
-  </div>
+<div class="container">
   <div class="card glass">
-    <div>
-      <h1>About Me</h1>
-      <p>
-        My name's Eric, but I also go by Jean! I'm a software engineer from the
-        Pacific Northwest with a degree in Computer Science. I love building all
-        sorts of things, but in particular, the kinds of projects that get me
-        going are the things that I know will positively impact people's lives.
-      </p>
-      <p>
-        When I'm not coding, I enjoy biking, hiking, and attending city hall
-        meetings, reading municipal planning documents too. I keep informed on
-        what's going on in my community at all times - because I believe that
-        staying involved is what enables me to make a better impact on the
-        world.
-      </p>
+    <div class="avatar-container" class:ready style="--gradient: {gradient};">
+      {#if avatar_src}
+        <img
+          bind:this={avatar_element}
+          src={avatar_src}
+          crossorigin="anonymous"
+          on:load={() => void process_gradient()}
+          alt="Bluesky Avatar"
+        />
+      {/if}
     </div>
+    <div>
+      <h1>{name}</h1>
+      <h3>{title}</h3>
+      <div class="social-icons">
+        <a href={github}><img alt="Github Logo" src={github_logo} /></a>
+        <a href={bsky}><img alt="Bluesky Logo" src={bsky_logo} /></a>
+        <a href={linkedin}><img alt="LinkedIn Logo" src={linkedin_logo} /></a>
+        <a href={email}><img alt="Email Logo" src={email_logo} /></a>
+      </div>
+    </div>
+  </div>
+  <div class="card glass">More</div>
+</div>
+<div class="card glass container">
+  <div>
+    <h1>About Me</h1>
+    <p>
+      My name's Eric, but I also go by Jean! I'm a software engineer from the
+      Pacific Northwest with a degree in Computer Science. I love building all
+      sorts of things, but in particular, the kinds of projects that get me
+      going are the things that I know will positively impact people's lives.
+    </p>
+    <p>
+      When I'm not coding, I enjoy biking, hiking, and attending city hall
+      meetings, reading municipal planning documents too. I keep informed on
+      what's going on in my community at all times - because I believe that
+      staying involved is what enables me to make a better impact on the world.
+    </p>
   </div>
 </div>
 
 <style>
-  .container.ready {
-    opacity: 1;
-  }
-
   .container {
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: 600px;
   }
 
   .avatar-container {
@@ -115,10 +104,15 @@
     max-width: 125px;
     min-height: 125px;
     min-width: 125px;
-    width: 125px;
     display: flex;
     padding: 4px;
     border-radius: 8px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .avatar-container.ready {
+    opacity: 1;
   }
 
   .avatar-container > img {

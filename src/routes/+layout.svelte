@@ -1,6 +1,5 @@
 <script lang="ts">
   let { children } = $props();
-  import "@material/web/button/filled-button.js";
   import "../styles/index.css";
 
   let videoElement: HTMLVideoElement;
@@ -17,53 +16,22 @@
     <source src="/backgrounds/suletta_battle.webm" type="video/webm" />
     <source src="/backgrounds/suletta_battle.mp4" type="video/mp4" />
   </video>
-  <main class="content">
-    <nav class="global-nav">
-      <md-filled-button class="glass" href="/">Home</md-filled-button>
-      <md-filled-button class="glass" href="/blog">Blog</md-filled-button>
-      <md-filled-button class="glass" href="/projects"
-        >Projects</md-filled-button
-      >
-    </nav>
+  <main>
     <div>
-      {@render children()}
+      <nav class="global-nav">
+        <a class="glass" href="/">Home</a>
+        <a class="glass" href="/blog">Blog</a>
+        <a class="glass" href="/projects">Projects</a>
+      </nav>
+      <div class="content">
+        {@render children()}
+      </div>
     </div>
   </main>
 </div>
 
-<svg style="display: none">
-  <filter id="lg-dist" x="0%" y="0%" width="100%" height="100%">
-    <feTurbulence
-      type="fractalNoise"
-      baseFrequency="0.008 0.008"
-      numOctaves="2"
-      seed="92"
-      result="noise"
-    />
-    <feGaussianBlur in="noise" stdDeviation="2" result="blurred" />
-    <feDisplacementMap
-      in="SourceGraphic"
-      in2="blurred"
-      scale="70"
-      xChannelSelector="R"
-      yChannelSelector="G"
-    />
-  </filter>
-</svg>
-
 <style>
   @import url("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap");
-
-  :root {
-    --md-sys-color-primary: none;
-    --md-sys-color-secondary: none;
-  }
-
-  md-filled-button {
-    color: black;
-    font-family: "Noto Sans";
-    font-weight: 550;
-  }
 
   :global(html, body) {
     margin: 0;
@@ -90,23 +58,50 @@
     transform: scale(1.05);
   }
 
-  .content {
+  main {
     margin: 10px;
     min-height: 100vh;
+    min-width: 100vh;
     font-family: "Noto Sans";
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     color: whitesmoke;
-    position: relative;
-    display: flex;
-    flex-direction: column;
     gap: 10px;
     z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
   }
 
-  .global-nav {
+  main > div {
+    max-width: 1200px;
+    align-self: center;
+  }
+
+  .content {
     display: flex;
-    justify-content: left;
+    flex-flow: row wrap;
+    gap: 10px;
+  }
+
+  nav.global-nav {
+    display: flex;
     margin-bottom: 10px;
     gap: 1rem;
+  }
+
+  .global-nav > a {
+    font-family: inherit;
+    font-size: 16px;
+    color: inherit;
+    text-shadow: inherit;
+    padding: 0.5rem 1rem;
+    font-weight: 550;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out;
+  }
+
+  .global-nav > a:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    transition: background-color 0.3s ease-in-out;
   }
 </style>
