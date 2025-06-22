@@ -1331,6 +1331,7 @@ __metadata:
     svelte-check: "npm:^4.0.0"
     typescript: "npm:^5.0.0"
     vite: "npm:^6.2.6"
+    vite-plugin-devtools-json: "npm:^0.2.0"
   languageName: unknown
   linkType: soft
 
@@ -2249,6 +2250,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"uuid@npm:^11.1.0":
+  version: 11.1.0
+  resolution: "uuid@npm:11.1.0"
+  bin:
+    uuid: dist/esm/bin/uuid
+  checksum: 10c0/34aa51b9874ae398c2b799c88a127701408cd581ee89ec3baa53509dd8728cbb25826f2a038f9465f8b7be446f0fbf11558862965b18d21c993684297628d4d3
+  languageName: node
+  linkType: hard
+
 "uuid@npm:^3.3.2":
   version: 3.4.0
   resolution: "uuid@npm:3.4.0"
@@ -2266,6 +2276,17 @@ __metadata:
     core-util-is: "npm:1.0.2"
     extsprintf: "npm:^1.2.0"
   checksum: 10c0/37ccdf8542b5863c525128908ac80f2b476eed36a32cb944de930ca1e2e78584cc435c4b9b4c68d0fc13a47b45ff364b4be43aa74f8804f9050140f660fb660d
+  languageName: node
+  linkType: hard
+
+"vite-plugin-devtools-json@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "vite-plugin-devtools-json@npm:0.2.0"
+  dependencies:
+    uuid: "npm:^11.1.0"
+  peerDependencies:
+    vite: ^2.7.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
+  checksum: 10c0/4fbaf93f9d37bba0341490bd30c79672c35cd4ce22019296a7008511bcf758b26fc3c71a6475b13a7aa4aa6740e70c5346ac5daf636819e2dea78d86b4f75e7f
   languageName: node
   linkType: hard
 
