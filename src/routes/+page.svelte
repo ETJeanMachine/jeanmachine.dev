@@ -47,32 +47,34 @@
 </script>
 
 <div class="container">
-  <div class="card glass">
-    <div class="avatar-container" class:ready style="--gradient: {gradient};">
-      {#if avatar_src}
-        <img
-          bind:this={avatar_element}
-          src={avatar_src}
-          crossorigin="anonymous"
-          on:load={() => void process_gradient()}
-          alt="Bluesky Avatar"
-        />
-      {/if}
-    </div>
-    <div>
-      <h1>{name}</h1>
-      <h3>{title}</h3>
-      <div class="social-icons">
-        <a href={github}><img alt="Github Logo" src={github_logo} /></a>
-        <a href={bsky}><img alt="Bluesky Logo" src={bsky_logo} /></a>
-        <a href={linkedin}><img alt="LinkedIn Logo" src={linkedin_logo} /></a>
-        <a href={email}><img alt="Email Logo" src={email_logo} /></a>
+  <div class="left-column">
+    <div class="card glass profile-card">
+      <div class="avatar-container" class:ready style="--gradient: {gradient};">
+        {#if avatar_src}
+          <img
+            bind:this={avatar_element}
+            src={avatar_src}
+            crossorigin="anonymous"
+            on:load={() => void process_gradient()}
+            alt="Bluesky Avatar"
+          />
+        {/if}
+      </div>
+      <div>
+        <h1>{name}</h1>
+        <h3>{title}</h3>
+        <div class="social-icons">
+          <a href={github}><img alt="Github Logo" src={github_logo} /></a>
+          <a href={bsky}><img alt="Bluesky Logo" src={bsky_logo} /></a>
+          <a href={linkedin}><img alt="LinkedIn Logo" src={linkedin_logo} /></a>
+          <a href={email}><img alt="Email Logo" src={email_logo} /></a>
+        </div>
       </div>
     </div>
+    <div class="card glass more-card">More</div>
   </div>
-  <div class="card glass">More</div>
 </div>
-<div class="card glass container">
+<div class="card glass about-card">
   <div>
     <h1>About Me</h1>
     <p>
@@ -95,7 +97,45 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    max-height: 600px;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+  }
+
+  /* Desktop layout */
+  @media (min-width: 769px) {
+    .container {
+      flex-direction: row;
+      max-height: 600px;
+      align-items: flex-start;
+    }
+
+    .left-column {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 0 0 auto;
+      min-width: 300px;
+      max-width: 400px;
+      width: 35%;
+    }
+
+    .profile-card,
+    .more-card {
+      width: 100%;
+    }
+
+    .about-card {
+      flex: 1;
+      min-width: 0; /* Important for flex items */
+    }
+  }
+
+  /* Ensure all cards don't overflow */
+  .card {
+    width: 100%;
+    box-sizing: border-box;
+    min-width: 0;
   }
 
   .avatar-container {

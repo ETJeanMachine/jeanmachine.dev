@@ -41,7 +41,6 @@
   .layout {
     min-height: 100vh;
     position: relative;
-    overflow: hidden;
   }
 
   .layout > video {
@@ -56,6 +55,7 @@
     margin: 0;
     padding: 0;
     transform: scale(1.05);
+    background-color: black;
   }
 
   main {

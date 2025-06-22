@@ -1,3 +1,7 @@
+body {
+    background-color: black;
+}
+
 .card {
     h1 {
         font-size: 24px;
