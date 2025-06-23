@@ -2,9 +2,7 @@
 import type { RequestHandler } from "./$types";
 
 export const GET: RequestHandler = async ({ params, platform }) => {
-  const object = await platform?.BACKGROUNDS?.get(
-    `backgrounds/${params.filename}`,
-  );
+  const object = await platform?.BACKGROUNDS?.get(`${params.filename}`);
 
   if (!object) {
     return new Response("Not found", { status: 404 });
