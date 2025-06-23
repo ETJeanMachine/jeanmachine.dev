@@ -1,8 +1,6 @@
 <script lang="ts">
   let { children } = $props();
-  import { dev } from "$app/environment";
   import "../styles/index.css";
-  const videoBase = dev ? "" : "/static/backgrounds";
 
   let videoElement: HTMLVideoElement;
 
@@ -15,11 +13,8 @@
 
 <div class="layout">
   <video bind:this={videoElement} autoplay muted loop>
-    <source
-      src="{videoBase}/backgrounds/suletta_battle.webm"
-      type="video/webm"
-    />
-    <source src="{videoBase}/backgrounds/suletta_battle.mp4" type="video/mp4" />
+    <source src="backgrounds/suletta_battle.webm" type="video/webm" />
+    <source src="backgrounds/suletta_battle.mp4" type="video/mp4" />
   </video>
   <main>
     <div>
