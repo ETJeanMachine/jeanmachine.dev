@@ -13,8 +13,8 @@
 
 <div class="layout">
   <video bind:this={videoElement} autoplay muted loop>
-    <source src="backgrounds/suletta_battle.webm" type="video/webm" />
-    <source src="backgrounds/suletta_battle.mp4" type="video/mp4" />
+    <source src="/backgrounds/suletta_battle.webm" type="video/webm" />
+    <source src="/backgrounds/suletta_battle.mp4" type="video/mp4" />
   </video>
   <main>
     <div>
