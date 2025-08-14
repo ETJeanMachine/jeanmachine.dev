@@ -4,10 +4,11 @@
   import { fetchRecentCommits } from "$lib/utils/github";
 
   // svg logos
-  import github_logo from "$lib/icons/github.svg";
-  import linkedin_logo from "$lib/icons/linkedin.svg";
-  import bsky_logo from "$lib/icons/bsky.svg";
-  import email_logo from "$lib/icons/email.svg";
+  import github_logo from "../assets/icons/github.svg";
+  import linkedin_logo from "../assets/icons/linkedin.svg";
+  import bsky_logo from "../assets/icons/bsky.svg";
+  import email_logo from "../assets/icons/email.svg";
+  import signal_logo from "../assets/icons/signal.svg";
   // @ts-ignore
   import ColorThief from "color-thief-ts";
 
@@ -18,6 +19,8 @@
   const linkedin = "https://linkedin.com/in/etjhamilton";
   const bsky = "https://bsky.app/profile/jeanmachine.dev";
   const email = "mailto:etj2206@rit.edu";
+  const signal =
+    "https://signal.me/#eu/NRi1kt98GTlPfIyn2DP4faTgyElC3ufIcTcdK0fLLttDMBFxJANNhoD-Ksn30G8O";
 
   let avatar_src = "";
   let avatar_element: HTMLImageElement;
@@ -73,6 +76,7 @@
           <a href={bsky}><img alt="Bluesky Logo" src={bsky_logo} /></a>
           <a href={linkedin}><img alt="LinkedIn Logo" src={linkedin_logo} /></a>
           <a href={email}><img alt="Email Logo" src={email_logo} /></a>
+          <a href={signal}><img alt="Signal Logo" src={signal_logo} /></a>
         </div>
       </div>
     </div>
