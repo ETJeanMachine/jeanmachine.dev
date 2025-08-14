@@ -15,11 +15,13 @@
     blogs = blogs.records.filter(
       (blog: any) => blog.value.visibility === "public",
     );
-    blogs = blogs.map((blog: any) => ({
-      ...blog,
+    let blog_entries = blogs.map((blog: any) => ({
       rkey: blog.uri.split("/").pop(),
+      title: blog.value.title,
+      createdAt: new Date(blog.value.createdAt).toLocaleDateString(),
     }));
-    return blogs;
+    console.log(blog_entries);
+    return blog_entries;
   }
 
   onMount(async () => {
@@ -32,8 +34,8 @@
   {#each blogs as blog}
     <a href="/blog/{blog.rkey}">
       <div class="card glass">
-        <h1>{blog.value.title}</h1>
-        <h3>{blog.value.createdAt}</h3>
+        <h1>{blog.title}</h1>
+        <h3>{blog.createdAt}</h3>
       </div>
     </a>
   {/each}
