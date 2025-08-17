@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { get_profile } from "$lib/utils/bsky";
   import { fetchRecentCommits } from "$lib/utils/github";
+  import { USER_DID, PERSONAL, SOCIAL_LINKS, PROXY_SERVICES } from "$lib/constants";
 
   // svg logos
   import github_logo from "../assets/icons/github.svg";
@@ -12,24 +13,13 @@
   // @ts-ignore
   import ColorThief from "color-thief-ts";
 
-  // easy to edit page components
-  const name = "Eric Hamilton";
-  const title = "Software Engineer, Caffeine Addict, Transit Enthusiast.";
-  const github = "https://github.com/ETJeanMachine";
-  const linkedin = "https://linkedin.com/in/etjhamilton";
-  const bsky = "https://bsky.app/profile/jeanmachine.dev";
-  const email = "mailto:etj2206@rit.edu";
-  const signal =
-    "https://signal.me/#eu/NRi1kt98GTlPfIyn2DP4faTgyElC3ufIcTcdK0fLLttDMBFxJANNhoD-Ksn30G8O";
-
   let avatar_src = "";
   let avatar_element: HTMLImageElement;
   let gradient = `linear-gradient(to right, #000000, #ffffff)`;
 
   onMount(async () => {
-    const did = "did:plc:6vxtya3serxcwvcdk5e7psvv";
-    let profile = await get_profile(did);
-    avatar_src = "https://corsproxy.io/?" + encodeURIComponent(profile.avatar);
+    let profile = await get_profile(USER_DID);
+    avatar_src = PROXY_SERVICES.CORS_PROXY + encodeURIComponent(profile.avatar);
   });
 
   let ready = false;
@@ -47,7 +37,7 @@
         console.error("ColorThief error:", error);
       }
     }
-    const commits = await fetchRecentCommits("etjeanmachine", 5);
+    const commits = await fetchRecentCommits(PERSONAL.GITHUB_USERNAME, 5);
     commits.forEach((commit) => {
       console.log(`${commit.repository}: ${commit.message}`);
     });
@@ -69,14 +59,14 @@
         {/if}
       </div>
       <div>
-        <h1>{name}</h1>
-        <h3>{title}</h3>
+        <h1>{PERSONAL.NAME}</h1>
+        <h3>{PERSONAL.TITLE}</h3>
         <div class="social-icons">
-          <a href={github}><img alt="Github Logo" src={github_logo} /></a>
-          <a href={bsky}><img alt="Bluesky Logo" src={bsky_logo} /></a>
-          <a href={linkedin}><img alt="LinkedIn Logo" src={linkedin_logo} /></a>
-          <a href={email}><img alt="Email Logo" src={email_logo} /></a>
-          <a href={signal}><img alt="Signal Logo" src={signal_logo} /></a>
+          <a href={SOCIAL_LINKS.GITHUB}><img alt="Github Logo" src={github_logo} /></a>
+          <a href={SOCIAL_LINKS.BLUESKY}><img alt="Bluesky Logo" src={bsky_logo} /></a>
+          <a href={SOCIAL_LINKS.LINKEDIN}><img alt="LinkedIn Logo" src={linkedin_logo} /></a>
+          <a href={SOCIAL_LINKS.EMAIL}><img alt="Email Logo" src={email_logo} /></a>
+          <a href={SOCIAL_LINKS.SIGNAL}><img alt="Signal Logo" src={signal_logo} /></a>
         </div>
       </div>
     </div>
