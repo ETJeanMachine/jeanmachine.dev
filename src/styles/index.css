@@ -1,6 +1,6 @@
 @font-face {
     font-family: "CaskaydiaCove Nerd Font";
-    src: url("/static/fonts/CaskaydiaCoveNerdFont[wght].ttf") format("truetype");
+    src: url("$lib/fonts/CaskaydiaCove.ttf") format("truetype");
     font-style: normal;
 }
 
