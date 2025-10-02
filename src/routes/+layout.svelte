@@ -11,10 +11,6 @@
   });
 </script>
 
-<svelte:head>
-  <title>Jean's Website</title>
-</svelte:head>
-
 <div class="global_wrapper">
   <nav class="global_nav">
     <a href="/">~</a>
