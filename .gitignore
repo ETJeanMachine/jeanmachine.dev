@@ -29,7 +29,6 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
 # Protected Assets
-/static/fonts/
 /static/backgrounds/
 
 # Project Files
