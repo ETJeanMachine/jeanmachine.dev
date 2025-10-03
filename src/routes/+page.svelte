@@ -21,13 +21,13 @@
 
   onMount(async () => {
     let profile = await get_profile(USER_DID);
-    avatar_src = PROXY_SERVICES.CORS_PROXY + encodeURIComponent(profile.avatar);
+    avatar_src = `/api/avatar?url=${encodeURIComponent(profile.avatar)}`;
   });
 </script>
 
 <div class="container">
   <div class="card">
-    <div class="avatar-container">
+    <div class="avatar-container" class:loaded={avatar_src}>
       {#if avatar_src}
         <img
           bind:this={avatar_element}
@@ -103,12 +103,19 @@
     border-radius: 8px;
     opacity: 0;
     transition: opacity 0.3s ease;
+    aspect-ratio: 1 / 1;
+    max-height: 150px;
+  }
+
+  .avatar-container.loaded {
+    opacity: 1;
   }
 
   .avatar-container > img {
     height: 100%;
     width: 100%;
     border-radius: 4px;
+    object-fit: cover;
   }
 
   .social-icons {
