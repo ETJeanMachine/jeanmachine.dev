@@ -1,5 +1,7 @@
-body {
-    background-color: black;
+@font-face {
+    font-family: "CaskaydiaCove Nerd Font";
+    src: url("/CaskaydiaCove.ttf") format("truetype");
+    font-style: normal;
 }
 
 .card {

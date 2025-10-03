@@ -1,145 +1,113 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { get_profile } from "$lib/utils/bsky";
-  import { fetchRecentCommits } from "$lib/utils/github";
-  import { USER_DID, PERSONAL, SOCIAL_LINKS, PROXY_SERVICES } from "$lib/constants";
+  import { onMount } from 'svelte';
+  import { get_profile } from '$lib/utils/bsky';
+  import { fetchRecentCommits } from '$lib/utils/github';
+  import {
+    USER_DID,
+    PERSONAL,
+    SOCIAL_LINKS,
+    PROXY_SERVICES,
+  } from '$lib/constants';
 
   // svg logos
-  import github_logo from "../assets/icons/github.svg";
-  import linkedin_logo from "../assets/icons/linkedin.svg";
-  import bsky_logo from "../assets/icons/bsky.svg";
-  import email_logo from "../assets/icons/email.svg";
-  import signal_logo from "../assets/icons/signal.svg";
-  // @ts-ignore
-  import ColorThief from "color-thief-ts";
+  import github_logo from '../assets/icons/github.svg';
+  import linkedin_logo from '../assets/icons/linkedin.svg';
+  import bsky_logo from '../assets/icons/bsky.svg';
+  import email_logo from '../assets/icons/email.svg';
+  import signal_logo from '../assets/icons/signal.svg';
 
-  let avatar_src = "";
+  let avatar_src = '';
   let avatar_element: HTMLImageElement;
-  let gradient = `linear-gradient(to right, #000000, #ffffff)`;
 
   onMount(async () => {
     let profile = await get_profile(USER_DID);
-    avatar_src = PROXY_SERVICES.CORS_PROXY + encodeURIComponent(profile.avatar);
+    avatar_src = `/api/avatar?url=${encodeURIComponent(profile.avatar)}`;
   });
-
-  let ready = false;
-
-  async function process_gradient() {
-    if (avatar_element?.complete) {
-      try {
-        let colorThief = new ColorThief();
-        let colors = await colorThief.getPaletteAsync(avatar_src, 2);
-        if (colors && colors.length >= 2) {
-          gradient = `linear-gradient(45deg, ${colors[0]}, ${colors[1]})`;
-          ready = true;
-        }
-      } catch (error) {
-        console.error("ColorThief error:", error);
-      }
-    }
-    const commits = await fetchRecentCommits(PERSONAL.GITHUB_USERNAME, 5);
-    commits.forEach((commit) => {
-      console.log(`${commit.repository}: ${commit.message}`);
-    });
-  }
 </script>
 
 <div class="container">
-  <div class="left-column">
-    <div class="card glass profile-card">
-      <div class="avatar-container" class:ready style="--gradient: {gradient};">
-        {#if avatar_src}
-          <img
-            bind:this={avatar_element}
-            src={avatar_src}
-            crossorigin="anonymous"
-            on:load={() => void process_gradient()}
-            alt="Bluesky Avatar"
-          />
-        {/if}
-      </div>
-      <div>
-        <h1>{PERSONAL.NAME}</h1>
-        <h3>{PERSONAL.TITLE}</h3>
-        <div class="social-icons">
-          <a href={SOCIAL_LINKS.GITHUB}><img alt="Github Logo" src={github_logo} /></a>
-          <a href={SOCIAL_LINKS.BLUESKY}><img alt="Bluesky Logo" src={bsky_logo} /></a>
-          <a href={SOCIAL_LINKS.LINKEDIN}><img alt="LinkedIn Logo" src={linkedin_logo} /></a>
-          <a href={SOCIAL_LINKS.EMAIL}><img alt="Email Logo" src={email_logo} /></a>
-          <a href={SOCIAL_LINKS.SIGNAL}><img alt="Signal Logo" src={signal_logo} /></a>
-        </div>
+  <div class="card">
+    <div class="avatar-container" class:loaded={avatar_src}>
+      {#if avatar_src}
+        <img
+          bind:this={avatar_element}
+          src={avatar_src}
+          crossorigin="anonymous"
+          alt="Bluesky Avatar"
+        />
+      {/if}
+    </div>
+    <div>
+      <h1>{PERSONAL.NAME}</h1>
+      <h3>{PERSONAL.TITLE}</h3>
+      <div class="social-icons">
+        <a href={SOCIAL_LINKS.GITHUB}
+          ><img alt="Github Logo" src={github_logo} /></a
+        >
+        <a href={SOCIAL_LINKS.BLUESKY}
+          ><img alt="Bluesky Logo" src={bsky_logo} /></a
+        >
+        <a href={SOCIAL_LINKS.LINKEDIN}
+          ><img alt="LinkedIn Logo" src={linkedin_logo} /></a
+        >
+        <a href={SOCIAL_LINKS.EMAIL}
+          ><img alt="Email Logo" src={email_logo} /></a
+        >
+        <a href={SOCIAL_LINKS.SIGNAL}
+          ><img alt="Signal Logo" src={signal_logo} /></a
+        >
       </div>
     </div>
-    <div class="card glass more-card">More</div>
   </div>
-</div>
-<div class="card glass about-card">
-  <div>
-    <h1>About Me</h1>
-    <p>
-      My name's Eric, but I also go by Jean! I'm a software engineer from the
-      Pacific Northwest with a degree in Computer Science. I love building all
-      sorts of things, but in particular, the kinds of projects that get me
-      going are the things that I know will positively impact people's lives.
-    </p>
-    <p>
-      When I'm not coding, I enjoy biking, hiking, and attending city hall
-      meetings, reading municipal planning documents too. I keep informed on
-      what's going on in my community at all times - because I believe that
-      staying involved is what enables me to make a better impact on the world.
-    </p>
+  <div class="card">
+    <div>
+      <h1>About Me</h1>
+      <p>
+        My name's Eric, but I also go by Jean! I'm a software engineer from the
+        Pacific Northwest with a degree in Computer Science. I love building all
+        sorts of things, but in particular, the kinds of projects that get me
+        going are the things that I know will positively impact people's lives.
+      </p>
+      <p>
+        When I'm not coding, I enjoy biking, hiking, and attending city hall
+        meetings, reading municipal planning documents too. I keep informed on
+        what's going on in my community at all times - because I believe that
+        staying involved is what enables me to make a better impact on the
+        world.
+      </p>
+    </div>
   </div>
 </div>
 
 <style>
+  /* Ensure all cards don't overflow */
   .container {
     display: flex;
     flex-direction: row;
-    gap: 10px;
-    max-height: 600px;
+    gap: 15px;
   }
 
-  .left-column {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    flex: 0 0 auto;
-  }
-
-  .about-card {
-    flex: 1;
-    max-height: none;
-  }
-
-  /* Make it responsive */
-  @media (max-width: 768px) {
-    .container {
-      flex-direction: column;
-      max-height: none;
-    }
-  }
-
-  /* Ensure all cards don't overflow */
   .card {
     width: 100%;
     box-sizing: border-box;
     min-width: 0;
+    background-color: var(--fg_dark);
+    border-radius: 20px;
+    border: 5px solid var(--fg_gutter);
   }
 
   .avatar-container {
-    background-image: var(--gradient);
-    max-height: 125px;
-    max-width: 125px;
-    min-height: 125px;
-    min-width: 125px;
+    background-color: var(--fg);
     display: flex;
     padding: 4px;
     border-radius: 8px;
     opacity: 0;
     transition: opacity 0.3s ease;
+    aspect-ratio: 1 / 1;
+    max-height: 150px;
   }
 
-  .avatar-container.ready {
+  .avatar-container.loaded {
     opacity: 1;
   }
 
@@ -147,6 +115,7 @@
     height: 100%;
     width: 100%;
     border-radius: 4px;
+    object-fit: cover;
   }
 
   .social-icons {
@@ -158,13 +127,11 @@
     width: 24px;
     height: 24px;
     filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7482%)
-      hue-rotate(199deg) brightness(108%) contrast(107%)
-      drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.5));
+      hue-rotate(199deg) brightness(108%) contrast(107%);
   }
 
   .social-icons img:hover {
     filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7482%)
-      hue-rotate(199deg) brightness(108%) contrast(107%) invert(10%)
-      drop-shadow(10px 10px 10px rgba(0, 0, 0, 0.5));
+      hue-rotate(199deg) brightness(108%) contrast(107%) invert(10%);
   }
 </style>
