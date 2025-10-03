@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+
   import { fetchRecentCommits } from '$lib/utils/github';
   import { USER_DID, PDS_URL, PERSONAL, SOCIAL_LINKS } from '$lib/constants';
 
@@ -11,7 +12,6 @@
   import signal_logo from '$lib/icons/signal.svg';
 
   let avatar_src = '';
-  let avatar_element: HTMLImageElement;
 
   onMount(async () => {
     avatar_src = `/api/bsky/avatar?pds=${PDS_URL}&did=${encodeURIComponent(USER_DID)}`;
@@ -19,10 +19,10 @@
 </script>
 
 <div class="container">
-  <div class="card">
+  <div class="card profile">
     <div class="avatar-container" class:loaded={avatar_src}>
       {#if avatar_src}
-        <img bind:this={avatar_element} src={avatar_src} alt="Bluesky Avatar" />
+        <img src={avatar_src} alt="Bluesky Avatar" />
       {/if}
     </div>
     <div>
@@ -73,15 +73,13 @@
     display: flex;
     flex-direction: row;
     gap: 15px;
+    align-items: flex-start;
   }
 
-  .card {
-    width: 100%;
-    box-sizing: border-box;
-    min-width: 0;
-    background-color: var(--fg_dark);
-    border-radius: 20px;
-    border: 5px solid var(--fg_gutter);
+  .profile {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
   }
 
   .avatar-container {
@@ -92,7 +90,8 @@
     opacity: 0;
     transition: opacity 0.3s ease;
     aspect-ratio: 1 / 1;
-    max-height: 150px;
+    flex-shrink: 0;
+    max-height: 175px;
   }
 
   .avatar-container.loaded {
@@ -108,6 +107,8 @@
 
   .social-icons {
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
     gap: 1rem;
   }
 

@@ -17,20 +17,9 @@
     h3 {
         font-size: 16px;
     }
-    display: flex;
-    flex-direction: row;
-    padding: 20px;
-    gap: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.glass {
-    position: relative;
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(2rem) saturate(180%);
-    border: 1px solid rgba(0, 0, 0, 0.8);
-    border-radius: 2rem;
-    box-shadow:
-        0 8px 32px rgba(31, 38, 135, 0.2),
-        inset 0 4px 20px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    background-color: var(--fg_dark);
+    border-radius: 20px;
+    border: 5px solid var(--fg_gutter);
+    padding: 10px;
 }
