@@ -15,13 +15,12 @@
   let profile_data: any;
 
   onMount(async () => {
-    const response = await fetch(
-      `/api/bsky/profile?pds=${encodeURIComponent(PDS_URL)}&did=${encodeURIComponent(USER_DID)}`,
-      { method: 'GET', headers: { 'Content-Type': 'application/json' } },
-    );
+    const response = await fetch(`/api/bsky/profile`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
     profile_data = await response.json();
-    console.log(profile_data);
-    avatar_src = `/api/atproto/blob?pds=${encodeURIComponent(PDS_URL)}&did=${encodeURIComponent(USER_DID)}&cid=${profile_data.value.avatar.ref.$link}`;
+    avatar_src = `/api/atproto/blob?&cid=${profile_data.value.avatar.ref.$link}`;
   });
 </script>
 
@@ -57,11 +56,13 @@
         </div>
       </div>
     </div>
-    <div class="card"><div class="card-content">&#xf435;</div></div>
+    <div class="card">
+      <div class="card-content"><h2>&#xf435; Pinned Post</h2></div>
+    </div>
   </div>
   <div class="card">
     <div class="card-content">
-      <h1>About Me</h1>
+      <h2>About Me</h2>
       <p>
         My name's Eric, but I also go by Jean! I'm a software engineer from the
         Pacific Northwest with a degree in Computer Science. I love building all
