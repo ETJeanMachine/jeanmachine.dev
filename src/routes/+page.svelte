@@ -10,11 +10,11 @@
   } from '$lib/constants';
 
   // svg logos
-  import github_logo from '../assets/icons/github.svg';
-  import linkedin_logo from '../assets/icons/linkedin.svg';
-  import bsky_logo from '../assets/icons/bsky.svg';
-  import email_logo from '../assets/icons/email.svg';
-  import signal_logo from '../assets/icons/signal.svg';
+  import github_logo from '$lib/icons/github.svg';
+  import linkedin_logo from '$lib/icons/linkedin.svg';
+  import bsky_logo from '$lib/icons/bsky.svg';
+  import email_logo from '$lib/icons/email.svg';
+  import signal_logo from '$lib/icons/signal.svg';
 
   let avatar_src = '';
   let avatar_element: HTMLImageElement;
