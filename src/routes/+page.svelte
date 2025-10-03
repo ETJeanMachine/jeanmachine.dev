@@ -12,9 +12,16 @@
   import signal_logo from '$lib/icons/signal.svg';
 
   let avatar_src = '';
+  let profile_data: any;
 
   onMount(async () => {
-    avatar_src = `/api/bsky/avatar?pds=${PDS_URL}&did=${encodeURIComponent(USER_DID)}`;
+    const response = await fetch(
+      `/api/bsky/profile?pds=${encodeURIComponent(PDS_URL)}&did=${encodeURIComponent(USER_DID)}`,
+      { method: 'GET', headers: { 'Content-Type': 'application/json' } },
+    );
+    profile_data = await response.json();
+    console.log(profile_data);
+    avatar_src = `/api/atproto/blob?pds=${encodeURIComponent(PDS_URL)}&did=${encodeURIComponent(USER_DID)}&cid=${profile_data.value.avatar.ref.$link}`;
   });
 </script>
 
