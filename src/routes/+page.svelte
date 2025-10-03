@@ -19,36 +19,41 @@
 </script>
 
 <div class="container">
-  <div class="card profile">
-    <div class="avatar-container" class:loaded={avatar_src}>
-      {#if avatar_src}
-        <img src={avatar_src} alt="Bluesky Avatar" />
-      {/if}
-    </div>
-    <div>
-      <h1>{PERSONAL.NAME}</h1>
-      <h3>{PERSONAL.TITLE}</h3>
-      <div class="social-icons">
-        <a href={SOCIAL_LINKS.GITHUB}
-          ><img alt="Github Logo" src={github_logo} /></a
-        >
-        <a href={SOCIAL_LINKS.BLUESKY}
-          ><img alt="Bluesky Logo" src={bsky_logo} /></a
-        >
-        <a href={SOCIAL_LINKS.LINKEDIN}
-          ><img alt="LinkedIn Logo" src={linkedin_logo} /></a
-        >
-        <a href={SOCIAL_LINKS.EMAIL}
-          ><img alt="Email Logo" src={email_logo} /></a
-        >
-        <a href={SOCIAL_LINKS.SIGNAL}
-          ><img alt="Signal Logo" src={signal_logo} /></a
-        >
+  <div style="display: flex; flex-direction: column; gap: 15px">
+    <div class="card">
+      <div class="card-content profile">
+        <div class="avatar-container" class:loaded={avatar_src}>
+          {#if avatar_src}
+            <img src={avatar_src} alt="Bluesky Avatar" />
+          {/if}
+        </div>
+        <div class="info">
+          <h1>{PERSONAL.NAME}</h1>
+          <h3>{PERSONAL.TITLE}</h3>
+          <div class="social-icons">
+            <a href={SOCIAL_LINKS.GITHUB}
+              ><img alt="Github Logo" src={github_logo} /></a
+            >
+            <a href={SOCIAL_LINKS.BLUESKY}
+              ><img alt="Bluesky Logo" src={bsky_logo} /></a
+            >
+            <a href={SOCIAL_LINKS.LINKEDIN}
+              ><img alt="LinkedIn Logo" src={linkedin_logo} /></a
+            >
+            <a href={SOCIAL_LINKS.EMAIL}
+              ><img alt="Email Logo" src={email_logo} /></a
+            >
+            <a href={SOCIAL_LINKS.SIGNAL}
+              ><img alt="Signal Logo" src={signal_logo} /></a
+            >
+          </div>
+        </div>
       </div>
     </div>
+    <div class="card"><div class="card-content">&#xf435;</div></div>
   </div>
   <div class="card">
-    <div>
+    <div class="card-content">
       <h1>About Me</h1>
       <p>
         My name's Eric, but I also go by Jean! I'm a software engineer from the
@@ -103,6 +108,13 @@
     width: 100%;
     border-radius: 4px;
     object-fit: cover;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    align-content: flex-start;
+    gap: 0;
   }
 
   .social-icons {
