@@ -1,13 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { get_profile } from '$lib/utils/bsky';
   import { fetchRecentCommits } from '$lib/utils/github';
-  import {
-    USER_DID,
-    PERSONAL,
-    SOCIAL_LINKS,
-    PROXY_SERVICES,
-  } from '$lib/constants';
+  import { USER_DID, PDS_URL, PERSONAL, SOCIAL_LINKS } from '$lib/constants';
 
   // svg logos
   import github_logo from '$lib/icons/github.svg';
@@ -20,8 +14,7 @@
   let avatar_element: HTMLImageElement;
 
   onMount(async () => {
-    let profile = await get_profile(USER_DID);
-    avatar_src = `/api/avatar?url=${encodeURIComponent(profile.avatar)}`;
+    avatar_src = `/api/bsky/avatar?pds=${PDS_URL}&did=${encodeURIComponent(USER_DID)}`;
   });
 </script>
 
@@ -29,12 +22,7 @@
   <div class="card">
     <div class="avatar-container" class:loaded={avatar_src}>
       {#if avatar_src}
-        <img
-          bind:this={avatar_element}
-          src={avatar_src}
-          crossorigin="anonymous"
-          alt="Bluesky Avatar"
-        />
+        <img bind:this={avatar_element} src={avatar_src} alt="Bluesky Avatar" />
       {/if}
     </div>
     <div>
