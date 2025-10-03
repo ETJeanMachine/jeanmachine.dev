@@ -22,12 +22,10 @@ export const GET: RequestHandler = async ({ url }) => {
 
   const data = await response.json();
   const cid = data.value.avatar.ref.$link;
-  const imageUrl = `${api_url}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${cid}`
-
+  const imageUrl = `${api_url}/xrpc/com.atproto.sync.getBlob?did=${did}&cid=${cid}`;
 
   try {
     const response = await fetch(imageUrl);
-    console.log(response)
 
     if (!response.ok) {
       throw error(response.status, 'Failed to fetch image');
