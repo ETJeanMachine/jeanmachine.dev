@@ -1,8 +1,8 @@
 <script lang="ts">
   let { children } = $props();
-  import "../styles/index.css";
-  import colors from "$lib/colors.json";
-  import { onMount } from "svelte";
+  import '../styles/index.css';
+  import colors from '$lib/colors.json';
+  import { onMount } from 'svelte';
 
   onMount(() => {
     Object.entries(colors).forEach(([key, value]) => {
@@ -34,7 +34,7 @@
     min-width: 100vh;
     display: flex;
     padding: 20px;
-    font-family: "CaskaydiaCove Nerd Font", sans-serif;
+    font-family: 'CaskaydiaCove Nerd Font', sans-serif;
     flex-direction: row;
     align-content: center;
   }
@@ -57,6 +57,6 @@
 
   .global_nav a:hover {
     background-color: var(--bg_dark1);
-    color: var(--green);
+    color: var(--magenta2);
   }
 </style>
