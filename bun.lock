@@ -6,11 +6,11 @@
       "dependencies": {
         "@sveltejs/adapter-cloudflare": "^7.2.4",
         "vite-plugin-devtools-json": "^0.2.1",
-        "wrangler": "^4.20.5",
+        "wrangler": "^4.42.0",
       },
       "devDependencies": {
         "@sveltejs/adapter-auto": "^6.1.1",
-        "@sveltejs/kit": "^2.43.7",
+        "@sveltejs/kit": "^2.43.8",
         "@sveltejs/vite-plugin-svelte": "^5.1.1",
         "prettier": "^3.6.2",
         "svelte": "^5.39.8",
