@@ -2,7 +2,13 @@
   import { onMount } from 'svelte';
   import { USER_DID, PDS_URL, PERSONAL, SOCIAL_LINKS } from '$lib/constants';
 
-  import { Linkedin, Github, MessageCircleDashed, Send } from '@lucide/svelte';
+  import {
+    Linkedin,
+    Github,
+    MessageCircleDashed,
+    Send,
+    Pin,
+  } from '@lucide/svelte';
   import Butterfly from '$lib/components/icons/Butterfly.svelte';
 
   const socialIcons = [
@@ -51,7 +57,7 @@
             {#each socialIcons as item}
               {@const SocialIcon = item.icon}
               <a href={item.href}>
-                <SocialIcon />
+                <SocialIcon strokeWidth={2.5} />
               </a>
             {/each}
           </div>
@@ -59,7 +65,14 @@
       </div>
     </div>
     <div class="card">
-      <div class="card-content"><h2>&#xf435; Pinned Post</h2></div>
+      <div class="card-content">
+        <h2 style="display: flex; flex-direction: row; gap: 10px;">
+          <Pin size={18} strokeWidth={2.5} /> Pinned Post
+        </h2>
+        {#if rkey}
+          <Post {rkey}></Post>
+        {/if}
+      </div>
     </div>
   </div>
   <div class="card">

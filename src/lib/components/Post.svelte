@@ -2,7 +2,6 @@
   import { onMount } from 'svelte';
 
   const { rkey } = $props();
-  console.log(rkey);
   let post_data: any;
 
   onMount(async () => {
@@ -14,6 +13,5 @@
       headers: { 'Content-Type': 'application/json' },
     });
     post_data = await response.json();
-    console.log(post_data);
   });
 </script>

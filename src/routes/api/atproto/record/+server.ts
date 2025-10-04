@@ -24,7 +24,6 @@ export const GET: RequestHandler = async ({ url }) => {
   }
 
   const data = await response.json();
-  console.log(data);
 
   return json(data, {
     headers: {
