@@ -1,23 +1,26 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { USER_DID } from '$lib/constants';
 import { selectApiEndpoint } from '$lib';
+import { USER_DID } from '$lib/constants';
 
 export const GET: RequestHandler = async ({ url }) => {
-  let api_url = await selectApiEndpoint();
+  const api_url = await selectApiEndpoint();
+  const collection = url.searchParams.get('collection');
+  const rkey = url.searchParams.get('rkey');
 
-  const collection = 'app.bsky.actor.profile';
-  const request_url = `${api_url}/xrpc/com.atproto.repo.getRecord?repo=${USER_DID}&collection=${collection}&rkey=self`;
+  const request_url = `${api_url}/xrpc/com.atproto.repo.getRecord?repo=${encodeURIComponent(USER_DID)}&collection=${collection}&rkey=${rkey}`;
+  console.log(request_url);
   const response = await fetch(request_url, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
 
   if (!response.ok) {
-    throw error(response.status, 'Failed to fetch profile');
+    throw error(response.status, 'Failed to fetch record');
   }
 
   const data = await response.json();
+  console.log(data);
 
   return json(data, {
     headers: {

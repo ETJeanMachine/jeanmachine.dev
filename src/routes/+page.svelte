@@ -15,7 +15,10 @@
   let profile_data: any;
 
   onMount(async () => {
-    const response = await fetch(`/api/bsky/profile`, {
+    const params = new URLSearchParams();
+    params.append('collection', 'app.bsky.actor.profile');
+    params.append('rkey', 'self');
+    const response = await fetch(`/api/atproto/record?${params}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
@@ -25,7 +28,7 @@
 </script>
 
 <div class="container">
-  <div style="display: flex; flex-direction: column; gap: 15px">
+  <div style="display: flex; flex-direction: column; gap: 5px;">
     <div class="card">
       <div class="card-content profile">
         <div class="avatar-container" class:loaded={avatar_src}>
@@ -85,7 +88,7 @@
   .container {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
   }
 
   @media (min-width: 1028px) {
@@ -130,7 +133,6 @@
     display: flex;
     flex-direction: column;
     align-content: flex-start;
-    gap: 0;
   }
 
   .social-icons {
