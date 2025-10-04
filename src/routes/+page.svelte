@@ -11,7 +11,7 @@
   import email_logo from '$lib/icons/email.svg';
   import signal_logo from '$lib/icons/signal.svg';
 
-  let avatar_src = '';
+  let avatar_src = $state('');
   let profile_data: any;
 
   onMount(async () => {
@@ -84,9 +84,17 @@
   /* Ensure all cards don't overflow */
   .container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     gap: 15px;
-    align-items: flex-start;
+  }
+
+  @media (min-width: 1028px) {
+    .container {
+      display: flex;
+      flex-direction: row;
+      gap: 15px;
+      align-items: flex-start;
+    }
   }
 
   .profile {
