@@ -53,6 +53,7 @@
     border: 2px solid var(--bg_highlight);
     padding: 2px;
     border-radius: 5px;
+    transition: color 0.2s ease;
   }
 
   .global_nav a:hover {

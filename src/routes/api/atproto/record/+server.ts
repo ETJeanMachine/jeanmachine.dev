@@ -8,6 +8,10 @@ export const GET: RequestHandler = async ({ url }) => {
   const collection = url.searchParams.get('collection');
   const rkey = url.searchParams.get('rkey');
 
+  if (!collection) {
+    throw error(400, 'Missing collection or rkey');
+  }
+
   const request_url = `${api_url}/xrpc/com.atproto.repo.getRecord?repo=${encodeURIComponent(USER_DID)}&collection=${collection}&rkey=${rkey}`;
   console.log(request_url);
   const response = await fetch(request_url, {

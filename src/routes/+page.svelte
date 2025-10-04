@@ -1,31 +1,39 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-
-  import { fetchRecentCommits } from '$lib/utils/github';
   import { USER_DID, PDS_URL, PERSONAL, SOCIAL_LINKS } from '$lib/constants';
 
-  // svg logos
-  import github_logo from '$lib/icons/github.svg';
-  import linkedin_logo from '$lib/icons/linkedin.svg';
-  import bsky_logo from '$lib/icons/bsky.svg';
-  import email_logo from '$lib/icons/email.svg';
-  import signal_logo from '$lib/icons/signal.svg';
+  import { Linkedin, Github, MessageCircleDashed, Send } from '@lucide/svelte';
+  import Butterfly from '$lib/components/icons/Butterfly.svelte';
+
+  const socialIcons = [
+    { name: 'LinkedIn', href: SOCIAL_LINKS.LINKEDIN, icon: Linkedin },
+    { name: 'GitHub', href: SOCIAL_LINKS.GITHUB, icon: Github },
+    { name: 'Signal', href: SOCIAL_LINKS.SIGNAL, icon: MessageCircleDashed },
+    { name: 'Bluesky', href: SOCIAL_LINKS.BLUESKY, icon: Butterfly },
+    { name: 'Email', href: SOCIAL_LINKS.EMAIL, icon: Send },
+  ];
+
+  import Post from '$lib/components/Post.svelte';
 
   let avatar_src = $state('');
   let profile_data: any;
+  let rkey = $state('');
 
   onMount(async () => {
     const params = new URLSearchParams();
     params.append('collection', 'app.bsky.actor.profile');
     params.append('rkey', 'self');
-    const response = await fetch(`/api/atproto/record?${params}`, {
+    const profile_response = await fetch(`/api/atproto/record?${params}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
-    profile_data = await response.json();
+    profile_data = await profile_response.json();
     avatar_src = `/api/atproto/blob?&cid=${profile_data.value.avatar.ref.$link}`;
+    rkey = profile_data.value.pinnedPost.uri.split('/').pop();
   });
 </script>
+
+<!-- <Post {rkey}></Post> -->
 
 <div class="container">
   <div style="display: flex; flex-direction: column; gap: 5px;">
@@ -40,21 +48,12 @@
           <h1>{PERSONAL.NAME}</h1>
           <h3>{PERSONAL.TITLE}</h3>
           <div class="social-icons">
-            <a href={SOCIAL_LINKS.GITHUB}
-              ><img alt="Github Logo" src={github_logo} /></a
-            >
-            <a href={SOCIAL_LINKS.BLUESKY}
-              ><img alt="Bluesky Logo" src={bsky_logo} /></a
-            >
-            <a href={SOCIAL_LINKS.LINKEDIN}
-              ><img alt="LinkedIn Logo" src={linkedin_logo} /></a
-            >
-            <a href={SOCIAL_LINKS.EMAIL}
-              ><img alt="Email Logo" src={email_logo} /></a
-            >
-            <a href={SOCIAL_LINKS.SIGNAL}
-              ><img alt="Signal Logo" src={signal_logo} /></a
-            >
+            {#each socialIcons as item}
+              {@const SocialIcon = item.icon}
+              <a href={item.href}>
+                <SocialIcon />
+              </a>
+            {/each}
           </div>
         </div>
       </div>
@@ -139,18 +138,19 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-items: center;
     gap: 1rem;
   }
 
-  .social-icons img {
-    width: 24px;
-    height: 24px;
-    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7482%)
-      hue-rotate(199deg) brightness(108%) contrast(107%);
+  .social-icons > a {
+    display: flex;
+    flex-direction: column;
+    font-size: 10px;
+    color: currentColor;
+    transition: color 0.2s ease;
   }
 
-  .social-icons img:hover {
-    filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7482%)
-      hue-rotate(199deg) brightness(108%) contrast(107%) invert(10%);
+  .social-icons > a:hover {
+    color: var(--blue0);
   }
 </style>
