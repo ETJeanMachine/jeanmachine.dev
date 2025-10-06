@@ -24,6 +24,7 @@
     font-size: 24px;
     font-weight: bolder;
     font-style: italic;
+    color: var(--accent-background);
   }
   h2 {
     font-size: 18px;

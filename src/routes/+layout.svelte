@@ -26,6 +26,12 @@
   });
 </script>
 
+<svelte:head>
+  {#if publication}
+    <link rel="icon" href={publication.icon} />
+  {/if}
+</svelte:head>
+
 {#if publication}
   <main>
     <div>

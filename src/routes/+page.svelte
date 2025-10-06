@@ -10,6 +10,7 @@
     MessageCircleDashed,
     Send,
     Pin,
+    MapPin,
   } from '@lucide/svelte';
   import { Butterfly } from '$lib/icons';
 
@@ -42,6 +43,7 @@
         {/if}
         <div class="info">
           <h1>{PERSONAL.NAME}</h1>
+          <h3 class="location"><MapPin size={16} /> {PERSONAL.LOCATION}</h3>
           <h3>{PERSONAL.TITLE}</h3>
           <div class="social-icons">
             {#each socialIcons as item}
@@ -110,14 +112,25 @@
     border-radius: 8px;
     object-fit: cover;
     border: 1px solid #000;
-    max-height: 175px;
+    max-height: 150px;
     aspect-ratio: 1 / 1;
   }
 
   .info {
     display: flex;
     flex-direction: column;
-    align-content: flex-start;
+    justify-content: space-evenly;
+    flex: 1;
+  }
+
+  .location {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .info > * {
+    margin: 0px;
   }
 
   .social-icons {
@@ -129,7 +142,7 @@
   }
 
   .social-icons > a {
-    color: currentColor;
+    color: #c2c2c2;
     transition: color 0.2s ease;
   }
 

@@ -15,6 +15,7 @@ export const COLLECTIONS = {
 export const PERSONAL = {
   NAME: 'Eric Hamilton',
   TITLE: 'Software Engineer, Caffeine Addict, Transit Enthusiast.',
+  LOCATION: 'Seattle, WA',
   EMAIL: 'mailto:etj2206@rit.edu',
   GITHUB_USERNAME: 'ETJeanMachine',
 } as const;
