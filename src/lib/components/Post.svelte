@@ -29,7 +29,6 @@
 </script>
 
 <div class="post-container">
-  {$inspect(post_data)}
   {#if post_data}
     <p>{post_data.value.text}</p>
   {/if}
