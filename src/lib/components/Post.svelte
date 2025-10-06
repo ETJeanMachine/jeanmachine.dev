@@ -5,7 +5,7 @@
   let { rkey = 'self', pinned = false } = $props();
   const params = new URLSearchParams();
   params.append('rkey', rkey);
-  let post_data: any = $state();
+  let post_data: any = $state(null);
 
   onMount(async () => {
     // fetching the pinned post if that's what we're looking for.
