@@ -120,29 +120,6 @@
     gap: 10px;
   }
 
-  .avatar-container {
-    background-color: var(--fg);
-    display: flex;
-    padding: 4px;
-    border-radius: 8px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    aspect-ratio: 1 / 1;
-    flex-shrink: 0;
-    max-height: 175px;
-  }
-
-  .avatar-container.loaded {
-    opacity: 1;
-  }
-
-  .avatar-container > img {
-    height: 100%;
-    width: 100%;
-    border-radius: 4px;
-    object-fit: cover;
-  }
-
   .info {
     display: flex;
     flex-direction: column;
