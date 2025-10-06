@@ -26,6 +26,11 @@
   p > a:hover {
     color: var(--accent-background);
   }
+  hr {
+    height: 1px;
+    background-color: #c2c2c2;
+    border: none;
+  }
   width: 100%;
   background-color: var(--page-background);
   /*backdrop-filter: blur(10px) saturate(180%);*/

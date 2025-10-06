@@ -75,7 +75,7 @@
           </a>
         {/each}
       </nav>
-
+      <br />
       <div>
         {@render children()}
       </div>

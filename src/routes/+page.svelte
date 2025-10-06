@@ -32,7 +32,8 @@
 
 <!-- <Post {rkey}></Post> -->
 
-<div class="container">
+<!-- Desktop Layout -->
+<div class="desktop-layout">
   <div
     style="display: flex; flex-direction: column; gap: 5px; min-width: 36vw;"
   >
@@ -47,18 +48,12 @@
         {/if}
         <div class="info">
           <div class="name-header">
-            {#if publication}
-              <img
-                src={publication.icon}
-                alt={'Leaflet Icon'}
-                class="mobile-icon"
-              />
-            {/if}
             <div class="name">
               <h1>{PERSONAL.NAME}</h1>
               <h3 class="location"><MapPin size={16} /> {PERSONAL.LOCATION}</h3>
             </div>
           </div>
+          <hr />
           <h3>{PERSONAL.TITLE}</h3>
           <div class="social-icons">
             {#each socialIcons as item}
@@ -100,20 +95,90 @@
   </div>
 </div>
 
+<!-- Mobile Layout -->
+<div class="mobile-layout card">
+  <div class="card-content">
+    <div class="profile">
+      <div class="info">
+        <div class="name-header">
+          {#if publication}
+            <img
+              src={publication.icon}
+              alt={'Leaflet Icon'}
+              class="mobile-icon"
+            />
+          {/if}
+          <div class="name">
+            <h1>{PERSONAL.NAME}</h1>
+            <h3 class="location"><MapPin size={16} /> {PERSONAL.LOCATION}</h3>
+          </div>
+        </div>
+        <hr />
+        <h3>{PERSONAL.TITLE}</h3>
+        <div class="social-icons">
+          {#each socialIcons as item}
+            {@const SocialIcon = item.icon}
+            <a href={item.href} target="_blank" rel="noopener noreferrer">
+              <SocialIcon strokeWidth={2.5} />
+            </a>
+          {/each}
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+    <div>
+      <h2 style="display: flex; flex-direction: row; gap: 10px;">
+        <Pin size={18} strokeWidth={2.5} /> Pinned Post
+      </h2>
+      <Post />
+    </div>
+
+    <hr />
+
+    <div>
+      <h2>About Me</h2>
+      <p>
+        My name's Eric, but I also go by Jean! I'm a software engineer from the
+        Pacific Northwest with a degree in Computer Science. I love building all
+        sorts of things, but in particular, the kinds of projects that get me
+        going are the things that I know will positively impact people's lives.
+      </p>
+      <p>
+        When I'm not coding, I enjoy biking, hiking, and attending city hall
+        meetings, reading municipal planning documents too. I keep informed on
+        what's going on in my community at all times - because I believe that
+        staying involved is what enables me to make a better impact on the
+        world.
+      </p>
+    </div>
+  </div>
+</div>
+
 <style>
-  /* Ensure all cards don't overflow */
-  .container {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  .desktop-layout {
+    display: none;
   }
 
-  @media (min-width: 1028px) {
-    .container {
+  .mobile-layout {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+  }
+
+  @media (min-width: 769px) {
+    .desktop-layout {
       display: flex;
       flex-direction: row;
       gap: 15px;
       align-items: flex-start;
+    }
+
+    .mobile-layout {
+      display: none;
     }
   }
 
