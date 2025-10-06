@@ -23,7 +23,7 @@
 </div>
 
 <!-- Mobile Layout -->
-<div class="mobile-layout card">
+<div class="mobile-layout">
   <div class="card-content">
     <Profile mobile={true} />
     <hr />
@@ -40,14 +40,6 @@
 <style>
   .desktop-layout {
     display: none;
-  }
-
-  .mobile-layout {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100vh;
-    overflow-y: auto;
   }
 
   @media (min-width: 769px) {

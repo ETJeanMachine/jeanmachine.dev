@@ -165,10 +165,28 @@
       display: block;
     }
 
+    main {
+      overflow: hidden;
+    }
+
     main > div {
       width: 90vw;
-      display: block;
-      padding-bottom: 20px;
+      height: 90vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    main > div > div:last-child {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      background-color: var(--page-background);
+      border: 1px solid #000;
+      border-radius: 10px;
+      padding: 1rem;
+      margin-top: 0.5rem;
+      position: relative;
     }
 
     nav {
