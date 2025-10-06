@@ -39,11 +39,26 @@
     <div class="card">
       <div class="card-content profile">
         {#if publication}
-          <img src={publication.icon} alt={'Leaflet Icon'} class="avatar" />
+          <img
+            src={publication.icon}
+            alt={'Leaflet Icon'}
+            class="avatar desktop-avatar"
+          />
         {/if}
         <div class="info">
-          <h1>{PERSONAL.NAME}</h1>
-          <h3 class="location"><MapPin size={16} /> {PERSONAL.LOCATION}</h3>
+          <div class="name-header">
+            {#if publication}
+              <img
+                src={publication.icon}
+                alt={'Leaflet Icon'}
+                class="mobile-icon"
+              />
+            {/if}
+            <div class="name">
+              <h1>{PERSONAL.NAME}</h1>
+              <h3 class="location"><MapPin size={16} /> {PERSONAL.LOCATION}</h3>
+            </div>
+          </div>
           <h3>{PERSONAL.TITLE}</h3>
           <div class="social-icons">
             {#each socialIcons as item}
@@ -116,11 +131,52 @@
     aspect-ratio: 1 / 1;
   }
 
+  .desktop-avatar {
+    display: block;
+  }
+
+  .mobile-icon {
+    display: none;
+    width: 64px;
+    height: 64px;
+    border-radius: 4px;
+    object-fit: cover;
+    border: 1px solid #000;
+  }
+
+  .name-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .name {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .name > * {
+    margin: 0px;
+  }
+
   .info {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    gap: 0.75rem;
     flex: 1;
+  }
+
+  @media (max-width: 768px) {
+    .desktop-avatar {
+      display: none;
+    }
+
+    .mobile-icon {
+      display: block;
+    }
   }
 
   .location {
