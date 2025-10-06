@@ -63,10 +63,17 @@
   .post {
     width: 100%;
     max-width: 100%;
+    overflow: hidden;
   }
 
   .post :global(blockquote.bluesky-embed) {
     max-width: 100% !important;
     width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .post :global(blockquote.bluesky-embed *) {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 </style>
