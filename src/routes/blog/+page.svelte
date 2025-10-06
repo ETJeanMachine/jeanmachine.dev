@@ -29,7 +29,7 @@
 
 <div class="blog-container">
   {#each blogs as blog}
-    <article class="blog-card">
+    <article class="card blog">
       <a href="/blog/{blog.rkey}" class="blog-card-link">
         <div class="blog-card-content">
           <header class="blog-card-header">
@@ -38,7 +38,7 @@
               >{blog.publishedAt}</time
             >
           </header>
-          <p class="blog-card-description">{blog.description}</p>
+          <p>{blog.description}</p>
         </div>
       </a>
     </article>
@@ -50,30 +50,8 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1.5rem;
-    padding: 2rem;
     max-width: 1200px;
     margin: 0 auto;
-  }
-
-  .blog-card {
-    position: relative;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 1rem;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    box-shadow:
-      0 4px 20px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
-  }
-
-  .blog-card:hover {
-    transform: translateY(-4px);
-    box-shadow:
-      0 8px 30px rgba(0, 0, 0, 0.4),
-      inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    border-color: rgba(255, 255, 255, 0.2);
   }
 
   .blog-card-link {
@@ -107,7 +85,7 @@
 
   .blog-card-date {
     font-size: 0.875rem;
-    color: rgba(255, 255, 255, 0.7);
+    color: #c2c2c2;
     font-weight: 400;
   }
 
