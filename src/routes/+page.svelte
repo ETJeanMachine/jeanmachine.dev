@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { getContext } from 'svelte';
+  import { Home } from '$lib/components';
   import { USER_DID, PDS_URL, PERSONAL, SOCIAL_LINKS } from '$lib/constants';
   import type { Publication } from '$lib/types/publication';
 
@@ -13,6 +14,7 @@
     MapPin,
   } from '@lucide/svelte';
   import { Butterfly } from '$lib/icons';
+  import { Post } from '$lib/components';
 
   const publicationContext = getContext<{ value: Publication | null }>(
     'publication',
@@ -26,8 +28,6 @@
     { name: 'Bluesky', href: SOCIAL_LINKS.BLUESKY, icon: Butterfly },
     { name: 'Email', href: SOCIAL_LINKS.EMAIL, icon: Send },
   ];
-
-  import { Post } from '$lib/components';
 </script>
 
 <!-- <Post {rkey}></Post> -->
@@ -39,31 +39,7 @@
   >
     <div class="card">
       <div class="card-content profile">
-        {#if publication}
-          <img
-            src={publication.icon}
-            alt={'Leaflet Icon'}
-            class="avatar desktop-avatar"
-          />
-        {/if}
-        <div class="info">
-          <div class="name-header">
-            <div class="name">
-              <h1>{PERSONAL.NAME}</h1>
-              <h3 class="location"><MapPin size={16} /> {PERSONAL.LOCATION}</h3>
-            </div>
-          </div>
-          <hr />
-          <h3>{PERSONAL.TITLE}</h3>
-          <div class="social-icons">
-            {#each socialIcons as item}
-              {@const SocialIcon = item.icon}
-              <a href={item.href} target="_blank" rel="noopener noreferrer">
-                <SocialIcon strokeWidth={2.5} />
-              </a>
-            {/each}
-          </div>
-        </div>
+        <Home.Profile iconSize={150} />
       </div>
     </div>
     <div class="card">
@@ -98,33 +74,7 @@
 <!-- Mobile Layout -->
 <div class="mobile-layout card">
   <div class="card-content">
-    <div class="profile">
-      <div class="info">
-        <div class="name-header">
-          {#if publication}
-            <img
-              src={publication.icon}
-              alt={'Leaflet Icon'}
-              class="mobile-icon"
-            />
-          {/if}
-          <div class="name">
-            <h1>{PERSONAL.NAME}</h1>
-            <h3 class="location"><MapPin size={16} /> {PERSONAL.LOCATION}</h3>
-          </div>
-        </div>
-        <hr />
-        <h3>{PERSONAL.TITLE}</h3>
-        <div class="social-icons">
-          {#each socialIcons as item}
-            {@const SocialIcon = item.icon}
-            <a href={item.href} target="_blank" rel="noopener noreferrer">
-              <SocialIcon strokeWidth={2.5} />
-            </a>
-          {/each}
-        </div>
-      </div>
-    </div>
+    <Home.Profile iconSize={64} />
 
     <hr />
 
@@ -180,24 +130,6 @@
     .mobile-layout {
       display: none;
     }
-  }
-
-  .profile {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-  }
-
-  .avatar {
-    border-radius: 8px;
-    object-fit: cover;
-    border: 1px solid #000;
-    max-height: 150px;
-    aspect-ratio: 1 / 1;
-  }
-
-  .desktop-avatar {
-    display: block;
   }
 
   .mobile-icon {
