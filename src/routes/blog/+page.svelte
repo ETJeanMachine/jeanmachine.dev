@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { get } from "svelte/store";
-  import { onMount } from "svelte";
-  import { PDS_URL, HANDLE, COLLECTIONS, API_ENDPOINTS } from "$lib/constants";
+  import { get } from 'svelte/store';
+  import { onMount } from 'svelte';
+  import { PDS_URL, HANDLE, COLLECTIONS, API_ENDPOINTS } from '$lib/constants';
 
   let blogs: any[];
 
@@ -12,7 +12,7 @@
     let blogs = await response.json();
     // reconstructing the array to have only public blog posts.
     let blog_entries = blogs.records.map((blog: any) => ({
-      rkey: blog.uri.split("/").pop(),
+      rkey: blog.uri.split('/').pop(),
       title: blog.value.title,
       description: blog.value.description,
       publishedAt: new Date(blog.value.publishedAt).toLocaleDateString(),
