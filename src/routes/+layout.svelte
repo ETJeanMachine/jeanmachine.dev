@@ -1,9 +1,8 @@
 <script lang="ts">
   let { children } = $props();
   import '../styles/index.css';
-  import colors from '$lib/colors.json';
   import { loadPublication } from '$lib';
-  import { onMount } from 'svelte';
+  import { onMount, setContext } from 'svelte';
   import { page } from '$app/state';
 
   import { HouseIcon, BriefcaseBusiness, NotebookPen } from '@lucide/svelte';
@@ -11,16 +10,18 @@
   let publication: any = $state(null);
   let currentPath = $state('');
 
+  setContext('publication', {
+    get value() {
+      return publication;
+    },
+  });
+
   $effect(() => {
     currentPath = page.url.pathname;
   });
 
   onMount(async () => {
     publication = await loadPublication();
-    // Keep existing color scheme
-    Object.entries(colors).forEach(([key, value]) => {
-      document.documentElement.style.setProperty(`--${key}`, value);
-    });
   });
 </script>
 
