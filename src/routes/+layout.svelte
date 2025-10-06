@@ -11,16 +11,19 @@
   });
 </script>
 
-<div class="global_wrapper">
-  <nav class="global_nav">
-    <a href="/">~</a>
-    <a href="/blog">~/blog</a>
-    <a href="/projects">~/projects</a>
-  </nav>
+<main>
   <div>
-    {@render children()}
+    <nav>
+      <a href="/">~</a>
+      <a href="/blog">~/blog</a>
+      <a href="/work">~/work</a>
+      <!-- <a href="/projects">~/projects</a> -->
+    </nav>
+    <div>
+      {@render children()}
+    </div>
   </div>
-</div>
+</main>
 
 <style>
   :global(html, body) {
@@ -29,24 +32,32 @@
     background-color: var(--bg);
   }
 
-  .global_wrapper {
-    min-height: 100vh;
-    min-width: 100vh;
-    display: flex;
-    padding: 20px;
-    font-family: 'CaskaydiaCove Nerd Font', sans-serif;
-    flex-direction: row;
-    align-content: center;
-  }
-
-  .global_nav {
+  main {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    min-width: 100vw;
+    padding: 20px;
+    font-family: 'CaskaydiaCove Nerd Font', sans-serif;
+  }
+
+  main > div {
+    width: 75vw;
+    flex-direction: column;
+    align-content: center;
+    display: flex;
+    gap: 5px;
+  }
+
+  nav {
+    display: flex;
+    flex-direction: row;
     margin-right: 10px;
     gap: 5px;
   }
 
-  .global_nav a {
+  nav > a {
     color: var(--magenta);
     text-decoration: none;
     background-color: var(--bg_dark);
@@ -54,9 +65,10 @@
     padding: 2px;
     border-radius: 5px;
     transition: color 0.2s ease;
+    font-size: 16px;
   }
 
-  .global_nav a:hover {
+  nav > a:hover {
     background-color: var(--bg_dark1);
     color: var(--magenta2);
   }
