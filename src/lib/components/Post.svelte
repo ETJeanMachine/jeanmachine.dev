@@ -30,7 +30,9 @@
 
 <div class="post-container">
   {$inspect(post_data)}
-  <p>{post_data?.value?.text}</p>
+  {#if post_data}
+    <p>{post_data.value.text}</p>
+  {/if}
 </div>
 
 <style>
