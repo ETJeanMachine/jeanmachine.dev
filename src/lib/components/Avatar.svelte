@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
 
   import { LoaderCircle } from '@lucide/svelte';
-  const { size } = $props();
+  const { circle = false } = $props();
 
   let avatar_src = $state('');
 
@@ -19,30 +19,27 @@
   });
 </script>
 
-<div class="avatar-container" style="height: {size}px; width: {size}px;">
-  {#if avatar_src}
-    <img src={avatar_src} alt="Bluesky Avatar" />
+{#if avatar_src}
+  {#if circle}
+    <img
+      src={avatar_src}
+      alt="Bluesky Avatar"
+      class="avatar"
+      style="border-radius: 50%;"
+    />
   {:else}
-    <div class="avatar-placeholder">
-      <div>
-        <LoaderCircle size={48} />
-      </div>
-    </div>
+    <img src={avatar_src} alt="Bluesky Avatar" class="avatar" />
   {/if}
-</div>
+{:else}
+  <div class="avatar-placeholder">
+    <div>
+      <LoaderCircle size={24} />
+    </div>
+  </div>
+{/if}
 
 <style>
-  .avatar-container {
-    background-color: var(--fg);
-    display: flex;
-    padding: 4px;
-    border-radius: 8px;
-    transition: opacity 0.3s ease;
-    aspect-ratio: 1 / 1;
-    flex-shrink: 0;
-  }
-
-  .avatar-container > img {
+  .avatar {
     height: 100%;
     width: 100%;
     border-radius: 4px;
@@ -55,6 +52,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    object-fit: contain;
   }
 
   .avatar-placeholder > div {
