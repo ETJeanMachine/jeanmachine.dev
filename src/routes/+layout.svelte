@@ -167,6 +167,8 @@
 
     main > div {
       width: 90vw;
+      display: block;
+      padding-bottom: 20px;
     }
 
     nav {
