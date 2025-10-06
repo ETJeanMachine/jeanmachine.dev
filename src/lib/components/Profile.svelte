@@ -53,7 +53,7 @@
       {/if}
       <div class="name">
         <h1>{PERSONAL.NAME}</h1>
-        <h3 class="location"><MapPin size={16} /> {PERSONAL.LOCATION}</h3>
+        <h3 class="location"><MapPin size={'1rem'} /> {PERSONAL.LOCATION}</h3>
       </div>
     </div>
     {#if iconSize > 100}
@@ -64,7 +64,7 @@
       {#each socialIcons as item}
         {@const SocialIcon = item.icon}
         <a href={item.href} target="_blank" rel="noopener noreferrer">
-          <SocialIcon size={24} strokeWidth={2.5} />
+          <SocialIcon size={'1.5rem'} strokeWidth={2.5} />
         </a>
       {/each}
     </div>
@@ -112,6 +112,7 @@
   .location {
     display: flex;
     align-items: center;
+    margin: 0px;
     gap: 0.5rem;
   }
 

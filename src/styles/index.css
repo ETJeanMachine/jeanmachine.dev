@@ -7,17 +7,20 @@
 
 .card {
   h1 {
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: bolder;
     font-style: italic;
     color: var(--accent-background);
   }
   h2 {
-    font-size: 18px;
+    font-size: 1.25rem;
     font-weight: bold;
   }
   h3 {
-    font-size: 16px;
+    font-size: 1rem;
+  }
+  p {
+    font-size: 0.9rem;
   }
   p > a {
     color: #c2c2c2;
