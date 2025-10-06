@@ -115,7 +115,7 @@
     position: fixed;
     top: 1rem;
     right: 1rem;
-    z-index: 1;
+    z-index: 101;
     background-color: var(--page-background);
     border: 1px solid #000;
     border-radius: 5px;
@@ -201,6 +201,7 @@
       padding: 5rem 1rem 1rem;
       transform: translateX(100%);
       box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+      z-index: 100;
     }
 
     nav.open {
