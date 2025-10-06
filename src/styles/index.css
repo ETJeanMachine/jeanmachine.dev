@@ -34,6 +34,7 @@
   }
   width: 100%;
   background-color: var(--page-background);
+  /*backdrop-filter: blur(10px) saturate(180%);*/
   color: var(--primary);
   border: 1px solid #000;
   border-radius: 20px;

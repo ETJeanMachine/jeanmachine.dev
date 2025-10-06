@@ -25,8 +25,6 @@ export const GET: RequestHandler = async ({ url }) => {
 
   let data = await response.json();
 
-  console.log('Original data:', JSON.stringify(data, null, 2));
-
   // Recursively replace blob objects with API references
   function replaceBlobsWithReferences(obj: any): any {
     if (obj === null || typeof obj !== 'object') {
@@ -51,8 +49,6 @@ export const GET: RequestHandler = async ({ url }) => {
   }
 
   data = replaceBlobsWithReferences(data);
-
-  console.log('Transformed data:', JSON.stringify(data, null, 2));
 
   return json(data, {
     headers: {

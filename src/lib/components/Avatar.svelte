@@ -15,7 +15,7 @@
       headers: { 'Content-Type': 'application/json' },
     });
     const profile_data = await profile_response.json();
-    avatar_src = `/api/atproto/blob?&cid=${profile_data.value.avatar.ref.$link}`;
+    avatar_src = profile_data.value.avatar;
   });
 </script>
 
@@ -42,8 +42,9 @@
   .avatar {
     height: 100%;
     width: 100%;
-    border-radius: 4px;
+    border-radius: 8px;
     object-fit: cover;
+    border: 1px solid #000;
   }
 
   .avatar-placeholder {

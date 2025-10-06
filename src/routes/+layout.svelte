@@ -2,72 +2,21 @@
   let { children } = $props();
   import '../styles/index.css';
   import colors from '$lib/colors.json';
+  import { loadPublication } from '$lib';
   import { onMount } from 'svelte';
-  import { PUBLICATION } from '$lib/constants';
+  import { page } from '$app/state';
+
+  import { HouseIcon, BriefcaseBusiness, NotebookPen } from '@lucide/svelte';
 
   let publication: any = $state(null);
-  let background_image = $state('');
-  let background_color = $state('');
+  let currentPath = $state('');
 
-  function colorToCSS(color: any): string {
-    if (!color) return '';
-    if (color.a !== undefined) {
-      return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a / 100})`;
-    }
-    return `rgb(${color.r}, ${color.g}, ${color.b})`;
-  }
+  $effect(() => {
+    currentPath = page.url.pathname;
+  });
 
   onMount(async () => {
-    const params = new URLSearchParams('');
-    params.append('collection', 'pub.leaflet.publication');
-    params.append('rkey', PUBLICATION);
-    const response = await fetch(`/api/atproto/record?${params.toString()}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    });
-    publication = (await response.json()).value;
-    const theme = publication.theme;
-
-    // Set background color
-    if (theme.backgroundColor) {
-      background_color = colorToCSS(theme.backgroundColor);
-      document.documentElement.style.setProperty(
-        '--background-color',
-        background_color,
-      );
-    }
-
-    // Set background image
-    if (theme.backgroundImage?.image) {
-      background_image = theme.backgroundImage.image;
-    }
-
-    // Set CSS variables for theme colors
-    if (theme.primary) {
-      document.documentElement.style.setProperty(
-        '--primary',
-        colorToCSS(theme.primary),
-      );
-    }
-    if (theme.pageBackground) {
-      document.documentElement.style.setProperty(
-        '--page-background',
-        colorToCSS(theme.pageBackground),
-      );
-    }
-    if (theme.accentBackground) {
-      document.documentElement.style.setProperty(
-        '--accent-background',
-        colorToCSS(theme.accentBackground),
-      );
-    }
-    if (theme.accentText) {
-      document.documentElement.style.setProperty(
-        '--accent-text',
-        colorToCSS(theme.accentText),
-      );
-    }
-
+    publication = await loadPublication();
     // Keep existing color scheme
     Object.entries(colors).forEach(([key, value]) => {
       document.documentElement.style.setProperty(`--${key}`, value);
@@ -76,14 +25,16 @@
 </script>
 
 {#if publication}
-  <main
-    style="background-image: url({background_image}); background-size: cover; background-position: center;"
-  >
+  <main>
     <div>
       <nav>
-        <a href="/">~</a>
-        <a href="/blog">~/blog</a>
-        <a href="/work">~/work</a>
+        <a href="/" class:active={currentPath === '/'}><HouseIcon /> Home</a>
+        <a href="/blog" class:active={currentPath.startsWith('/blog')}
+          ><NotebookPen /> Blog</a
+        >
+        <a href="/work" class:active={currentPath.startsWith('/work')}
+          ><BriefcaseBusiness /> Work</a
+        >
         <!-- <a href="/projects">~/projects</a> -->
       </nav>
       <div>
@@ -107,6 +58,9 @@
     min-height: 100vh;
     min-width: 100vw;
     font-family: 'CaskaydiaCove Nerd Font', sans-serif;
+    background-image: var(--background-image);
+    background-size: cover;
+    background-position: center;
   }
 
   main > div {
@@ -126,16 +80,23 @@
 
   nav > a {
     color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 5px;
     text-decoration: none;
     background-color: var(--page-background);
     padding: 2px;
     border-radius: 5px;
+    border: 1px solid #000;
     transition: color 0.2s ease;
     font-size: 16px;
   }
 
   nav > a:hover {
-    background-color: var(--accent-background);
-    color: var(--accent-text);
+    border: 1px solid var(--accent-background);
+  }
+
+  nav > a.active {
+    border: 1px solid var(--accent-background);
   }
 </style>

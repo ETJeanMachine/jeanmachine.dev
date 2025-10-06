@@ -100,11 +100,6 @@
   }
 
   .avatar-container {
-    background-color: var(--fg);
-    display: flex;
-    padding: 4px;
-    border-radius: 8px;
-    transition: opacity 0.3s ease;
     aspect-ratio: 1 / 1;
     flex-shrink: 0;
     max-height: 175px;
@@ -130,6 +125,6 @@
   }
 
   .social-icons > a:hover {
-    color: var(--blue0);
+    color: var(--accent-background);
   }
 </style>
