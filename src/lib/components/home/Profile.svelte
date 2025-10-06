@@ -16,7 +16,6 @@
   );
   let publication = $derived(publicationContext.value);
   const { iconSize } = $props();
-  console.log(iconSize);
   let iconBorderRadius: number = $state(4);
   if (iconSize > 100) {
     iconBorderRadius = 8;

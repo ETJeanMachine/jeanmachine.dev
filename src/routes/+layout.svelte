@@ -104,7 +104,6 @@
 
   main > div {
     width: 75vw;
-
     flex-direction: column;
     align-content: center;
     display: flex;
