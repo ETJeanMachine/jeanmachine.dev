@@ -1,5 +1,6 @@
 // place files you want to import through the `$lib` alias in this folder.
 import { BSKY_API, PDS_URL, PUBLICATION } from '$lib/constants';
+import type { Publication } from './types/publication';
 
 // helper function for figuring out if the PDS set is actually available
 // or if it's firewalled (which mine often is :/)
@@ -16,15 +17,17 @@ export async function selectApiEndpoint() {
   }
 }
 
-function colorToCSS(color: any): string {
+import type { Colour } from './types/publication';
+
+function colorToCSS(color: Colour | undefined): string {
   if (!color) return '';
-  if (color.a !== undefined) {
+  if ('a' in color) {
     return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a / 100})`;
   }
   return `rgb(${color.r}, ${color.g}, ${color.b})`;
 }
 
-export async function loadPublication() {
+export async function loadPublication(): Promise<Publication> {
   const params = new URLSearchParams('');
   params.append('collection', 'pub.leaflet.publication');
   params.append('rkey', PUBLICATION);
@@ -32,8 +35,8 @@ export async function loadPublication() {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
-  const publication = (await response.json()).value;
-  const theme = publication.theme;
+  const publication: Publication = (await response.json()).value;
+  const theme = publication.theme ?? {};
 
   // Set background color
   if (theme.backgroundColor) {

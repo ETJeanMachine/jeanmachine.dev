@@ -1,6 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { getContext } from 'svelte';
   import { USER_DID, PDS_URL, PERSONAL, SOCIAL_LINKS } from '$lib/constants';
+  import type { Publication } from '$lib/types/publication';
 
   import {
     Linkedin,
@@ -11,6 +13,11 @@
   } from '@lucide/svelte';
   import { Butterfly } from '$lib/icons';
 
+  const publicationContext = getContext<{ value: Publication | null }>(
+    'publication',
+  );
+  let publication = $derived(publicationContext.value);
+
   const socialIcons = [
     { name: 'LinkedIn', href: SOCIAL_LINKS.LINKEDIN, icon: Linkedin },
     { name: 'GitHub', href: SOCIAL_LINKS.GITHUB, icon: Github },
@@ -19,7 +26,7 @@
     { name: 'Email', href: SOCIAL_LINKS.EMAIL, icon: Send },
   ];
 
-  import { Post, Avatar } from '$lib/components';
+  import { Post } from '$lib/components';
 </script>
 
 <!-- <Post {rkey}></Post> -->
@@ -30,9 +37,9 @@
   >
     <div class="card">
       <div class="card-content profile">
-        <div class="avatar-container">
-          <Avatar />
-        </div>
+        {#if publication}
+          <img src={publication.icon} alt={'Leaflet Icon'} class="avatar" />
+        {/if}
         <div class="info">
           <h1>{PERSONAL.NAME}</h1>
           <h3>{PERSONAL.TITLE}</h3>
@@ -99,10 +106,12 @@
     gap: 10px;
   }
 
-  .avatar-container {
-    aspect-ratio: 1 / 1;
-    flex-shrink: 0;
+  .avatar {
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #000;
     max-height: 175px;
+    aspect-ratio: 1 / 1;
   }
 
   .info {

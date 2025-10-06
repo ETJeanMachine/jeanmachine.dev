@@ -4,10 +4,11 @@
   import { loadPublication } from '$lib';
   import { onMount, setContext } from 'svelte';
   import { page } from '$app/state';
+  import type { Publication } from '$lib/types/publication';
 
   import { HouseIcon, BriefcaseBusiness, NotebookPen } from '@lucide/svelte';
 
-  let publication: any = $state(null);
+  let publication: Publication | null = $state(null);
   let currentPath = $state('');
 
   setContext('publication', {
