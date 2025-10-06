@@ -116,9 +116,9 @@
     position: fixed;
     top: 1rem;
     right: 1rem;
-    z-index: 1000;
+    z-index: 1;
     background-color: var(--page-background);
-    border: 1px solid var(--accent-background);
+    border: 1px solid #000;
     border-radius: 5px;
     padding: 0.5rem;
     color: var(--primary);
