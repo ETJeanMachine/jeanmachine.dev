@@ -30,28 +30,43 @@
   <Pin size={18} strokeWidth={2.5} /> Pinned Post
 </h2>
 {#if post_data}
-  <blockquote
-    class="bluesky-embed"
-    data-bluesky-uri={post_data.uri}
-    data-bluesky-cid={post_data.cid}
-    data-bluesky-embed-color-mode="system"
-  >
-    <p lang="en">
-      bridge.<br /><br /><a
-        href={`https://bsky.app/profile/${HANDLE}/post/${rkey}?ref_src=embed`}
-        >[image or embed]</a
-      >
-    </p>
-    &mdash; jean (<a href={`https://bsky.app/profile/${HANDLE}?ref_src=embed`}
-      >@jeanmachine.dev</a
-    >)
-    <a href={`https://bsky.app/profile/${USER_DID}/post/${rkey}?ref_src=embed`}
-      >August 24, 2025 at 6:28 PM</a
+  <div class="post">
+    <blockquote
+      class="bluesky-embed"
+      data-bluesky-uri={post_data.uri}
+      data-bluesky-cid={post_data.cid}
+      data-bluesky-embed-color-mode="system"
     >
-  </blockquote>
-  <script
-    async
-    src="https://embed.bsky.app/static/embed.js"
-    charset="utf-8"
-  ></script>
+      <p lang="en">
+        bridge.<br /><br /><a
+          href={`https://bsky.app/profile/${HANDLE}/post/${rkey}?ref_src=embed`}
+          >[image or embed]</a
+        >
+      </p>
+      &mdash; jean (<a href={`https://bsky.app/profile/${HANDLE}?ref_src=embed`}
+        >@jeanmachine.dev</a
+      >)
+      <a
+        href={`https://bsky.app/profile/${USER_DID}/post/${rkey}?ref_src=embed`}
+        >August 24, 2025 at 6:28 PM</a
+      >
+    </blockquote>
+    <script
+      async
+      src="https://embed.bsky.app/static/embed.js"
+      charset="utf-8"
+    ></script>
+  </div>
 {/if}
+
+<style>
+  .post {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .post :global(blockquote.bluesky-embed) {
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+</style>
