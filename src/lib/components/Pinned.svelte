@@ -66,14 +66,26 @@
     overflow: hidden;
   }
 
-  .post :global(blockquote.bluesky-embed) {
+  .post :global(.bluesky-embed),
+  .post :global([data-bluesky-uri]) {
     max-width: 100% !important;
-    width: 100% !important;
+    min-width: 0 !important;
     box-sizing: border-box !important;
   }
 
-  .post :global(blockquote.bluesky-embed *) {
+  .post :global(.bluesky-embed > div) {
     max-width: 100% !important;
-    box-sizing: border-box !important;
+    min-width: 0 !important;
+  }
+
+  .post :global(.bluesky-embed iframe) {
+    max-width: 100% !important;
+  }
+
+  @media (max-width: 768px) {
+    .post :global(.bluesky-embed),
+    .post :global([data-bluesky-uri]) {
+      max-width: calc(100vw - 4rem) !important;
+    }
   }
 </style>
