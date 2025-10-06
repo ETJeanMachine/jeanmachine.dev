@@ -165,11 +165,15 @@
       display: block;
     }
 
+    main > div {
+      width: 90vw;
+    }
+
     nav {
       position: fixed;
       top: 0;
       right: 0;
-      height: 100vh;
+      height: 100;
       width: 250px;
       flex-direction: column;
       background-color: var(--page-background);

@@ -71,7 +71,6 @@ export async function fetchRecentCommits(
 
     return commits;
   } catch (error) {
-    console.error("Failed to fetch commits:", error);
     throw error;
   }
 }

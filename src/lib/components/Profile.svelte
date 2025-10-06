@@ -16,11 +16,11 @@
   );
   let publication = $derived(publicationContext.value);
   const { mobile = false } = $props();
-  let iconSize = $state(150);
+  let iconSize = $state(175);
   let iconBorderRadius: number = $state(8);
   if (mobile) {
     iconBorderRadius = 4;
-    iconSize = 64;
+    iconSize = 4.5;
   }
 
   const socialIcons = [
@@ -48,7 +48,7 @@
           src={publication.icon}
           alt={'Leaflet Icon'}
           class="avatar"
-          style="max-height: {iconSize}px; border-radius: {iconBorderRadius}px;"
+          style="max-height: {iconSize}rem; border-radius: {iconBorderRadius}px;"
         />
       {/if}
       <div class="name">

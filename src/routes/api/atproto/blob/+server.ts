@@ -1,15 +1,12 @@
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { selectApiEndpoint } from '$lib';
-import { USER_DID } from '$lib/constants';
+import { PDS_URL, USER_DID } from '$lib/constants';
 
 export const GET: RequestHandler = async ({ url }) => {
   const cid = url.searchParams.get('cid');
   const mimetype = url.searchParams.get('mimetype');
 
-  const api_url = await selectApiEndpoint();
-
-  const blobUrl = `${api_url}/xrpc/com.atproto.sync.getBlob?did=${USER_DID}&cid=${cid}`;
+  const blobUrl = `${PDS_URL}/xrpc/com.atproto.sync.getBlob?did=${USER_DID}&cid=${cid}`;
 
   try {
     const response = await fetch(blobUrl);

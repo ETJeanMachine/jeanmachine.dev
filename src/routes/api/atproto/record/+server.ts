@@ -1,10 +1,8 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { selectApiEndpoint } from '$lib';
-import { USER_DID } from '$lib/constants';
+import { USER_DID, PDS_URL } from '$lib/constants';
 
 export const GET: RequestHandler = async ({ url }) => {
-  const api_url = await selectApiEndpoint();
   const collection = url.searchParams.get('collection');
   const rkey = url.searchParams.get('rkey');
 
@@ -12,8 +10,7 @@ export const GET: RequestHandler = async ({ url }) => {
     throw error(400, 'Missing collection or rkey');
   }
 
-  const request_url = `${api_url}/xrpc/com.atproto.repo.getRecord?repo=${encodeURIComponent(USER_DID)}&collection=${collection}&rkey=${rkey}`;
-  console.log(request_url);
+  const request_url = `${PDS_URL}/xrpc/com.atproto.repo.getRecord?repo=${encodeURIComponent(USER_DID)}&collection=${collection}&rkey=${rkey}`;
   const response = await fetch(request_url, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
@@ -24,6 +21,9 @@ export const GET: RequestHandler = async ({ url }) => {
   }
 
   let data = await response.json();
+  if (data == null) {
+    throw error(response.status, '');
+  }
 
   // Recursively replace blob objects with API references
   function replaceBlobsWithReferences(obj: any): any {

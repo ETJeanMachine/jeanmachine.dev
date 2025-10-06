@@ -6,16 +6,11 @@
 
 <!-- Desktop Layout -->
 <div class="desktop-layout">
-  <div
-    style="display: flex; flex-direction: column; gap: 5px; min-width: 36vw;"
-  >
+  <div style="display: flex; flex-direction: row; gap: 5px;">
     <div class="card">
       <div class="card-content profile">
         <Profile />
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-content">
+        <hr />
         <Pinned />
       </div>
     </div>
@@ -33,11 +28,11 @@
     <Profile mobile={true} />
     <hr />
     <div>
-      <Pinned />
+      <About />
     </div>
     <hr />
     <div>
-      <About />
+      <Pinned />
     </div>
   </div>
 </div>
@@ -51,7 +46,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: calc(100vh - 80px);
+    height: 100vh;
     overflow-y: auto;
   }
 

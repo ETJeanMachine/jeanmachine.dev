@@ -1,13 +1,13 @@
 <script lang="ts">
   import { get } from 'svelte/store';
   import { onMount } from 'svelte';
-  import { PDS_URL, HANDLE, COLLECTIONS, API_ENDPOINTS } from '$lib/constants';
+  import { PDS_URL, HANDLE, API_ENDPOINTS } from '$lib/constants';
 
   let blogs: any[];
 
   async function getBlogs(page = 0) {
     let response = await fetch(
-      `${PDS_URL}${API_ENDPOINTS.ATPROTO_REPO_LIST_RECORDS}?repo=${HANDLE}&collection=${COLLECTIONS.LEAFLET_DOCUMENT}`,
+      `${PDS_URL}${API_ENDPOINTS.ATPROTO_REPO_LIST_RECORDS}?repo=${HANDLE}&collection=pub.leaflet.document`,
     );
     let blogs = await response.json();
     // reconstructing the array to have only public blog posts.
@@ -17,13 +17,11 @@
       description: blog.value.description,
       publishedAt: new Date(blog.value.publishedAt).toLocaleDateString(),
     }));
-    console.log(blog_entries);
     return blog_entries;
   }
 
   onMount(async () => {
     blogs = await getBlogs();
-    console.log(blogs);
   });
 </script>
 

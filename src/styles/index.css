@@ -5,6 +5,31 @@
   font-style: normal;
 }
 
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c2c2c2;
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c2c2c2;
+  opacity: 0.8;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c2c2c2 transparent;
+}
+
 .card {
   h1 {
     font-size: 1.5rem;
@@ -30,9 +55,10 @@
     color: var(--accent-background);
   }
   hr {
-    height: 1px;
+    height: 0.5px;
     background-color: #c2c2c2;
     border: none;
+    margin: 0px;
   }
   width: 100%;
   background-color: var(--page-background);
