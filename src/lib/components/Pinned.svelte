@@ -1,23 +1,21 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { HANDLE, USER_DID } from '$lib/constants';
+  import { Pin } from '@lucide/svelte';
 
-  let { rkey = null } = $props();
   const params = new URLSearchParams();
   let post_data: any = $state(null);
+  let rkey: string | null = $state(null);
 
   onMount(async () => {
-    // if no rkey is supplied, we just assume it to be the pinned post.
-    if (!rkey) {
-      params.append('collection', 'app.bsky.actor.profile');
-      params.append('rkey', 'self');
-      const response = await fetch(`/api/atproto/record?${params.toString()}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      const profile_data = (await response.json()).value;
-      rkey = profile_data.pinnedPost.uri.split('/').pop();
-    }
+    params.append('collection', 'app.bsky.actor.profile');
+    params.append('rkey', 'self');
+    const profile_response = await fetch(
+      `/api/atproto/record?${params.toString()}`,
+      { method: 'GET', headers: { 'Content-Type': 'application/json' } },
+    );
+    const profile_data = (await profile_response.json()).value;
+    let rkey = profile_data.pinnedPost.uri.split('/').pop();
     params.set('collection', 'app.bsky.feed.post');
     params.set('rkey', rkey);
     const response = await fetch(`/api/atproto/record?${params.toString()}`, {
@@ -28,6 +26,9 @@
   });
 </script>
 
+<h2 style="display: flex; flex-direction: row; gap: 10px;">
+  <Pin size={18} strokeWidth={2.5} /> Pinned Post
+</h2>
 {#if post_data}
   <blockquote
     class="bluesky-embed"

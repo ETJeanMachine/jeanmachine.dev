@@ -15,10 +15,12 @@
     'publication',
   );
   let publication = $derived(publicationContext.value);
-  const { iconSize } = $props();
-  let iconBorderRadius: number = $state(4);
-  if (iconSize > 100) {
-    iconBorderRadius = 8;
+  const { mobile = false } = $props();
+  let iconSize = $state(150);
+  let iconBorderRadius: number = $state(8);
+  if (mobile) {
+    iconBorderRadius = 4;
+    iconSize = 64;
   }
 
   const socialIcons = [
@@ -31,7 +33,7 @@
 </script>
 
 <div class="profile">
-  {#if publication && iconSize > 100}
+  {#if publication && !mobile}
     <img
       src={publication.icon}
       alt={'Leaflet Icon'}
@@ -41,7 +43,7 @@
   {/if}
   <div class="info">
     <div class="name-header">
-      {#if publication && iconSize <= 100}
+      {#if publication && mobile}
         <img
           src={publication.icon}
           alt={'Leaflet Icon'}

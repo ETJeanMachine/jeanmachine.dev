@@ -1,8 +1,4 @@
-export { default as Post } from './Post.svelte';
-
-import Profile from './home/Profile.svelte';
-import Pinned from './home/Pinned.svelte';
-import Github from './home/Github.svelte';
-import About from './home/About.svelte';
-
-export const Home = { Profile, Pinned, Github, About };
+export { default as Profile } from './Profile.svelte';
+export { default as Pinned } from './Pinned.svelte';
+export { default as Github } from './Github.svelte';
+export { default as About } from './About.svelte';
