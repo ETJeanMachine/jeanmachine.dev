@@ -1,5 +1,4 @@
 // place files you want to import through the `$lib` alias in this folder.
-
 import { BSKY_API, PDS_URL } from './constants';
 
 // helper function for figuring out if the PDS set is actually available

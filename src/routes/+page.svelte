@@ -9,7 +9,7 @@
     Send,
     Pin,
   } from '@lucide/svelte';
-  import Butterfly from '$lib/components/icons/Butterfly.svelte';
+  import { Butterfly } from '$lib/icons';
 
   const socialIcons = [
     { name: 'LinkedIn', href: SOCIAL_LINKS.LINKEDIN, icon: Linkedin },
@@ -19,7 +19,7 @@
     { name: 'Email', href: SOCIAL_LINKS.EMAIL, icon: Send },
   ];
 
-  import Post from '$lib/components/Post.svelte';
+  import { Post, Avatar } from '$lib/components';
 
   let avatar_src = $state('');
   let profile_data: any;
@@ -28,7 +28,6 @@
   onMount(async () => {
     const params = new URLSearchParams();
     params.append('collection', 'app.bsky.actor.profile');
-    params.append('rkey', 'self');
     const profile_response = await fetch(`/api/atproto/record?${params}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
@@ -42,21 +41,24 @@
 <!-- <Post {rkey}></Post> -->
 
 <div class="container">
-  <div style="display: flex; flex-direction: column; gap: 5px;">
+  <div
+    style="display: flex; flex-direction: column; gap: 5px; min-width: 36vw;"
+  >
     <div class="card">
       <div class="card-content profile">
-        <div class="avatar-container" class:loaded={avatar_src}>
+        <Avatar size={175} />
+        <!-- <div class="avatar-container" class:loaded={avatar_src}>
           {#if avatar_src}
             <img src={avatar_src} alt="Bluesky Avatar" />
           {/if}
-        </div>
+        </div> -->
         <div class="info">
           <h1>{PERSONAL.NAME}</h1>
           <h3>{PERSONAL.TITLE}</h3>
           <div class="social-icons">
             {#each socialIcons as item}
               {@const SocialIcon = item.icon}
-              <a href={item.href}>
+              <a href={item.href} target="_blank" rel="noopener noreferrer">
                 <SocialIcon strokeWidth={2.5} />
               </a>
             {/each}
@@ -156,9 +158,6 @@
   }
 
   .social-icons > a {
-    display: flex;
-    flex-direction: column;
-    font-size: 10px;
     color: currentColor;
     transition: color 0.2s ease;
   }

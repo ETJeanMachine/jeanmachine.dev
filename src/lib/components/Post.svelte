@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
 
-  const { rkey } = $props();
-  let post_data: any;
+  let { rkey = 'self', pinned = false } = $props();
+  let post_data: any = $state();
 
   onMount(async () => {
     const params = new URLSearchParams();
@@ -15,3 +15,17 @@
     post_data = await response.json();
   });
 </script>
+
+<div class="post-container">
+  {$inspect(post_data)}
+  <p>{post_data?.value?.text}</p>
+</div>
+
+<style>
+  .post-container {
+    border: 2px solid var(--blue0);
+    background-color: var(--blue);
+    padding: 1rem;
+    border-radius: 4px;
+  }
+</style>
