@@ -3,6 +3,7 @@ export const PDS_URL = 'https://pds.jeanmachine.dev';
 export const BSKY_API = 'https://public.api.bsky.app';
 export const USER_DID = 'did:plc:6vxtya3serxcwvcdk5e7psvv';
 export const HANDLE = 'jeanmachine.dev';
+export const PUBLICATION = '3lwddhdcemk2l';
 
 // Collection Identifiers
 export const COLLECTIONS = {

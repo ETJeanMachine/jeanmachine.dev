@@ -23,7 +23,32 @@ export const GET: RequestHandler = async ({ url }) => {
     throw error(response.status, 'Failed to fetch record');
   }
 
-  const data = await response.json();
+  let data = await response.json();
+
+  // Recursively replace blob objects with API references
+  function replaceBlobsWithReferences(obj: any): any {
+    if (obj === null || typeof obj !== 'object') {
+      return obj;
+    }
+
+    if (Array.isArray(obj)) {
+      return obj.map(replaceBlobsWithReferences);
+    }
+
+    if (obj.$type === 'blob' && obj.ref) {
+      const cid = obj.ref.$link || obj.ref;
+      const mimeType = obj.mimeType || '';
+      return `/api/atproto/blob?cid=${encodeURIComponent(cid)}&mimetype=${encodeURIComponent(mimeType)}`;
+    }
+
+    const result: any = {};
+    for (const [key, value] of Object.entries(obj)) {
+      result[key] = replaceBlobsWithReferences(value);
+    }
+    return result;
+  }
+
+  data = replaceBlobsWithReferences(data);
 
   return json(data, {
     headers: {
