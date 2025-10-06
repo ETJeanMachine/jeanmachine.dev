@@ -1,25 +1,25 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import Page from '../../routes/blog/[slug]/+page.svelte';
+  import { HANDLE, USER_DID } from '$lib/constants';
 
-  let { rkey = 'self', pinned = false } = $props();
+  let { rkey = null } = $props();
   const params = new URLSearchParams();
-  params.append('rkey', rkey);
   let post_data: any = $state(null);
 
   onMount(async () => {
-    // fetching the pinned post if that's what we're looking for.
-    if (pinned) {
+    // if no rkey is supplied, we just assume it to be the pinned post.
+    if (!rkey) {
       params.append('collection', 'app.bsky.actor.profile');
+      params.append('rkey', 'self');
       const response = await fetch(`/api/atproto/record?${params.toString()}`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
       });
-      const profile_data = await response.json();
-      rkey = profile_data.value.pinnedPost.uri.split('/').pop();
-      params.set('rkey', rkey);
+      const profile_data = (await response.json()).value;
+      rkey = profile_data.pinnedPost.uri.split('/').pop();
     }
     params.set('collection', 'app.bsky.feed.post');
+    params.set('rkey', rkey);
     const response = await fetch(`/api/atproto/record?${params.toString()}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
@@ -28,17 +28,29 @@
   });
 </script>
 
-<div class="post-container">
-  {#if post_data}
-    <p>{post_data.value.text}</p>
-  {/if}
-</div>
-
-<style>
-  .post-container {
-    border: 2px solid var(--blue0);
-    background-color: var(--blue);
-    padding: 1rem;
-    border-radius: 4px;
-  }
-</style>
+{#if post_data}
+  <blockquote
+    class="bluesky-embed"
+    data-bluesky-uri={post_data.uri}
+    data-bluesky-cid={post_data.cid}
+    data-bluesky-embed-color-mode="system"
+  >
+    <p lang="en">
+      bridge.<br /><br /><a
+        href={`https://bsky.app/profile/${HANDLE}/post/${rkey}?ref_src=embed`}
+        >[image or embed]</a
+      >
+    </p>
+    &mdash; jean (<a href={`https://bsky.app/profile/${HANDLE}?ref_src=embed`}
+      >@jeanmachine.dev</a
+    >)
+    <a href={`https://bsky.app/profile/${USER_DID}/post/${rkey}?ref_src=embed`}
+      >August 24, 2025 at 6:28 PM</a
+    >
+  </blockquote>
+  <script
+    async
+    src="https://embed.bsky.app/static/embed.js"
+    charset="utf-8"
+  ></script>
+{/if}

@@ -30,7 +30,9 @@
   >
     <div class="card">
       <div class="card-content profile">
-        <Avatar size={175} />
+        <div class="avatar-container">
+          <Avatar />
+        </div>
         <div class="info">
           <h1>{PERSONAL.NAME}</h1>
           <h3>{PERSONAL.TITLE}</h3>
@@ -50,7 +52,7 @@
         <h2 style="display: flex; flex-direction: row; gap: 10px;">
           <Pin size={18} strokeWidth={2.5} /> Pinned Post
         </h2>
-        <Post pinned={true} />
+        <Post />
       </div>
     </div>
   </div>
@@ -95,6 +97,17 @@
     display: flex;
     flex-direction: row;
     gap: 10px;
+  }
+
+  .avatar-container {
+    background-color: var(--fg);
+    display: flex;
+    padding: 4px;
+    border-radius: 8px;
+    transition: opacity 0.3s ease;
+    aspect-ratio: 1 / 1;
+    flex-shrink: 0;
+    max-height: 175px;
   }
 
   .info {
