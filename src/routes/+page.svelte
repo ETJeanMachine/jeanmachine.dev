@@ -20,22 +20,6 @@
   ];
 
   import { Post, Avatar } from '$lib/components';
-
-  let avatar_src = $state('');
-  let profile_data: any;
-  let rkey = $state('');
-
-  onMount(async () => {
-    const params = new URLSearchParams();
-    params.append('collection', 'app.bsky.actor.profile');
-    const profile_response = await fetch(`/api/atproto/record?${params}`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    });
-    profile_data = await profile_response.json();
-    avatar_src = `/api/atproto/blob?&cid=${profile_data.value.avatar.ref.$link}`;
-    rkey = profile_data.value.pinnedPost.uri.split('/').pop();
-  });
 </script>
 
 <!-- <Post {rkey}></Post> -->
@@ -47,11 +31,6 @@
     <div class="card">
       <div class="card-content profile">
         <Avatar size={175} />
-        <!-- <div class="avatar-container" class:loaded={avatar_src}>
-          {#if avatar_src}
-            <img src={avatar_src} alt="Bluesky Avatar" />
-          {/if}
-        </div> -->
         <div class="info">
           <h1>{PERSONAL.NAME}</h1>
           <h3>{PERSONAL.TITLE}</h3>
@@ -71,9 +50,7 @@
         <h2 style="display: flex; flex-direction: row; gap: 10px;">
           <Pin size={18} strokeWidth={2.5} /> Pinned Post
         </h2>
-        {#if rkey}
-          <Post {rkey}></Post>
-        {/if}
+        <Post pinned={true} />
       </div>
     </div>
   </div>

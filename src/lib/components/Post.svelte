@@ -1,13 +1,25 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import Page from '../../routes/blog/[slug]/+page.svelte';
 
   let { rkey = 'self', pinned = false } = $props();
+  const params = new URLSearchParams();
+  params.append('rkey', rkey);
   let post_data: any = $state();
 
   onMount(async () => {
-    const params = new URLSearchParams();
-    params.append('collection', 'app.bsky.feed.post');
-    params.append('rkey', rkey);
+    // fetching the pinned post if that's what we're looking for.
+    if (pinned) {
+      params.append('collection', 'app.bsky.actor.profile');
+      const response = await fetch(`/api/atproto/record?${params.toString()}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const profile_data = await response.json();
+      rkey = profile_data.value.pinnedPost.uri.split('/').pop();
+      params.set('rkey', rkey);
+    }
+    params.set('collection', 'app.bsky.feed.post');
     const response = await fetch(`/api/atproto/record?${params.toString()}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
