@@ -1,22 +1,8 @@
 @font-face {
   font-family: 'CaskaydiaCove Nerd Font';
-  src: url('/fonts/CaskaydiaCoveNerdFont-Regular.ttf') format('truetype');
+  src: url('/fonts/CaskaydiaCove-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
-}
-
-@font-face {
-  font-family: 'CaskaydiaCove Nerd Font';
-  src: url('/fonts/CaskaydiaCoveNerdFont-Bold.ttf') format('truetype');
-  font-weight: 700;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'CaskaydiaCove Nerd Font';
-  src: url('/fonts/CaskaydiaCoveNerdFont-Italic.ttf') format('truetype');
-  font-weight: 400;
-  font-style: italic;
 }
 
 .card {
@@ -32,6 +18,13 @@
   }
   h3 {
     font-size: 16px;
+  }
+  p > a {
+    color: #c2c2c2;
+    text-decoration: underline;
+  }
+  p > a:hover {
+    color: var(--accent-background);
   }
   width: 100%;
   background-color: var(--page-background);

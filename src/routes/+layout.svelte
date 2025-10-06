@@ -6,10 +6,22 @@
   import { page } from '$app/state';
   import type { Publication } from '$lib/types/publication';
 
-  import { HouseIcon, BriefcaseBusiness, NotebookPen } from '@lucide/svelte';
+  import {
+    HouseIcon,
+    BriefcaseBusiness,
+    NotebookPen,
+    Signature,
+  } from '@lucide/svelte';
 
   let publication: Publication | null = $state(null);
   let currentPath = $state('');
+
+  const navItems = [
+    { name: 'Home', href: '/', icon: HouseIcon, exact: true },
+    { name: 'Blog', href: '/blog', icon: NotebookPen, exact: false },
+    { name: 'Work', href: '/work', icon: BriefcaseBusiness, exact: false },
+    { name: 'Credits', href: '/attributions', icon: Signature, exact: false },
+  ];
 
   setContext('publication', {
     get value() {
@@ -36,14 +48,16 @@
   <main>
     <div>
       <nav>
-        <a href="/" class:active={currentPath === '/'}><HouseIcon /> Home</a>
-        <a href="/blog" class:active={currentPath.startsWith('/blog')}
-          ><NotebookPen /> Blog</a
-        >
-        <a href="/work" class:active={currentPath.startsWith('/work')}
-          ><BriefcaseBusiness /> Work</a
-        >
-        <!-- <a href="/projects">~/projects</a> -->
+        {#each navItems as item}
+          {@const NavIcon = item.icon}
+          {@const isActive = item.exact
+            ? currentPath === item.href
+            : currentPath.startsWith(item.href)}
+          <a href={item.href} class:active={isActive}>
+            <NavIcon size={16} />
+            {item.name}
+          </a>
+        {/each}
       </nav>
       <div>
         {@render children()}
@@ -73,6 +87,7 @@
 
   main > div {
     width: 75vw;
+
     flex-direction: column;
     align-content: center;
     display: flex;
@@ -82,8 +97,8 @@
   nav {
     display: flex;
     flex-direction: row;
-    margin-right: 10px;
     gap: 5px;
+    padding-top: 10px;
   }
 
   nav > a {
@@ -98,6 +113,7 @@
     border: 1px solid #000;
     transition: color 0.2s ease;
     font-size: 16px;
+    padding: 5px 5px;
   }
 
   nav > a:hover {
