@@ -157,11 +157,11 @@
 
     main > div {
       width: 90vw;
-      height: 90vh;
+      height: calc(100vh - 70px - 10px);
       display: flex;
       flex-direction: column;
       position: relative;
-      padding-bottom: 70px;
+      margin-bottom: 5px;
     }
 
     main > div > div {
@@ -209,6 +209,7 @@
     .nav-mobile > a:hover,
     .nav-mobile > a.active {
       background-color: var(--accent-background);
+      border: #000 solid 1px;
       color: var(--accent-text);
     }
   }
