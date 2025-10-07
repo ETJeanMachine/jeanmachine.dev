@@ -6,34 +6,26 @@
 
 <!-- Desktop Layout -->
 <div class="desktop-layout">
-  <div style="display: flex; flex-direction: row; gap: 5px;">
-    <div class="card">
-      <div class="card-content profile">
-        <Profile />
-        <hr />
-        <Pinned />
-      </div>
-    </div>
+  <div class="card">
+    <Profile />
+    <hr />
+    <Pinned />
   </div>
   <div class="card">
-    <div class="card-content">
-      <About />
-    </div>
+    <About />
   </div>
 </div>
 
 <!-- Mobile Layout -->
 <div class="mobile-layout">
-  <div class="card-content">
-    <Profile mobile={true} />
-    <hr />
-    <div>
-      <About />
-    </div>
-    <hr />
-    <div>
-      <Pinned />
-    </div>
+  <Profile mobile={true} />
+  <hr />
+  <div>
+    <About />
+  </div>
+  <hr />
+  <div>
+    <Pinned />
   </div>
 </div>
 

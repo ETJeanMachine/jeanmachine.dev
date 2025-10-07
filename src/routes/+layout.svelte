@@ -106,6 +106,7 @@
     width: 75vw;
     flex-direction: column;
     align-content: center;
+    color: var(--background-color);
     display: flex;
     gap: 5px;
   }

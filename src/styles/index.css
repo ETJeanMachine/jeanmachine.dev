@@ -37,38 +37,34 @@
   color: var(--primary);
   border: 1px solid #000;
   border-radius: 20px;
+  padding: 10px;
 }
 
-.card-content {
-  h1 {
-    font-size: 1.5rem;
-    font-weight: bolder;
-    font-style: italic;
-    color: var(--accent-background);
-  }
-  h2 {
-    font-size: 1.25rem;
-    font-weight: bold;
-  }
-  h3 {
-    font-size: 1rem;
-  }
-  p {
-    font-size: 0.9rem;
-  }
-  p > a {
-    color: #c2c2c2;
-    text-decoration: underline;
-  }
-  p > a:hover {
-    color: var(--accent-background);
-  }
-  hr {
-    height: 0.5px;
-    background-color: #c2c2c2;
-    border: none;
-  }
-  color: var(--primary);
-
-  padding: 10px;
+h1 {
+  font-size: 1.5rem;
+  font-weight: bolder;
+  font-style: italic;
+  color: var(--accent-background);
+}
+h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+h3 {
+  font-size: 1rem;
+}
+p {
+  font-size: 0.9rem;
+}
+p > a {
+  color: #c2c2c2;
+  text-decoration: underline;
+}
+p > a:hover {
+  color: var(--accent-background);
+}
+hr {
+  height: 0.5px;
+  background-color: #c2c2c2;
+  border: none;
 }
