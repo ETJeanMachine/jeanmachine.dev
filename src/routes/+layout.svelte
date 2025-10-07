@@ -81,6 +81,8 @@
       </nav>
     </div>
   </main>
+{:else}
+  {@render children()}
 {/if}
 
 <style>
