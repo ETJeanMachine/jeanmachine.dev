@@ -1,6 +1,7 @@
 <script lang="ts">
   import { HANDLE } from '$lib/constants';
   import { Butterfly } from '$lib/icons';
+  import { blobUri } from '$lib';
   import type { AppBskyActorProfile, AppBskyFeedPost } from '@atcute/bluesky';
 
   const { post, author, uri } = $props<{
@@ -34,7 +35,7 @@
       target="_blank"
       rel="noopener noreferrer"
     >
-      <img src={author.avatar} alt={author.displayName} class="avatar" /></a
+      <img src={blobUri(author.avatar)} alt={author.displayName} class="avatar" /></a
     >
     <div class="author-info">
       <a
@@ -72,7 +73,7 @@
       {:else if post.embed.$type === 'app.bsky.embed.images'}
         <div class="images">
           {#each post.embed.images as image}
-            <img src={image.image} alt={image.alt || ''} class="post-image" />
+            <img src={blobUri(image.image)} alt={image.alt || ''} class="post-image" />
           {/each}
         </div>
       {:else if post.embed.$type === 'app.bsky.embed.external'}
@@ -84,7 +85,7 @@
         >
           {#if post.embed.external.thumb}
             <img
-              src={post.embed.external.thumb}
+              src={blobUri(post.embed.external.thumb)}
               alt=""
               class="external-thumb"
             />
