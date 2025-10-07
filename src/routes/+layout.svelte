@@ -163,7 +163,7 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      padding-bottom: 80px;
+      padding-bottom: 65px;
       box-sizing: border-box;
     }
 
@@ -205,7 +205,6 @@
       gap: 0.25rem;
       color: var(--primary);
       text-decoration: none;
-      padding: 0.5rem 1rem;
       border-radius: 5px;
       transition: all 0.2s ease;
       font-size: 12px;
