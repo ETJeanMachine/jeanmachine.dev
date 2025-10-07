@@ -51,26 +51,14 @@
 {#if publication}
   <main>
     <div>
-      <button
-        class="hamburger"
-        onclick={() => (isMenuOpen = !isMenuOpen)}
-        aria-label="Toggle menu"
-      >
-        {#if isMenuOpen}
-          <X size={24} />
-        {:else}
-          <Menu size={24} />
-        {/if}
-      </button>
-
-      <nav class:open={isMenuOpen}>
+      <nav class="nav-desktop">
         {#each navItems as item}
           {@const NavIcon = item.icon}
           {@const isActive = item.exact
             ? currentPath === item.href
             : currentPath.startsWith(item.href)}
           <a href={item.href} class:active={isActive}>
-            <NavIcon size={16} />
+            <NavIcon size={'1rem'} />
             {item.name}
           </a>
         {/each}
@@ -79,6 +67,18 @@
       <div>
         {@render children()}
       </div>
+      <nav class="nav-mobile">
+        {#each navItems as item}
+          {@const NavIcon = item.icon}
+          {@const isActive = item.exact
+            ? currentPath === item.href
+            : currentPath.startsWith(item.href)}
+          <a href={item.href} class:active={isActive}>
+            <NavIcon size={20} />
+            <span>{item.name}</span>
+          </a>
+        {/each}
+      </nav>
     </div>
   </main>
 {/if}
@@ -110,27 +110,7 @@
     gap: 5px;
   }
 
-  .hamburger {
-    display: none;
-    position: fixed;
-    top: 1rem;
-    right: 1rem;
-    z-index: 101;
-    background-color: var(--page-background);
-    border: 1px solid #000;
-    border-radius: 5px;
-    padding: 0.5rem;
-    color: var(--primary);
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .hamburger:hover {
-    background-color: var(--accent-background);
-    color: var(--accent-text);
-  }
-
-  nav {
+  .nav-desktop {
     display: flex;
     flex-direction: row;
     gap: 5px;
@@ -138,7 +118,7 @@
     transition: transform 0.3s ease;
   }
 
-  nav > a {
+  .nav-desktop > a {
     color: var(--primary);
     display: flex;
     align-items: center;
@@ -152,17 +132,23 @@
     font-size: 16px;
   }
 
-  nav > a:hover {
+  .nav-desktop > a:hover {
     border: 1px solid var(--accent-background);
   }
 
-  nav > a.active {
+  .nav-desktop > a.active {
     border: 1px solid var(--accent-background);
+  }
+
+  @media (min-width: 768px) {
+    .nav-mobile {
+      display: none;
+    }
   }
 
   @media (max-width: 768px) {
-    .hamburger {
-      display: block;
+    .nav-desktop {
+      display: none;
     }
 
     main {
@@ -175,9 +161,10 @@
       display: flex;
       flex-direction: column;
       position: relative;
+      padding-bottom: 70px;
     }
 
-    main > div > div:last-child {
+    main > div > div {
       flex: 1;
       overflow-y: auto;
       overflow-x: hidden;
@@ -189,29 +176,40 @@
       position: relative;
     }
 
-    nav {
+    .nav-mobile {
       position: fixed;
-      top: 0;
+      bottom: 0;
+      left: 0;
       right: 0;
-      height: 100;
-      width: 250px;
-      flex-direction: column;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      align-items: center;
       background-color: var(--page-background);
-      border-left: 1px solid var(--accent-background);
-      padding: 5rem 1rem 1rem;
-      transform: translateX(100%);
-      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.2);
+      border-top: 1px solid #000;
+      padding: 0.25rem 0;
       z-index: 100;
     }
 
-    nav.open {
-      transform: translateX(0);
+    .nav-mobile > a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      color: var(--primary);
+      text-decoration: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      transition: all 0.2s ease;
+      font-size: 12px;
+      aspect-ratio: 1/1;
     }
 
-    nav > a {
-      width: 100%;
-      padding: 0.75rem;
-      font-size: 18px;
+    .nav-mobile > a:hover,
+    .nav-mobile > a.active {
+      background-color: var(--accent-background);
+      color: var(--accent-text);
     }
   }
 </style>
