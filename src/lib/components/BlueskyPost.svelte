@@ -1,8 +1,14 @@
 <script lang="ts">
-  import { HANDLE, USER_DID } from '$lib/constants';
+  import { HANDLE } from '$lib/constants';
   import { Butterfly } from '$lib/icons';
+  import { blobUri } from '$lib';
+  import type { AppBskyActorProfile, AppBskyFeedPost } from '@atcute/bluesky';
 
-  let { post, author } = $props<{ post: any; author: any }>();
+  const { post, author, uri } = $props<{
+    post: AppBskyFeedPost.Main;
+    author: AppBskyActorProfile.Main;
+    uri: string;
+  }>();
 
   function formatDate(dateString: string): string {
     const date = new Date(dateString);
@@ -29,7 +35,7 @@
       target="_blank"
       rel="noopener noreferrer"
     >
-      <img src={author.avatar} alt={author.displayName} class="avatar" /></a
+      <img src={blobUri(author.avatar)} alt={author.displayName} class="avatar" /></a
     >
     <div class="author-info">
       <a
@@ -50,45 +56,44 @@
   </div>
 
   <div class="post-content">
-    <p>{post.value.text}</p>
+    <p>{post.text}</p>
 
-    {#if post.value.embed}
-      {#if post.value.embed.$type === 'app.bsky.embed.record'}
+    {#if post.embed}
+      {#if post.embed.$type === 'app.bsky.embed.record'}
         <div class="quote-post">
           <div class="quote-header">
             <span class="quote-author">Quoted post</span>
           </div>
           <div class="quote-content">
             <p class="quote-text">
-              {post.value.embed.record.uri}
+              {post.embed.record.uri}
             </p>
           </div>
         </div>
-      {:else if post.value.embed.$type === 'app.bsky.embed.images'}
+      {:else if post.embed.$type === 'app.bsky.embed.images'}
         <div class="images">
-          {#each post.value.embed.images as image}
-            <img src={image.image} alt={image.alt || ''} class="post-image" />
+          {#each post.embed.images as image}
+            <img src={blobUri(image.image)} alt={image.alt || ''} class="post-image" />
           {/each}
         </div>
-      {:else if post.value.embed.$type === 'app.bsky.embed.external'}
+      {:else if post.embed.$type === 'app.bsky.embed.external'}
         <a
-          href={post.value.embed.external.uri}
+          href={post.embed.external.uri}
           class="external-link"
           target="_blank"
           rel="noopener noreferrer"
         >
-          {#if post.value.embed.external.thumb}
+          {#if post.embed.external.thumb}
             <img
-              src={post.value.embed.external.thumb}
+              src={blobUri(post.embed.external.thumb)}
               alt=""
               class="external-thumb"
             />
           {/if}
           <div class="external-info">
-            <span class="external-title">{post.value.embed.external.title}</span
-            >
+            <span class="external-title">{post.embed.external.title}</span>
             <span class="external-description"
-              >{post.value.embed.external.description}</span
+              >{post.embed.external.description}</span
             >
           </div>
         </a>
@@ -97,8 +102,8 @@
   </div>
 
   <div class="post-footer">
-    <a href={getPostUrl(post.uri)} target="_blank" rel="noopener noreferrer">
-      {formatDate(post.value.createdAt)}
+    <a href={getPostUrl(uri)} target="_blank" rel="noopener noreferrer">
+      {formatDate(post.createdAt)}
     </a>
     <Butterfly size={20} color="#1185fe" />
   </div>

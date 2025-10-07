@@ -1,7 +1,5 @@
 <script lang="ts">
   import { getContext } from 'svelte';
-  import type { Publication } from '$lib/types/publication';
-  import { SOCIAL_LINKS, PERSONAL } from '$lib/constants';
   import {
     Github,
     Linkedin,
@@ -9,11 +7,14 @@
     MessageCircleDashed,
     Send,
   } from '@lucide/svelte';
+  import { PubLeafletPublication } from '@atcute/leaflet';
+  import { SOCIAL_LINKS, PERSONAL } from '$lib/constants';
   import { Butterfly } from '$lib/icons';
+  import { blobUri } from '$lib';
 
-  const publicationContext = getContext<{ value: Publication | null }>(
-    'publication',
-  );
+  const publicationContext = getContext<{
+    value: PubLeafletPublication.Main | null;
+  }>('publication');
   let publication = $derived(publicationContext.value);
   const { mobile = false } = $props();
   let iconSize = $state(175);
@@ -35,7 +36,7 @@
 <div class="profile">
   {#if publication && !mobile}
     <img
-      src={publication.icon}
+      src={blobUri(publication.icon)}
       alt={'Leaflet Icon'}
       class="avatar"
       style="max-height: {iconSize}px; border-radius: {iconBorderRadius}px;"
@@ -45,7 +46,7 @@
     <div class="name-header">
       {#if publication && mobile}
         <img
-          src={publication.icon}
+          src={blobUri(publication.icon)}
           alt={'Leaflet Icon'}
           class="avatar"
           style="max-height: {iconSize}rem; border-radius: {iconBorderRadius}px;"
