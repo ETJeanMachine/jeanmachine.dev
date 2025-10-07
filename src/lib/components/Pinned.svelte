@@ -1,13 +1,14 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { HANDLE, USER_DID } from '$lib/constants';
   import { Pin } from '@lucide/svelte';
   import BlueskyPost from './BlueskyPost.svelte';
+  import { AppBskyActorProfile, AppBskyFeedPost } from '@atcute/bluesky';
+  import { error } from '@sveltejs/kit';
 
   const params = new URLSearchParams();
-  let post_data: any = $state(null);
-  let author_data: any = $state(null);
-  let rkey: string | null = $state(null);
+  let post = $state<AppBskyFeedPost.Main | null>(null);
+  let author = $state<AppBskyActorProfile.Main | null>(null);
+  let uri: string = $state('');
 
   onMount(async () => {
     params.append('collection', 'app.bsky.actor.profile');
@@ -16,25 +17,34 @@
       `/api/atproto/record?${params.toString()}`,
       { method: 'GET', headers: { 'Content-Type': 'application/json' } },
     );
-    const profile_data = (await profile_response.json()).value;
-    author_data = profile_data;
-    let rkey = profile_data.pinnedPost.uri.split('/').pop();
+    const profile_data: AppBskyActorProfile.Main = (
+      await profile_response.json()
+    ).value;
+    author = profile_data;
+    if (!author.pinnedPost) {
+      throw error(500, { message: 'No pinned post.' });
+    }
+    uri = author.pinnedPost.uri.toString();
+    let rkey = uri.split('/').pop();
+    if (!rkey) {
+      throw error(500, { message: 'Failed to fetch pinned post URI' });
+    }
     params.set('collection', 'app.bsky.feed.post');
     params.set('rkey', rkey);
     const response = await fetch(`/api/atproto/record?${params.toString()}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
     });
-    post_data = await response.json();
+    post = (await response.json()).value;
   });
 </script>
 
 <h2>
   <Pin size={'1.25rem'} strokeWidth={2.5} /> Pinned Post
 </h2>
-{#if post_data && author_data}
+{#if post && author}
   <div class="post-container">
-    <BlueskyPost post={post_data} author={author_data} />
+    <BlueskyPost {post} {author} {uri} />
   </div>
 {/if}
 

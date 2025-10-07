@@ -14,21 +14,24 @@
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^6.1.1",
-    "@sveltejs/kit": "^2.44.0",
+    "@sveltejs/kit": "^2.46.2",
     "@sveltejs/vite-plugin-svelte": "^5.1.1",
     "prettier": "^3.6.2",
-    "svelte": "^5.39.9",
+    "svelte": "^5.39.10",
     "svelte-check": "^4.3.2",
     "typescript": "^5.9.3",
     "vite": "^6.3.6"
   },
   "dependencies": {
+    "@atcute/bluesky": "^3.2.3",
+    "@atcute/leaflet": "^1.0.8",
+    "@atcute/lexicons": "^1.1.1",
     "@lucide/lab": "^0.1.2",
     "@lucide/svelte": "^0.544.0",
     "@sveltejs/adapter-cloudflare": "^7.2.4",
     "prettier-plugin-svelte": "^3.4.0",
     "vite-plugin-devtools-json": "^0.2.1",
-    "wrangler": "^4.42.0"
+    "wrangler": "^4.42.1"
   },
   "resolutions": {
     "rollup": "npm:@rollup/wasm-node"

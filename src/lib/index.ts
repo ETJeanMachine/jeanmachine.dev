@@ -1,8 +1,10 @@
 // place files you want to import through the `$lib` alias in this folder.
 import { PUBLICATION } from '$lib/constants';
-import type { Publication } from './types/publication';
+import { PubLeafletPublication } from '@atcute/leaflet';
+import { is, type Blob, type LegacyBlob } from '@atcute/lexicons';
 
 import type { Colour } from './types/publication';
+import { isBlob, isLegacyBlob } from '@atcute/lexicons/interfaces';
 
 function colorToCSS(color: Colour | undefined): string {
   if (!color) return '';
@@ -12,7 +14,7 @@ function colorToCSS(color: Colour | undefined): string {
   return `rgb(${color.r}, ${color.g}, ${color.b})`;
 }
 
-export async function loadPublication(): Promise<Publication> {
+export async function loadPublication(): Promise<PubLeafletPublication.Main> {
   const params = new URLSearchParams('');
   params.append('collection', 'pub.leaflet.publication');
   params.append('rkey', PUBLICATION);
@@ -20,7 +22,12 @@ export async function loadPublication(): Promise<Publication> {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
-  const publication: Publication = (await response.json()).value;
+  const publication: PubLeafletPublication.Main = (await response.json()).value;
+  console.log(publication);
+  if (!is(PubLeafletPublication.mainSchema, publication)) {
+    console.error('Invalid publication schema');
+  }
+
   const theme = publication.theme ?? {};
 
   // Only set CSS variables if we're in the browser (not SSR)
@@ -37,7 +44,7 @@ export async function loadPublication(): Promise<Publication> {
     if (theme.backgroundImage?.image) {
       document.documentElement.style.setProperty(
         '--background-image',
-        `url(${theme.backgroundImage.image})`,
+        `url(${blobUri(theme.backgroundImage.image)})`,
       );
     }
 
@@ -68,4 +75,16 @@ export async function loadPublication(): Promise<Publication> {
     }
   }
   return publication;
+}
+
+export function blobUri(
+  blob: Blob<string> | LegacyBlob<string> | undefined,
+): string {
+  if (isBlob(blob)) {
+    return `/api/atproto/blob?cid=${blob.ref.$link}&mimetype=${blob.mimeType}`;
+  } else if (isLegacyBlob(blob)) {
+    return `/api/atproto/blob?cid=${blob.cid}&mimetype=${blob.mimeType}`;
+  } else {
+    throw new Error('Invalid blob: blob is undefined or has invalid format');
+  }
 }
