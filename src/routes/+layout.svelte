@@ -214,9 +214,7 @@
 
     .nav-mobile > a:hover,
     .nav-mobile > a.active {
-      background-color: var(--accent-background);
-      border: #000 solid 1px;
-      color: var(--accent-text);
+      color: var(--accent-background);
     }
   }
 </style>
