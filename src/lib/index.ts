@@ -15,20 +15,7 @@ function colorToCSS(color: Color | undefined): string {
   return `rgb(${color.r}, ${color.g}, ${color.b})`;
 }
 
-export async function loadPublication(): Promise<PubLeafletPublication.Main> {
-  const params = new URLSearchParams('');
-  params.append('collection', 'pub.leaflet.publication');
-  params.append('rkey', PUBLICATION);
-  const response = await fetch(`/api/atproto/record?${params.toString()}`, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
-  const publication: PubLeafletPublication.Main = (await response.json()).value;
-  console.log(publication);
-  if (!is(PubLeafletPublication.mainSchema, publication)) {
-    console.error('Invalid publication schema');
-  }
-
+export function applyTheme(publication: PubLeafletPublication.Main): void {
   const theme = publication.theme ?? {};
 
   // Only set CSS variables if we're in the browser (not SSR)
@@ -75,7 +62,6 @@ export async function loadPublication(): Promise<PubLeafletPublication.Main> {
       );
     }
   }
-  return publication;
 }
 
 export function blobUri(

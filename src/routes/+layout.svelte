@@ -1,6 +1,6 @@
 <script lang="ts">
   import '../styles/index.css';
-  import { loadPublication, blobUri } from '$lib';
+  import { applyTheme, blobUri } from '$lib';
   import { onMount, setContext } from 'svelte';
   import { page } from '$app/state';
   import { PERSONAL, HANDLE } from '$lib/constants';
@@ -15,9 +15,12 @@
 
   let { children, data } = $props();
 
-  let publication = $state<PubLeafletPublication.Main | null>(data.publication);
+  const publication = $state<PubLeafletPublication.Main | null>(
+    data.publication,
+  );
   let currentPath = $state('');
   let isMenuOpen = $state(false);
+  let themeLoaded = $state(false);
 
   const navItems = [
     { name: 'Home', href: '/', icon: HouseIcon, exact: true },
@@ -37,9 +40,12 @@
     isMenuOpen = false; // Close menu on navigation
   });
 
-  onMount(async () => {
-    // Apply theme to document
-    await loadPublication();
+  onMount(() => {
+    // Apply theme to document using server-fetched data
+    if (publication) {
+      applyTheme(publication);
+    }
+    themeLoaded = true;
   });
 </script>
 
@@ -72,7 +78,7 @@
   {/if}
 </svelte:head>
 
-{#if publication}
+{#if themeLoaded}
   <main>
     <div>
       <nav class="nav-desktop">
