@@ -26,8 +26,8 @@
   });
 </script>
 
-<h2 style="display: flex; flex-direction: row; gap: 10px;">
-  <Pin size={18} strokeWidth={2.5} /> Pinned Post
+<h2>
+  <Pin size={'1.25rem'} strokeWidth={2.5} /> Pinned Post
 </h2>
 {#if post_data}
   <div class="post">
@@ -60,32 +60,25 @@
 {/if}
 
 <style>
+  h2 {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+  }
+
   .post {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
     width: 100%;
     max-width: 100%;
-    overflow: hidden;
   }
 
-  .post :global(.bluesky-embed),
-  .post :global([data-bluesky-uri]) {
+  .post :global(.bluesky-embed) {
     max-width: 100% !important;
+    width: 100% !important;
     min-width: 0 !important;
-    box-sizing: border-box !important;
-  }
-
-  .post :global(.bluesky-embed > div) {
-    max-width: 100% !important;
-    min-width: 0 !important;
-  }
-
-  .post :global(.bluesky-embed iframe) {
-    max-width: 100% !important;
-  }
-
-  @media (max-width: 768px) {
-    .post :global(.bluesky-embed),
-    .post :global([data-bluesky-uri]) {
-      max-width: calc(100vw - 4rem) !important;
-    }
   }
 </style>

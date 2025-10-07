@@ -154,15 +154,17 @@
 
     main {
       overflow: hidden;
+      position: relative;
     }
 
     main > div {
       width: 90vw;
-      height: calc(100vh - 70px - 10px);
+      height: 100dvh;
       display: flex;
       flex-direction: column;
       position: relative;
-      margin-bottom: 5px;
+      padding-bottom: 80px;
+      box-sizing: border-box;
     }
 
     main > div > div {
@@ -175,6 +177,7 @@
       padding: 1rem;
       margin-top: 0.5rem;
       position: relative;
+      min-height: 0;
     }
 
     .nav-mobile {
@@ -182,6 +185,7 @@
       bottom: 0;
       left: 0;
       right: 0;
+      width: 100%;
       display: flex;
       flex-direction: row;
       justify-content: space-around;
@@ -189,6 +193,7 @@
       background-color: var(--page-background);
       border-top: 1px solid #000;
       padding: 0.25rem 0;
+      padding-bottom: calc(0.25rem + env(safe-area-inset-bottom));
       z-index: 100;
     }
 
