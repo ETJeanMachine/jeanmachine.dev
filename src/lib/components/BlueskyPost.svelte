@@ -110,8 +110,7 @@
     border-radius: 16px;
     padding: 16px;
     background-color: #16191f;
-    max-width: 100%;
-    width: 100%;
+    max-width: 30rem;
     box-sizing: border-box;
   }
 

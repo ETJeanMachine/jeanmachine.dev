@@ -102,6 +102,7 @@
     min-height: 100vh;
     min-width: 100vw;
     font-family: 'CaskaydiaCove Nerd Font', sans-serif;
+    color: var(--primary);
     background-image: var(--background-image);
     background-size: cover;
     background-position: center;
@@ -111,7 +112,6 @@
     width: 75vw;
     flex-direction: column;
     align-content: center;
-    color: var(--background-color);
     display: flex;
     gap: 5px;
   }
