@@ -10,14 +10,12 @@
     BriefcaseBusiness,
     NotebookPen,
     Signature,
-    Menu,
-    X,
   } from '@lucide/svelte';
-  import { PubLeafletPublication } from '@atcute/leaflet';
+  import type { PubLeafletPublication } from '@atcute/leaflet';
 
-  let { children } = $props();
+  let { children, data } = $props();
 
-  let publication = $state<PubLeafletPublication.Main | null>(null);
+  let publication = $state<PubLeafletPublication.Main | null>(data.publication);
   let currentPath = $state('');
   let isMenuOpen = $state(false);
 
@@ -40,12 +38,12 @@
   });
 
   onMount(async () => {
-    publication = await loadPublication();
+    // Apply theme to document
+    await loadPublication();
   });
 </script>
 
 <svelte:head>
-  <title>{PERSONAL.NAME} - {PERSONAL.TITLE}</title>
   <meta name="description" content={PERSONAL.TITLE} />
 
   <!-- Open Graph / Facebook -->
