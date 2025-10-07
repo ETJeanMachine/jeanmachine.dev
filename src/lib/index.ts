@@ -23,46 +23,49 @@ export async function loadPublication(): Promise<Publication> {
   const publication: Publication = (await response.json()).value;
   const theme = publication.theme ?? {};
 
-  // Set background color
-  if (theme.backgroundColor) {
-    document.documentElement.style.setProperty(
-      '--background-color',
-      colorToCSS(theme.backgroundColor),
-    );
-  }
+  // Only set CSS variables if we're in the browser (not SSR)
+  if (typeof document !== 'undefined') {
+    // Set background color
+    if (theme.backgroundColor) {
+      document.documentElement.style.setProperty(
+        '--background-color',
+        colorToCSS(theme.backgroundColor),
+      );
+    }
 
-  // Set background image
-  if (theme.backgroundImage?.image) {
-    document.documentElement.style.setProperty(
-      '--background-image',
-      `url(${theme.backgroundImage.image})`,
-    );
-  }
+    // Set background image
+    if (theme.backgroundImage?.image) {
+      document.documentElement.style.setProperty(
+        '--background-image',
+        `url(${theme.backgroundImage.image})`,
+      );
+    }
 
-  // Set CSS variables for theme colors
-  if (theme.primary) {
-    document.documentElement.style.setProperty(
-      '--primary',
-      colorToCSS(theme.primary),
-    );
-  }
-  if (theme.pageBackground) {
-    document.documentElement.style.setProperty(
-      '--page-background',
-      colorToCSS(theme.pageBackground),
-    );
-  }
-  if (theme.accentBackground) {
-    document.documentElement.style.setProperty(
-      '--accent-background',
-      colorToCSS(theme.accentBackground),
-    );
-  }
-  if (theme.accentText) {
-    document.documentElement.style.setProperty(
-      '--accent-text',
-      colorToCSS(theme.accentText),
-    );
+    // Set CSS variables for theme colors
+    if (theme.primary) {
+      document.documentElement.style.setProperty(
+        '--primary',
+        colorToCSS(theme.primary),
+      );
+    }
+    if (theme.pageBackground) {
+      document.documentElement.style.setProperty(
+        '--page-background',
+        colorToCSS(theme.pageBackground),
+      );
+    }
+    if (theme.accentBackground) {
+      document.documentElement.style.setProperty(
+        '--accent-background',
+        colorToCSS(theme.accentBackground),
+      );
+    }
+    if (theme.accentText) {
+      document.documentElement.style.setProperty(
+        '--accent-text',
+        colorToCSS(theme.accentText),
+      );
+    }
   }
   return publication;
 }

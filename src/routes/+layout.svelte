@@ -82,7 +82,10 @@
     </div>
   </main>
 {:else}
-  {@render children()}
+  <div class="loading-screen">
+    <div class="spinner"></div>
+    <p>Loading...</p>
+  </div>
 {/if}
 
 <style>
@@ -217,5 +220,38 @@
     .nav-mobile > a.active {
       color: var(--accent-background);
     }
+  }
+
+  .loading-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    min-width: 100vw;
+    font-family: 'CaskaydiaCove Nerd Font', sans-serif;
+    background-color: #1a1a1a;
+    color: #ffffff;
+  }
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.1);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .loading-screen p {
+    font-size: 1.25rem;
+    margin: 0;
   }
 </style>
