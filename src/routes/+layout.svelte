@@ -1,10 +1,9 @@
 <script lang="ts">
-  let { children } = $props();
   import '../styles/index.css';
-  import { loadPublication } from '$lib';
+  import { loadPublication, blobUri } from '$lib';
   import { onMount, setContext } from 'svelte';
   import { page } from '$app/state';
-  import type { Publication } from '$lib/types/publication';
+  import { PERSONAL, HANDLE } from '$lib/constants';
 
   import {
     HouseIcon,
@@ -14,8 +13,11 @@
     Menu,
     X,
   } from '@lucide/svelte';
+  import { PubLeafletPublication } from '@atcute/leaflet';
 
-  let publication: Publication | null = $state(null);
+  let { children } = $props();
+
+  let publication = $state<PubLeafletPublication.Main | null>(null);
   let currentPath = $state('');
   let isMenuOpen = $state(false);
 
@@ -43,8 +45,32 @@
 </script>
 
 <svelte:head>
+  <title>{PERSONAL.NAME} - {PERSONAL.TITLE}</title>
+  <meta name="description" content={PERSONAL.TITLE} />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://{HANDLE}/" />
+  <meta property="og:title" content={PERSONAL.NAME} />
+  <meta property="og:description" content={PERSONAL.TITLE} />
   {#if publication}
-    <link rel="icon" href={publication.icon} />
+    <meta
+      property="og:image"
+      content="https://{HANDLE}{blobUri(publication.icon)}"
+    />
+    <link rel="icon" href={blobUri(publication.icon)} />
+  {/if}
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary" />
+  <meta property="twitter:url" content="https://{HANDLE}/" />
+  <meta property="twitter:title" content={PERSONAL.NAME} />
+  <meta property="twitter:description" content={PERSONAL.TITLE} />
+  {#if publication}
+    <meta
+      property="twitter:image"
+      content="https://{HANDLE}{blobUri(publication.icon)}"
+    />
   {/if}
 </svelte:head>
 
