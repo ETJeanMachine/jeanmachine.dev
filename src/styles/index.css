@@ -30,14 +30,15 @@
   scrollbar-color: #c2c2c2 transparent;
 }
 
-.card {
-  width: 100%;
-  background-color: var(--page-background);
-  /*backdrop-filter: blur(10px) saturate(180%);*/
-  color: var(--primary);
-  border: 1px solid #000;
-  border-radius: 20px;
-  padding: 10px;
+@media (min-width: 769px) {
+  .card {
+    width: 100%;
+    background-color: var(--page-background);
+    color: var(--primary);
+    border: 1px solid #000;
+    border-radius: 20px;
+    padding: 10px;
+  }
 }
 
 h1 {
