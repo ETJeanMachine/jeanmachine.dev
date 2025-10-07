@@ -101,8 +101,8 @@
   </div>
 
   <div class="post-footer">
-    <a href={getPostUrl(post.uri)} target="_blank" rel="noopener noreferrer">
-      {formatDate(post.value.createdAt)}
+    <a href={getPostUrl(uri)} target="_blank" rel="noopener noreferrer">
+      {formatDate(post.createdAt)}
     </a>
     <Butterfly size={20} color="#1185fe" />
   </div>
