@@ -1,32 +1,50 @@
 <script lang="ts">
-  import { get } from 'svelte/store';
+  import type { PubLeafletDocument } from '@atcute/leaflet';
   import { onMount } from 'svelte';
-  import { PDS_URL, HANDLE, API_ENDPOINTS } from '$lib/constants';
+  import { page } from '$app/state';
 
-  let blogs: any[];
+  const documents = $state<[Map<string, PubLeafletDocument.Main>]>([new Map()]);
 
-  async function getBlogs(page = 0) {
-    let response = await fetch(
-      `${PDS_URL}${API_ENDPOINTS.ATPROTO_REPO_LIST_RECORDS}?repo=${HANDLE}&collection=pub.leaflet.document`,
-    );
-    let blogs = await response.json();
-    // reconstructing the array to have only public blog posts.
-    let blog_entries = blogs.records.map((blog: any) => ({
-      rkey: blog.uri.split('/').pop(),
-      title: blog.value.title,
-      description: blog.value.description,
-      publishedAt: new Date(blog.value.publishedAt).toLocaleDateString(),
-    }));
-    return blog_entries;
-  }
+  $effect(() => {
+    const curr_page = parseInt(page.url.searchParams.get('page') || '1');
+  });
+
+  // async function getBlogs(page = 0) {
+  //   let response = await fetch(
+  //     `${PDS_URL}${API_ENDPOINTS.ATPROTO_REPO_LIST_RECORDS}?repo=${HANDLE}&collection=pub.leaflet.document`,
+  //   );
+  //   let blogs = await response.json();
+  //   // reconstructing the array to have only public blog posts.
+  //   let blog_entries = blogs.records.map((blog: any) => ({
+  //     rkey: blog.uri.split('/').pop(),
+  //     title: blog.value.title,
+  //     description: blog.value.description,
+  //     publishedAt: new Date(blog.value.publishedAt).toLocaleDateString(),
+  //   }));
+  //   return blog_entries;
+  // }
 
   onMount(async () => {
-    blogs = await getBlogs();
+    const urlParams = new URLSearchParams();
+    urlParams.set('collection', 'pub.leaflet.document');
+    urlParams.set('limit', '100');
+
+    let cursor;
+    // fetching records
+    do {
+      const records = await fetch(
+        `/api/atproto/listRecords?${urlParams.toString()}`,
+      );
+      const response = await records.json();
+
+      cursor = response.cursor;
+      urlParams.set('cursor', cursor);
+    } while (cursor);
   });
 </script>
 
-<div class="blog-container">
-  {#each blogs as blog}
+<!-- <div class="blog-container">
+  {#each document_info as blog}
     <article class="card blog">
       <a href="/blog/{blog.rkey}" class="blog-card-link">
         <div class="blog-card-content">
@@ -110,4 +128,4 @@
       padding: 1.25rem;
     }
   }
-</style>
+</style> -->

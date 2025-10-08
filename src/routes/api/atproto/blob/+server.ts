@@ -6,6 +6,10 @@ export const GET: RequestHandler = async ({ url }) => {
   const cid = url.searchParams.get('cid');
   const mimetype = url.searchParams.get('mimetype');
 
+  if (!cid) {
+    throw error(400, 'Missing cid');
+  }
+
   const blobUrl = `${PDS_URL}/xrpc/com.atproto.sync.getBlob?did=${USER_DID}&cid=${cid}`;
 
   try {

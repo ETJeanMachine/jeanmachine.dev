@@ -6,7 +6,7 @@ export const GET: RequestHandler = async ({ url }) => {
   const collection = url.searchParams.get('collection');
   const rkey = url.searchParams.get('rkey');
 
-  if (!collection) {
+  if (!collection || !rkey) {
     throw error(400, 'Missing collection or rkey');
   }
 

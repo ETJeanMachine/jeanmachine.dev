@@ -23,10 +23,10 @@ export async function loadPublication(): Promise<PubLeafletPublication.Main> {
     headers: { 'Content-Type': 'application/json' },
   });
   const publication: PubLeafletPublication.Main = (await response.json()).value;
-  console.log(publication);
-  if (!is(PubLeafletPublication.mainSchema, publication)) {
-    console.error('Invalid publication schema');
-  }
+  // commenting this out bc the guys over at leaflet have an invalid schema rn
+  // if (!is(PubLeafletPublication.mainSchema, publication)) {
+  //   console.error('Invalid publication schema');
+  // }
 
   const theme = publication.theme ?? {};
 

@@ -25,7 +25,6 @@
       throw error(500, { message: 'No pinned post.' });
     }
     uri = author.pinnedPost.uri;
-    console.log(uri);
     let rkey = uri.split('/').pop();
     if (!rkey) {
       throw error(500, { message: 'Failed to fetch pinned post URI' });
