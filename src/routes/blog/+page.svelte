@@ -3,7 +3,7 @@
   import { onMount } from 'svelte';
   import { page } from '$app/state';
 
-  let documents = $state<[Map<string, PubLeafletDocument.Main>]>([]);
+  let documents = $state<Map<string, PubLeafletDocument.Main>[]>([]);
   let documents_loaded = $state(false);
   let page_count = $state(1);
 
