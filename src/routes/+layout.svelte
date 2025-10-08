@@ -1,7 +1,6 @@
 <script lang="ts">
-  let { children } = $props();
   import '../styles/index.css';
-  import { blobUri, loadPublication } from '$lib';
+  import { applyTheme, blobUri } from '$lib';
   import { onMount, setContext } from 'svelte';
   import { page } from '$app/state';
 
@@ -13,9 +12,14 @@
   } from '@lucide/svelte';
   import type { PubLeafletPublication } from '@atcute/leaflet';
 
-  let publication = $state<PubLeafletPublication.Main | null>(null);
+  let { children, data } = $props();
+
+  const publication = $state<PubLeafletPublication.Main | null>(
+    data.publication,
+  );
   let currentPath = $state('');
   let isMenuOpen = $state(false);
+  let themeLoaded = $state(false);
 
   const navItems = [
     { name: 'Home', href: '/', icon: HouseIcon, exact: true },
@@ -35,18 +39,46 @@
     isMenuOpen = false; // Close menu on navigation
   });
 
-  onMount(async () => {
-    publication = await loadPublication();
+  onMount(() => {
+    // Apply theme to document using server-fetched data
+    if (publication) {
+      applyTheme(publication);
+    }
+    themeLoaded = true;
   });
 </script>
 
 <svelte:head>
+  <meta name="description" content={PERSONAL.TITLE} />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://{HANDLE}/" />
+  <meta property="og:title" content={PERSONAL.NAME} />
+  <meta property="og:description" content={PERSONAL.TITLE} />
+  {#if publication}
+    <meta
+      property="og:image"
+      content="https://{HANDLE}{blobUri(publication.icon)}"
+    />
+    <link rel="icon" href={blobUri(publication.icon)} />
+  {/if}
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary" />
+  <meta property="twitter:url" content="https://{HANDLE}/" />
+  <meta property="twitter:title" content={PERSONAL.NAME} />
+  <meta property="twitter:description" content={PERSONAL.TITLE} />
   {#if publication}
     <link rel="icon" href={blobUri(publication.icon)} />
+    <meta
+      property="twitter:image"
+      content="https://{HANDLE}{blobUri(publication.icon)}"
+    />
   {/if}
 </svelte:head>
 
-{#if publication}
+{#if themeLoaded}
   <main>
     <div>
       <nav class="nav-desktop">
