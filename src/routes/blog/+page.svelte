@@ -65,14 +65,24 @@
   }
 
   async function navigateToPage(pageNum: number) {
-    const totalPages = Math.ceil(documents.size / 10);
-
-    // Fetch more documents if we're on the 2nd to last page or beyond
+    // Fetch more documents if we're going to the last page
     if (pageNum == -1) {
       await fetchRemainingDocs();
-      pageNum = Math.floor(documents.size / 10);
-    } else if (pageNum >= totalPages - 2 && cursor) {
-      await fetchDocs();
+      pageNum = Math.ceil(documents.size / 10) - 1;
+    } else {
+      // Calculate how many pages we currently have
+      let totalPages = Math.ceil(documents.size / 10);
+
+      // Only fetch if we're moving forward and near the end
+      if (pageNum > curr_page && pageNum >= totalPages - 2 && cursor) {
+        // Calculate how many additional pages we need to have a buffer
+        const pagesNeeded = Math.max(1, pageNum - totalPages + 3);
+
+        // Fetch documents until we have enough pages
+        for (let i = 0; i < pagesNeeded && cursor; i++) {
+          await fetchDocs();
+        }
+      }
     }
 
     goto(`?page=${pageNum}`, { replaceState: true });
@@ -112,7 +122,13 @@
           <ChevronLeft />
         </button>
       {/if}
-      <span>{curr_page + 1}</span>
+      <input
+        type="number"
+        value={curr_page + 1}
+        min={1}
+        max={99}
+        onchange={(e) => navigateToPage(parseInt(e.currentTarget.value) - 1)}
+      />
       {#if curr_page >= Math.floor(documents.size / 10) - 2}
         <ChevronRight strokeWidth={0.5} color="grey" />
         <ChevronLast strokeWidth={0.5} color="grey" />
@@ -129,6 +145,72 @@
 </div>
 
 <style>
+  .paginator {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    max-width: 150px;
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10;
+  }
+
+  .paginator button {
+    all: unset;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+
+  .paginator button:hover {
+    color: var(--accent-background);
+  }
+
+  .paginator input {
+    all: unset;
+    width: 3ch;
+    text-align: center;
+    background-color: var(--accent-background);
+    padding: 3px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    color: var(--accent-text);
+    text-decoration: underline;
+  }
+
+  .paginator input::-webkit-outer-spin-button,
+  .paginator input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .paginator input[type='number'] {
+    appearance: textfield;
+    -moz-appearance: textfield;
+  }
+
+  /* Mobile view - center paginator */
+  .blog-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  @media (max-width: 768px) {
+    .paginator {
+      border: 1px solid #000;
+      background-color: var(--page-background);
+      padding: 4px;
+      border-radius: 4px;
+    }
+
+    .blog-layout {
+      padding-bottom: 40px;
+    }
+  }
+
   @media (min-width: 769px) {
     .blog-layout {
       width: 100%;
@@ -142,21 +224,6 @@
       display: flex;
       gap: 10px;
       width: 100%;
-    }
-
-    .paginator {
-      display: flex;
-      justify-content: space-evenly;
-      max-width: 150px;
-    }
-
-    .paginator button {
-      all: unset;
-      cursor: pointer;
-    }
-
-    .paginator button:hover {
-      color: var(--accent-background);
     }
   }
 </style>
