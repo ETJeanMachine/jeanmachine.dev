@@ -53,14 +53,23 @@
         />
       {/if}
       <div class="name">
-        <h1>{PERSONAL.NAME}</h1>
-        <h3 class="location"><MapPin size={'1rem'} /> {PERSONAL.LOCATION}</h3>
+        <div class="woke">
+          <h1>{PERSONAL.NAME}</h1>
+          <h3><i>(any/all)</i></h3>
+        </div>
+
+        <div class="location">
+          <MapPin size={'1.4rem'} />
+          <h3>
+            {PERSONAL.LOCATION}
+          </h3>
+        </div>
       </div>
     </div>
     {#if iconSize > 100}
       <hr />
     {/if}
-    <h3>{PERSONAL.TITLE}</h3>
+    <span>{PERSONAL.TITLE}</span>
     <div class="social-icons">
       {#each socialIcons as item}
         {@const SocialIcon = item.icon}
@@ -76,6 +85,7 @@
   .profile {
     display: flex;
     flex-direction: row;
+    align-items: center;
     gap: 10px;
   }
 
@@ -83,6 +93,22 @@
     object-fit: cover;
     border: 1px solid #000;
     aspect-ratio: 1 / 1;
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    gap: 0.3rem;
+    flex: 1;
+  }
+
+  .info > * {
+    margin: 0px;
+  }
+
+  .info span {
+    font-style: italic;
   }
 
   .name-header {
@@ -94,20 +120,24 @@
   .name {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     gap: 0.5rem;
+    flex: 1;
   }
 
   .name > * {
     margin: 0px;
   }
 
-  .info {
+  .woke {
+    width: 100%;
     display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    gap: 0.75rem;
-    flex: 1;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .woke > * {
+    margin: 0px;
   }
 
   .location {
@@ -117,7 +147,7 @@
     gap: 0.5rem;
   }
 
-  .info > * {
+  .location > * {
     margin: 0px;
   }
 
