@@ -64,9 +64,6 @@
   });
 </script>
 
-{#if documents_loaded}
-  {$inspect(documents)}
-{/if}
 <!-- <div class="blog-container">
   {#each document_info as blog}
     <article class="card blog">
