@@ -1,21 +1,19 @@
 <script lang="ts">
   let { children } = $props();
   import '../styles/index.css';
-  import { loadPublication } from '$lib';
+  import { blobUri, loadPublication } from '$lib';
   import { onMount, setContext } from 'svelte';
   import { page } from '$app/state';
-  import type { Publication } from '$lib/types/publication';
 
   import {
     HouseIcon,
     BriefcaseBusiness,
     NotebookPen,
     Signature,
-    Menu,
-    X,
   } from '@lucide/svelte';
+  import type { PubLeafletPublication } from '@atcute/leaflet';
 
-  let publication: Publication | null = $state(null);
+  let publication = $state<PubLeafletPublication.Main | null>(null);
   let currentPath = $state('');
   let isMenuOpen = $state(false);
 
@@ -44,7 +42,7 @@
 
 <svelte:head>
   {#if publication}
-    <link rel="icon" href={publication.icon} />
+    <link rel="icon" href={blobUri(publication.icon)} />
   {/if}
 </svelte:head>
 
@@ -159,7 +157,13 @@
 
     main {
       overflow: hidden;
-      position: relative;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      min-height: 100dvh;
+      max-height: 100dvh;
     }
 
     main > div {
