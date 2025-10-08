@@ -56,7 +56,7 @@
   <meta property="og:image" content="/api/meta-image" />
 
   <!-- X (Twitter) -->
-  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:card" content="summary" />
   <meta property="twitter:url" content="https://jeanmachine.dev" />
   <meta property="twitter:title" content={PERSONAL.NAME} />
   <meta property="twitter:description" content={PERSONAL.TITLE} />
