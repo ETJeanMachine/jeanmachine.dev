@@ -81,6 +81,8 @@ p > a {
 }
 p > a:hover {
   color: var(--accent-background);
+  text-decoration: underline;
+  font-weight: bold;
 }
 hr {
   height: 0.5px;

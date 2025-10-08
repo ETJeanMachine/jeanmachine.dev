@@ -1,9 +1,8 @@
 <script lang="ts">
-  let { children } = $props();
-  import { blobUri, loadPublication } from '$lib';
+  import '../index.css';
+  import { loadPublication } from '$lib';
   import { onMount, setContext } from 'svelte';
   import { page } from '$app/state';
-
   import {
     HouseIcon,
     BriefcaseBusiness,
@@ -12,6 +11,8 @@
   } from '@lucide/svelte';
   import type { PubLeafletPublication } from '@atcute/leaflet';
   import { PERSONAL } from '$lib/constants';
+
+  let { children } = $props();
 
   let publication = $state<PubLeafletPublication.Main | null>(null);
   let currentPath = $state('');
