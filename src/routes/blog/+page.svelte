@@ -3,7 +3,9 @@
   import { onMount } from 'svelte';
   import { page } from '$app/state';
 
-  const documents = $state<[Map<string, PubLeafletDocument.Main>]>([new Map()]);
+  let documents = $state<[Map<string, PubLeafletDocument.Main>]>([]);
+  let documents_loaded = $state(false);
+  let page_count = $state(1);
 
   $effect(() => {
     const curr_page = parseInt(page.url.searchParams.get('page') || '1');
@@ -26,23 +28,45 @@
 
   onMount(async () => {
     const urlParams = new URLSearchParams();
-    urlParams.set('collection', 'pub.leaflet.document');
+    urlParams.set('collection', 'app.bsky.feed.post');
     urlParams.set('limit', '100');
 
     let cursor;
+    let currentMap = new Map<string, PubLeafletDocument.Main>();
+
     // fetching records
     do {
       const records = await fetch(
         `/api/atproto/listRecords?${urlParams.toString()}`,
       );
       const response = await records.json();
-
+      for (const record of response.records) {
+        const rkey = record.uri.split('/').pop();
+        currentMap.set(rkey, record.value);
+        // Every 10 records, add the current map to documents and start a new map
+        if (currentMap.size === 10) {
+          documents.push(currentMap);
+          currentMap = new Map<string, PubLeafletDocument.Main>();
+        }
+      }
       cursor = response.cursor;
-      urlParams.set('cursor', cursor);
+      if (cursor) {
+        urlParams.set('cursor', cursor);
+      }
     } while (cursor);
+
+    // Add any remaining records (if less than 10)
+    if (currentMap.size > 0) {
+      documents.push(currentMap);
+    }
+
+    documents_loaded = true;
   });
 </script>
 
+{#if documents_loaded}
+  {$inspect(documents)}
+{/if}
 <!-- <div class="blog-container">
   {#each document_info as blog}
     <article class="card blog">
