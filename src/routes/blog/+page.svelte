@@ -10,6 +10,7 @@
     ChevronLeft,
     ChevronRight,
   } from '@lucide/svelte';
+  import { datetimeString } from '@atcute/lexicons/validations';
 
   let documents = $state<Map<string, PubLeafletDocument.Main>>(new Map());
   let leftKeys = $state<string[]>();
@@ -37,7 +38,7 @@
   // fetching the next 5 pages of documents when we need to.
   async function fetchDocs() {
     const urlParams = new URLSearchParams();
-    urlParams.set('collection', 'app.bsky.feed.post');
+    urlParams.set('collection', 'pub.leaflet.document');
     urlParams.set('limit', '50');
     if (cursor) {
       urlParams.set('cursor', cursor);
@@ -94,20 +95,40 @@
 </script>
 
 <div class="blog-layout">
+  {#snippet documentList(keys: string[])}
+    <div class="card">
+      {#each keys as key, i}
+        {@const doc = documents.get(key)}
+        {#if doc && doc?.publishedAt}
+          <a href="/blog/{key}">
+            <div>
+              <h2>{doc.title}</h2>
+              <p class="date">
+                {new Date(doc.publishedAt).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </p>
+            </div>
+            <p>{doc.description}</p>
+          </a>
+        {/if}
+        {#if i < keys.length - 1}
+          <hr />
+        {/if}
+      {/each}
+    </div>
+  {/snippet}
+
   {#if documents.size > 0}
     <div class="blog-header"></div>
     <div class="blog-container">
-      <div class="card">
-        {#each leftKeys as key}
-          <p>{documents.get(key).text}</p>
-        {/each}
-      </div>
-      {#if rightKeys}
-        <div class="card">
-          {#each rightKeys as key}
-            <p>{documents.get(key).text}</p>
-          {/each}
-        </div>
+      {#if leftKeys}
+        {@render documentList(leftKeys)}
+      {/if}
+      {#if rightKeys && rightKeys.length > 0}
+        {@render documentList(rightKeys)}
       {/if}
     </div>
     <div class="paginator card">
@@ -145,16 +166,45 @@
 </div>
 
 <style>
+  /* Mobile view - center paginator */
+  .blog-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .blog-layout a {
+    all: unset;
+    cursor: pointer;
+  }
+
+  .blog-layout a:hover {
+    filter: brightness(0.8);
+    h2,
+    .date {
+      text-decoration: underline;
+    }
+  }
+
+  .blog-layout a div {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    * {
+      margin-bottom: 0px;
+    }
+  }
+
+  .date {
+    color: var(--accent-text);
+    font-style: italic;
+  }
+
   .paginator {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     max-width: 150px;
-    position: fixed;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
   }
 
   .paginator button {
@@ -191,19 +241,17 @@
     -moz-appearance: textfield;
   }
 
-  /* Mobile view - center paginator */
-  .blog-layout {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
   @media (max-width: 768px) {
     .paginator {
       border: 1px solid #000;
       background-color: var(--page-background);
       padding: 4px;
       border-radius: 4px;
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
     }
 
     .blog-layout {
