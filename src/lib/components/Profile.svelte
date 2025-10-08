@@ -57,17 +57,23 @@
           <h1>{PERSONAL.NAME}</h1>
           <h3><i>(any/all)</i></h3>
         </div>
-
-        <div class="location">
-          <MapPin size={'1.4rem'} />
-          <h3>
-            {PERSONAL.LOCATION}
-          </h3>
-        </div>
+        {#if !mobile}
+          <div class="location">
+            <MapPin size={'1.4rem'} />
+            <h3>
+              {PERSONAL.LOCATION}
+            </h3>
+          </div>
+        {/if}
       </div>
     </div>
-    {#if iconSize > 100}
-      <hr />
+    {#if mobile}
+      <div class="location">
+        <MapPin size={'1.4rem'} />
+        <h3>
+          {PERSONAL.LOCATION}
+        </h3>
+      </div>
     {/if}
     <span>{PERSONAL.TITLE}</span>
     <div class="social-icons">
@@ -134,6 +140,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+
+  @media (max-width: 768px) {
+    .woke {
+      align-items: start;
+      flex-direction: column;
+    }
   }
 
   .woke > * {
