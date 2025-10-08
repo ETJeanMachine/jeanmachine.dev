@@ -12,6 +12,7 @@
     Signature,
   } from '@lucide/svelte';
   import type { PubLeafletPublication } from '@atcute/leaflet';
+  import { PERSONAL } from '$lib/constants';
 
   let publication = $state<PubLeafletPublication.Main | null>(null);
   let currentPath = $state('');
@@ -44,9 +45,24 @@
 </script>
 
 <svelte:head>
-  {#if publication}
-    <link rel="icon" href={blobUri(publication.icon)} />
-  {/if}
+  <meta name="title" content={PERSONAL.NAME} />
+  <meta name="description" content={PERSONAL.TITLE} />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://jeanmachine.dev" />
+  <meta property="og:title" content={PERSONAL.NAME} />
+  <meta property="og:description" content={PERSONAL.TITLE} />
+  <meta property="og:image" content="/api/meta-image" />
+
+  <!-- X (Twitter) -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://jeanmachine.dev" />
+  <meta property="twitter:title" content={PERSONAL.NAME} />
+  <meta property="twitter:description" content={PERSONAL.TITLE} />
+  <meta property="twitter:image" content="/api/meta-image" />
+
+  <link rel="icon" href="/api/meta-image" />
 </svelte:head>
 
 {#if publication}
