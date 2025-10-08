@@ -35,7 +35,11 @@
       target="_blank"
       rel="noopener noreferrer"
     >
-      <img src={blobUri(author.avatar)} alt={author.displayName} class="avatar" /></a
+      <img
+        src={blobUri(author.avatar)}
+        alt={author.displayName}
+        class="avatar"
+      /></a
     >
     <div class="author-info">
       <a
@@ -73,7 +77,11 @@
       {:else if post.embed.$type === 'app.bsky.embed.images'}
         <div class="images">
           {#each post.embed.images as image}
-            <img src={blobUri(image.image)} alt={image.alt || ''} class="post-image" />
+            <img
+              src={blobUri(image.image)}
+              alt={image.alt || ''}
+              class="post-image"
+            />
           {/each}
         </div>
       {:else if post.embed.$type === 'app.bsky.embed.external'}

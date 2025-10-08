@@ -1,10 +1,10 @@
 // place files you want to import through the `$lib` alias in this folder.
 import { PUBLICATION } from '$lib/constants';
-import { PubLeafletPublication } from '@atcute/leaflet';
+import { PubLeafletPublication, PubLeafletThemeColor } from '@atcute/leaflet';
 import { is, type Blob, type LegacyBlob } from '@atcute/lexicons';
-
-import type { Colour } from './types/publication';
 import { isBlob, isLegacyBlob } from '@atcute/lexicons/interfaces';
+
+type Colour = PubLeafletThemeColor.Rgb | PubLeafletThemeColor.Rgba;
 
 function colorToCSS(color: Colour | undefined): string {
   if (!color) return '';
