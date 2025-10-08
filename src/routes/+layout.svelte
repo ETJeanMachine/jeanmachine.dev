@@ -15,7 +15,7 @@
 
   let publication = $state<PubLeafletPublication.Main | null>(null);
   let currentPath = $state('');
-  let isMenuOpen = $state(false);
+  let contentDiv: HTMLDivElement | null = $state(null);
 
   const navItems = [
     { name: 'Home', href: '/', icon: HouseIcon, exact: true },
@@ -32,7 +32,10 @@
 
   $effect(() => {
     currentPath = page.url.pathname;
-    isMenuOpen = false; // Close menu on navigation
+    // Reset scroll to top on navigation
+    if (contentDiv) {
+      contentDiv.scrollTop = 0;
+    }
   });
 
   onMount(async () => {
@@ -62,7 +65,7 @@
         {/each}
       </nav>
       <br />
-      <div>
+      <div bind:this={contentDiv}>
         {@render children()}
       </div>
       <nav class="nav-mobile">
@@ -96,8 +99,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
-    min-width: 100vw;
+    min-height: 100dvh;
+    min-width: 100dvw;
     font-family: 'CaskaydiaCove Nerd Font', sans-serif;
     color: var(--primary);
   }
