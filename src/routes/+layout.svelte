@@ -1,6 +1,5 @@
 <script lang="ts">
   let { children } = $props();
-  import '../styles/index.css';
   import { blobUri, loadPublication } from '$lib';
   import { onMount, setContext } from 'svelte';
   import { page } from '$app/state';
