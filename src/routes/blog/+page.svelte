@@ -1,16 +1,14 @@
 <script lang="ts">
-  import { getContext, onMount } from 'svelte';
+  import { getContext, onMount, setContext } from 'svelte';
   import { page } from '$app/state';
   import { goto } from '$app/navigation';
   import { PubLeafletDocument, PubLeafletPublication } from '@atcute/leaflet';
-  import { is } from '@atcute/lexicons';
   import {
     ChevronFirst,
     ChevronLast,
     ChevronLeft,
     ChevronRight,
   } from '@lucide/svelte';
-  import { datetimeString } from '@atcute/lexicons/validations';
 
   let documents = $state<Map<string, PubLeafletDocument.Main>>(new Map());
   let leftKeys = $state<string[]>();
@@ -19,6 +17,12 @@
     value: PubLeafletPublication.Main | null;
   }>('publication');
   let curr_page = $state(0);
+
+  setContext('documents', {
+    get value() {
+      return documents;
+    },
+  });
 
   $effect(() => {
     curr_page = parseInt(page.url.searchParams.get('page') ?? '0');
