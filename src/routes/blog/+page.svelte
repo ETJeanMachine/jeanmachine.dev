@@ -189,7 +189,7 @@
   .blog-layout a div {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: flex-end;
     * {
       margin-bottom: 0px;
     }
