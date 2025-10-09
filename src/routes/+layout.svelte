@@ -17,6 +17,9 @@
   let publication = $state<PubLeafletPublication.Main | null>(null);
   let currentPath = $state('');
   let contentDiv: HTMLDivElement | null = $state(null);
+  let lastScrollTop = $state(0);
+  let navHidden = $state(false);
+  let isScrollingDown = $state(false);
 
   const navItems = [
     { name: 'Home', href: '/', icon: HouseIcon, exact: true },
@@ -38,6 +41,24 @@
       contentDiv.scrollTop = 0;
     }
   });
+
+  function handleScroll(event: Event) {
+    const target = event.target as HTMLDivElement;
+    const scrollTop = target.scrollTop;
+
+    // Determine scroll direction based on scroll position change
+    if (scrollTop > lastScrollTop + 10 && scrollTop > 50) {
+      // Scrolling down significantly
+      isScrollingDown = true;
+      navHidden = true;
+    } else if (scrollTop < lastScrollTop - 10) {
+      // Scrolling up significantly
+      isScrollingDown = false;
+      navHidden = false;
+    }
+
+    lastScrollTop = scrollTop;
+  }
 
   onMount(async () => {
     publication = await loadPublication();
@@ -67,7 +88,7 @@
 
 {#if publication}
   <main>
-    <div>
+    <div class:nav-hidden={navHidden}>
       <nav class="nav-desktop">
         {#each navItems as item}
           {@const NavIcon = item.icon}
@@ -81,10 +102,10 @@
         {/each}
       </nav>
       <br />
-      <div bind:this={contentDiv}>
+      <div bind:this={contentDiv} onscroll={handleScroll}>
         {@render children()}
       </div>
-      <nav class="nav-mobile">
+      <nav class="nav-mobile" class:hidden={navHidden}>
         {#each navItems as item}
           {@const NavIcon = item.icon}
           {@const isActive = item.exact
@@ -187,8 +208,13 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      padding-bottom: 65px;
       box-sizing: border-box;
+      padding-bottom: 65px;
+      transition: padding-bottom 0.3s ease;
+    }
+
+    main > div.nav-hidden {
+      padding-bottom: 0.5rem;
     }
 
     main > div > div {
@@ -207,18 +233,25 @@
     .nav-mobile {
       position: fixed;
       bottom: 0;
-      left: 0;
-      right: 0;
-      width: 100%;
+      left: 5vw;
+      right: 5vw;
+      width: 90vw;
       display: flex;
       flex-direction: row;
       justify-content: space-around;
       align-items: center;
       background-color: var(--page-background);
-      border-top: 1px solid #000;
+      border: 1px solid #000;
+      border-radius: 10px 10px 0 0;
       padding: 0.25rem 0;
       padding-bottom: calc(0.25rem + env(safe-area-inset-bottom));
       z-index: 100;
+      transform: translateY(0);
+      transition: transform 0.3s ease;
+    }
+
+    .nav-mobile.hidden {
+      transform: translateY(100%);
     }
 
     .nav-mobile > a {
