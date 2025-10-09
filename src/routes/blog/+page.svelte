@@ -16,6 +16,7 @@
   const publicationContext = getContext<{
     value: PubLeafletPublication.Main | null;
   }>('publication');
+  const publication = publicationContext.value;
   let curr_page = $state(0);
 
   $effect(() => {
@@ -97,8 +98,8 @@
     <div class="card">
       {#each keys as key, i}
         {@const doc = documents.get(key)}
-        {#if doc && doc?.publishedAt}
-          <a href="https://blog.jean.moe/{key}">
+        {#if doc && doc?.publishedAt && publication}
+          <a href="https://{publication.base_path}/{key}">
             <div>
               <h2>{doc.title}</h2>
               <p class="date">
