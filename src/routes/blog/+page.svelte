@@ -18,12 +18,6 @@
   }>('publication');
   let curr_page = $state(0);
 
-  setContext('documents', {
-    get value() {
-      return documents;
-    },
-  });
-
   $effect(() => {
     curr_page = parseInt(page.url.searchParams.get('page') ?? '0');
     if (documents && documents.size > 0) {
@@ -104,7 +98,7 @@
       {#each keys as key, i}
         {@const doc = documents.get(key)}
         {#if doc && doc?.publishedAt}
-          <a href="/blog/{key}">
+          <a href="https://blog.jean.moe/{key}">
             <div>
               <h2>{doc.title}</h2>
               <p class="date">
