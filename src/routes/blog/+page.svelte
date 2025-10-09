@@ -1,113 +1,276 @@
 <script lang="ts">
-  import { get } from 'svelte/store';
-  import { onMount } from 'svelte';
-  import { PDS_URL, HANDLE, API_ENDPOINTS } from '$lib/constants';
+  import { getContext, onMount, setContext } from 'svelte';
+  import { page } from '$app/state';
+  import { goto } from '$app/navigation';
+  import { PubLeafletDocument, PubLeafletPublication } from '@atcute/leaflet';
+  import {
+    ChevronFirst,
+    ChevronLast,
+    ChevronLeft,
+    ChevronRight,
+  } from '@lucide/svelte';
 
-  let blogs: any[];
+  let documents = $state<Map<string, PubLeafletDocument.Main>>(new Map());
+  let leftKeys = $state<string[]>();
+  let rightKeys = $state<string[]>();
+  const publicationContext = getContext<{
+    value: PubLeafletPublication.Main | null;
+  }>('publication');
+  const publication = publicationContext.value;
+  let curr_page = $state(0);
 
-  async function getBlogs(page = 0) {
-    let response = await fetch(
-      `${PDS_URL}${API_ENDPOINTS.ATPROTO_REPO_LIST_RECORDS}?repo=${HANDLE}&collection=pub.leaflet.document`,
+  $effect(() => {
+    curr_page = parseInt(page.url.searchParams.get('page') ?? '0');
+    if (documents && documents.size > 0) {
+      const startIndex = curr_page * 10;
+      const keyArray = Array.from(documents.keys());
+
+      // Get first 5 items for left column
+      leftKeys = keyArray.slice(startIndex, startIndex + 5);
+
+      // Get next 5 items for right column (only if we have more than 5 items)
+      rightKeys = keyArray.slice(startIndex + 5, startIndex + 10);
+    }
+  });
+
+  let cursor = $state('');
+  // fetching the next 5 pages of documents when we need to.
+  async function fetchDocs() {
+    const urlParams = new URLSearchParams();
+    urlParams.set('collection', 'pub.leaflet.document');
+    urlParams.set('limit', '50');
+    if (cursor) {
+      urlParams.set('cursor', cursor);
+    }
+    const response_map = new Map<string, PubLeafletDocument.Main>();
+    // fetching records
+    const records = await fetch(
+      `/api/atproto/listRecords?${urlParams.toString()}`,
     );
-    let blogs = await response.json();
-    // reconstructing the array to have only public blog posts.
-    let blog_entries = blogs.records.map((blog: any) => ({
-      rkey: blog.uri.split('/').pop(),
-      title: blog.value.title,
-      description: blog.value.description,
-      publishedAt: new Date(blog.value.publishedAt).toLocaleDateString(),
-    }));
-    return blog_entries;
+    const response = await records.json();
+    // going through the records we retrieved (they should be reverse-chronological)
+    for (const record of response.records) {
+      const rkey = record.uri.split('/').pop();
+      // if (is(PubLeafletDocument.mainSchema, record.value)) {
+      response_map.set(rkey, record.value);
+    }
+    cursor = response.cursor;
+    documents = new Map([...documents, ...response_map]);
+  }
+
+  async function fetchRemainingDocs() {
+    do {
+      await fetchDocs();
+    } while (cursor);
+  }
+
+  async function navigateToPage(pageNum: number) {
+    // Fetch more documents if we're going to the last page
+    if (pageNum == -1) {
+      await fetchRemainingDocs();
+      pageNum = Math.ceil(documents.size / 10) - 1;
+    } else {
+      // Calculate how many pages we currently have
+      let totalPages = Math.ceil(documents.size / 10);
+
+      // Only fetch if we're moving forward and near the end
+      if (pageNum > curr_page && pageNum >= totalPages - 2 && cursor) {
+        // Calculate how many additional pages we need to have a buffer
+        const pagesNeeded = Math.max(1, pageNum - totalPages + 3);
+
+        // Fetch documents until we have enough pages
+        for (let i = 0; i < pagesNeeded && cursor; i++) {
+          await fetchDocs();
+        }
+      }
+    }
+
+    goto(`?page=${pageNum}`, { replaceState: true });
   }
 
   onMount(async () => {
-    blogs = await getBlogs();
+    await fetchDocs();
   });
 </script>
 
-<div class="blog-container">
-  {#each blogs as blog}
-    <article class="card blog">
-      <a href="/blog/{blog.rkey}" class="blog-card-link">
-        <div class="blog-card-content">
-          <header class="blog-card-header">
-            <h2 class="blog-card-title">{blog.title}</h2>
-            <time class="blog-card-date" datetime={blog.publishedAt}
-              >{blog.publishedAt}</time
-            >
-          </header>
-          <p>{blog.description}</p>
-        </div>
-      </a>
-    </article>
-  {/each}
+<div class="blog-layout">
+  {#snippet documentList(keys: string[])}
+    <div class="card">
+      {#each keys as key, i}
+        {@const doc = documents.get(key)}
+        {#if doc && doc?.publishedAt && publication}
+          <a href="https://{publication.base_path}/{key}">
+            <div>
+              <h2>{doc.title}</h2>
+              <p class="date">
+                {new Date(doc.publishedAt).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </p>
+            </div>
+            <p>{doc.description}</p>
+          </a>
+        {/if}
+        {#if i < keys.length - 1}
+          <hr />
+        {/if}
+      {/each}
+    </div>
+  {/snippet}
+
+  {#if documents.size > 0}
+    <div class="blog-header"></div>
+    <div class="blog-container">
+      {#if leftKeys}
+        {@render documentList(leftKeys)}
+      {/if}
+      {#if rightKeys && rightKeys.length > 0}
+        {@render documentList(rightKeys)}
+      {/if}
+    </div>
+    <div class="paginator card">
+      {#if curr_page == 0}
+        <ChevronFirst strokeWidth={0.5} color="grey" />
+        <ChevronLeft strokeWidth={0.5} color="grey" />
+      {:else}
+        <button onclick={() => navigateToPage(0)}>
+          <ChevronFirst />
+        </button>
+        <button onclick={() => navigateToPage(curr_page - 1)}>
+          <ChevronLeft />
+        </button>
+      {/if}
+      <input
+        type="number"
+        value={curr_page + 1}
+        min={1}
+        max={99}
+        onchange={(e) => navigateToPage(parseInt(e.currentTarget.value) - 1)}
+      />
+      {#if curr_page >= Math.floor(documents.size / 10) - 2}
+        <ChevronRight strokeWidth={0.5} color="grey" />
+        <ChevronLast strokeWidth={0.5} color="grey" />
+      {:else}
+        <button onclick={() => navigateToPage(curr_page + 1)}>
+          <ChevronRight />
+        </button>
+        <button onclick={() => navigateToPage(-1)}>
+          <ChevronLast />
+        </button>
+      {/if}
+    </div>
+  {/if}
 </div>
 
 <style>
-  .blog-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1.5rem;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .blog-card-link {
-    display: block;
-    text-decoration: none;
-    color: inherit;
-    height: 100%;
-  }
-
-  .blog-card-content {
-    padding: 1.5rem;
-    height: 100%;
+  /* Mobile view - center paginator */
+  .blog-layout {
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
 
-  .blog-card-header {
+  .blog-layout a {
+    all: unset;
+    cursor: pointer;
+  }
+
+  .blog-layout a:hover {
+    filter: brightness(0.8);
+    h2,
+    .date {
+      text-decoration: underline;
+    }
+  }
+
+  .blog-layout a div {
     display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    justify-content: space-between;
+    align-items: flex-end;
+    * {
+      margin-bottom: 0px;
+    }
   }
 
-  .blog-card-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    line-height: 1.4;
-    color: #ffffff;
+  .date {
+    color: var(--accent-text);
+    font-style: italic;
+  }
+
+  .paginator {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    max-width: 150px;
+  }
+
+  .paginator button {
+    all: unset;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+  }
+
+  .paginator button:hover {
+    color: var(--accent-background);
+  }
+
+  .paginator input {
+    all: unset;
+    width: 3ch;
+    text-align: center;
+    background-color: var(--accent-background);
+    padding: 3px;
+    border: 1px solid #000;
+    border-radius: 4px;
+    color: var(--accent-text);
+    text-decoration: underline;
+  }
+
+  .paginator input::-webkit-outer-spin-button,
+  .paginator input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
     margin: 0;
-    word-wrap: break-word;
   }
 
-  .blog-card-date {
-    font-size: 0.875rem;
-    color: #c2c2c2;
-    font-weight: 400;
-  }
-
-  .blog-card-description {
-    margin: 0;
-    margin-top: 1rem;
-    font-size: 0.9rem;
-    line-height: 1.5;
-    color: rgba(255, 255, 255, 0.8);
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+  .paginator input[type='number'] {
+    appearance: textfield;
+    -moz-appearance: textfield;
   }
 
   @media (max-width: 768px) {
-    .blog-container {
-      grid-template-columns: 1fr;
-      padding: 1rem;
-      gap: 1rem;
+    .paginator {
+      border: 1px solid #000;
+      background-color: var(--page-background);
+      padding: 4px;
+      border-radius: 4px;
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
     }
 
-    .blog-card-content {
-      padding: 1.25rem;
+    .blog-layout {
+      padding-bottom: 40px;
+    }
+  }
+
+  @media (min-width: 769px) {
+    .blog-layout {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .blog-container {
+      display: flex;
+      gap: 10px;
+      width: 100%;
     }
   }
 </style>
