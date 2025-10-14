@@ -1,6 +1,6 @@
 # jeanmachine.dev
 
-This is a repository for my [personal website])(https://jeanmachine.dev), and it is powered by Svelte. To be able to run this project, or to make a Svelte project of your own, check out [`sv`](https://github.com/sveltejs/cli).
+This is a repository for my [personal website](https://jeanmachine.dev), and it is powered by Svelte. To be able to run this project, or to make a Svelte project of your own, check out [`sv`](https://github.com/sveltejs/cli).
 
 ## Developing
 
