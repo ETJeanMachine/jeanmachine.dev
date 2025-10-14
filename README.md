@@ -9,10 +9,10 @@ This project uses bun as a JS/TS runtime, which you can install by running `npm 
 Once you've created a project and installed dependencies with `bun install`, start a development server:
 
 ```bash
-bun dev
+bun run dev
 
 # or start the server and open the app in a new browser tab
-bun dev --open
+bun run dev --open
 ```
 
 ## Building
@@ -20,7 +20,7 @@ bun dev --open
 To create a production version of this app:
 
 ```bash
-bun build
+bun run build
 ```
 
 You can preview the production build with `bun preview`.
