@@ -1,6 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { USER_DID, PDS_URL } from '$lib/constants';
+import { PUBLIC_DID, PUBLIC_PDS_URL } from '$env/static/public';
 
 export const GET: RequestHandler = async ({ url }) => {
   const collection = url.searchParams.get('collection');
@@ -12,12 +12,12 @@ export const GET: RequestHandler = async ({ url }) => {
   }
 
   const urlParams = new URLSearchParams();
-  urlParams.append('repo', USER_DID);
+  urlParams.append('repo', PUBLIC_DID);
   urlParams.append('collection', collection);
   urlParams.append('cursor', cursor || '');
   urlParams.append('limit', limit || '');
 
-  const request_url = `${PDS_URL}/xrpc/com.atproto.repo.listRecords?${urlParams.toString()}`;
+  const request_url = `${PUBLIC_PDS_URL}/xrpc/com.atproto.repo.listRecords?${urlParams.toString()}`;
 
   const response = await fetch(request_url, {
     method: 'GET',

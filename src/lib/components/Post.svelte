@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { HANDLE } from '$lib/constants';
+  import { PUBLIC_HANDLE } from '$env/static/public';
   import { Butterfly } from '$lib/icons';
   import { blobUri } from '$lib';
   import type { AppBskyActorProfile, AppBskyFeedPost } from '@atcute/bluesky';
@@ -23,14 +23,14 @@
 
   function getPostUrl(uri: string): string {
     const rkey = uri.split('/').pop();
-    return `https://bsky.app/profile/${HANDLE}/post/${rkey}`;
+    return `https://bsky.app/profile/${PUBLIC_HANDLE}/post/${rkey}`;
   }
 </script>
 
 <div class="post">
   <div class="post-header">
     <a
-      href={`https://bsky.app/profile/${HANDLE}`}
+      href={`https://bsky.app/profile/${PUBLIC_HANDLE}`}
       class="handle"
       target="_blank"
       rel="noopener noreferrer"
@@ -43,7 +43,7 @@
     >
     <div class="author-info">
       <a
-        href={`https://bsky.app/profile/${HANDLE}`}
+        href={`https://bsky.app/profile/${PUBLIC_HANDLE}`}
         class="handle"
         target="_blank"
         rel="noopener noreferrer"
@@ -51,10 +51,10 @@
         <span class="display-name">{author.displayName}</span></a
       >
       <a
-        href={`https://bsky.app/profile/${HANDLE}`}
+        href={`https://bsky.app/profile/${PUBLIC_HANDLE}`}
         class="handle"
         target="_blank"
-        rel="noopener noreferrer">@{HANDLE}</a
+        rel="noopener noreferrer">@{PUBLIC_HANDLE}</a
       >
     </div>
   </div>

@@ -8,7 +8,11 @@
     Send,
   } from '@lucide/svelte';
   import { PubLeafletPublication } from '@atcute/leaflet';
-  import { SOCIAL_LINKS, PERSONAL } from '$lib/constants';
+  import {
+    PUBLIC_NAME,
+    PUBLIC_TITLE,
+    PUBLIC_LOCATION,
+  } from '$env/static/public';
   import { Butterfly } from '$lib/icons';
   import { blobUri } from '$lib';
 
@@ -25,11 +29,23 @@
   }
 
   const socialIcons = [
-    { name: 'LinkedIn', href: SOCIAL_LINKS.LINKEDIN, icon: Linkedin },
-    { name: 'GitHub', href: SOCIAL_LINKS.GITHUB, icon: Github },
-    { name: 'Signal', href: SOCIAL_LINKS.SIGNAL, icon: MessageCircleDashed },
-    { name: 'Bluesky', href: SOCIAL_LINKS.BLUESKY, icon: Butterfly },
-    { name: 'Email', href: SOCIAL_LINKS.EMAIL, icon: Send },
+    {
+      name: 'LinkedIn',
+      href: 'https://linkedin.com/in/etjhamilton',
+      icon: Linkedin,
+    },
+    { name: 'GitHub', href: 'https://github.com/ETJeanMachine', icon: Github },
+    {
+      name: 'Signal',
+      href: 'https://signal.me/#eu/NRi1kt98GTlPfIyn2DP4faTgyElC3ufIcTcdK0fLLttDMBFxJANNhoD-Ksn30G8O',
+      icon: MessageCircleDashed,
+    },
+    {
+      name: 'Bluesky',
+      href: 'https://bsky.app/profile/jeanmachine.dev',
+      icon: Butterfly,
+    },
+    { name: 'Email', href: 'mailto:etj2206@rit.edu', icon: Send },
   ];
 </script>
 
@@ -54,14 +70,14 @@
       {/if}
       <div class="name">
         <div class="woke">
-          <h1>{PERSONAL.NAME}</h1>
+          <h1>{PUBLIC_NAME}</h1>
           <h3><i>(any/all)</i></h3>
         </div>
         {#if !mobile}
           <div class="location">
             <MapPin size={'1.4rem'} />
             <h3>
-              {PERSONAL.LOCATION}
+              {PUBLIC_LOCATION}
             </h3>
           </div>
         {/if}
@@ -71,11 +87,11 @@
       <div class="location">
         <MapPin size={'1.4rem'} />
         <h3>
-          {PERSONAL.LOCATION}
+          {PUBLIC_LOCATION}
         </h3>
       </div>
     {/if}
-    <span>{PERSONAL.TITLE}</span>
+    <span>{PUBLIC_TITLE}</span>
     <div class="social-icons">
       {#each socialIcons as item}
         {@const SocialIcon = item.icon}
