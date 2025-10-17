@@ -1,5 +1,5 @@
 // place files you want to import through the `$lib` alias in this folder.
-import { PUB_RKEY } from '$lib/constants';
+import { PUBLIC_LEAFLET_RKEY } from '$env/static/public';
 import { PubLeafletPublication, PubLeafletThemeColor } from '@atcute/leaflet';
 import { is, type Blob, type LegacyBlob } from '@atcute/lexicons';
 import { isBlob, isLegacyBlob } from '@atcute/lexicons/interfaces';
@@ -17,7 +17,7 @@ function colorToCSS(color: Colour | undefined): string {
 export async function loadPublication(): Promise<PubLeafletPublication.Main> {
   const params = new URLSearchParams('');
   params.append('collection', 'pub.leaflet.publication');
-  params.append('rkey', PUB_RKEY);
+  params.append('rkey', PUBLIC_LEAFLET_RKEY);
   const response = await fetch(`/api/atproto/record?${params.toString()}`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
