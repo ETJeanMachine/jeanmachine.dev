@@ -13,6 +13,8 @@
   </div>
   <div class="card">
     <About />
+    <hr />
+    <Github />
   </div>
 </div>
 
