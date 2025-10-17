@@ -1,3 +1,8 @@
 # Top-level configuration
 name = "jeanmachine-dev"
 pages_build_output_dir = ".svelte-kit/cloudflare"
+
+# KV namespace for caching PDS responses
+[[kv_namespaces]]
+binding = "CACHE"
+id = "b8c68b50b8bb43fa9eefc754d0d27f45"
