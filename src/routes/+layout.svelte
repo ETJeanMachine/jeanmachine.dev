@@ -10,6 +10,7 @@
     Signature,
   } from '@lucide/svelte';
   import type { PubLeafletPublication } from '@atcute/leaflet';
+  import twemoji from '@twemoji/api';
   import { PUBLIC_NAME, PUBLIC_TITLE } from '$env/static/public';
 
   let { children } = $props();
@@ -19,7 +20,6 @@
   let contentDiv: HTMLDivElement | null = $state(null);
   let lastScrollTop = $state(0);
   let navHidden = $state(false);
-  let isScrollingDown = $state(false);
 
   const navItems = [
     { name: 'Home', href: '/', icon: HouseIcon, exact: true },
@@ -49,19 +49,50 @@
     // Determine scroll direction based on scroll position change
     if (scrollTop > lastScrollTop + 10 && scrollTop > 50) {
       // Scrolling down significantly
-      isScrollingDown = true;
       navHidden = true;
     } else if (scrollTop < lastScrollTop - 10) {
       // Scrolling up significantly
-      isScrollingDown = false;
       navHidden = false;
     }
 
     lastScrollTop = scrollTop;
   }
 
+  let observer: MutationObserver | null = null;
+
   onMount(async () => {
     publication = await loadPublication();
+
+    // Set up MutationObserver to parse emoji whenever DOM changes (catches all dynamic content)
+    observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.addedNodes.length) {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === Node.ELEMENT_NODE) {
+              twemoji.parse(node as HTMLElement, {
+                folder: 'svg',
+                ext: '.svg',
+              });
+            }
+          });
+        }
+      });
+    });
+
+    // Observe the entire document for changes
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    // Initial parse of existing content
+    twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });
+  });
+
+  // Cleanup on unmount using $effect
+  $effect(() => {
+    return () => {
+      if (observer) {
+        observer.disconnect();
+      }
+    };
   });
 </script>
 
@@ -83,6 +114,7 @@
   <meta property="twitter:description" content={PUBLIC_TITLE} />
   <meta property="twitter:image" content="/api/meta-image" />
 
+  <!-- Favicon -->
   <link rel="icon" href="/api/meta-image" />
 </svelte:head>
 
