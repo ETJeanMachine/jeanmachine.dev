@@ -58,11 +58,13 @@
     lastScrollTop = scrollTop;
   }
 
+  let observer: MutationObserver | null = null;
+
   onMount(async () => {
     publication = await loadPublication();
 
     // Set up MutationObserver to parse emoji whenever DOM changes (catches all dynamic content)
-    const observer = new MutationObserver((mutations) => {
+    observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.addedNodes.length) {
           mutation.addedNodes.forEach((node) => {
@@ -82,9 +84,15 @@
 
     // Initial parse of existing content
     twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });
+  });
 
-    // Cleanup on unmount
-    observer.disconnect();
+  // Cleanup on unmount using $effect
+  $effect(() => {
+    return () => {
+      if (observer) {
+        observer.disconnect();
+      }
+    };
   });
 </script>
 
