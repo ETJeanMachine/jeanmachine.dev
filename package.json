@@ -32,7 +32,7 @@
     "@twemoji/api": "^16.0.1",
     "prettier-plugin-svelte": "^3.4.0",
     "vite-plugin-devtools-json": "^0.2.1",
-    "wrangler": "^4.42.1"
+    "wrangler": "^4.43.0"
   },
   "resolutions": {
     "rollup": "npm:@rollup/wasm-node"
