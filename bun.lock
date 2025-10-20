@@ -5,7 +5,7 @@
       "name": "jeanmachine.dev",
       "dependencies": {
         "@atcute/bluesky": "^3.2.3",
-        "@atcute/leaflet": "^1.0.8",
+        "@atcute/leaflet": "^1.0.11",
         "@atcute/lexicons": "^1.1.1",
         "@lucide/lab": "^0.1.2",
         "@lucide/svelte": "^0.544.0",
@@ -35,7 +35,7 @@
 
     "@atcute/bluesky": ["@atcute/bluesky@3.2.3", "", { "dependencies": { "@atcute/atproto": "^3.1.4", "@atcute/lexicons": "^1.1.1" } }, "sha512-IdPQQ54F1BLhW5z49k81ZUC/GQl/tVygZ+CzLHYvQySHA6GJRcvPzwEf8aV21u0SZOJF+yF4CWEGNgtryyxPmg=="],
 
-    "@atcute/leaflet": ["@atcute/leaflet@1.0.8", "", { "dependencies": { "@atcute/atproto": "^3.1.4", "@atcute/lexicons": "^1.1.1" } }, "sha512-+RkKoimK6dkDCR87mpxYPIJpu+3aLZOhbO3bdGF9i1YWp5Km3HSyacOkTJFjX3gJ9n4GBz8L2Y5PqaqLX2eKSw=="],
+    "@atcute/leaflet": ["@atcute/leaflet@1.0.11", "", { "dependencies": { "@atcute/atproto": "^3.1.8", "@atcute/lexicons": "^1.2.2" } }, "sha512-PmhBIltPD4DqR737J412ePwtfyBeC/Xr9R+s/d55Aq0kLPo4aBWt+JDb40Mh4JCGGxiz6gu9HFCCZeaVLrL4Dw=="],
 
     "@atcute/lexicons": ["@atcute/lexicons@1.1.1", "", { "dependencies": { "esm-env": "^1.2.2" } }, "sha512-k6qy5p3j9fJJ6ekaMPfEfp3ni4TW/XNuH9ZmsuwC0fi0tOjp+Fa8ZQakHwnqOzFt/cVBfGcmYE/lKNAbeTjgUg=="],
 
@@ -360,6 +360,10 @@
     "zimmerframe": ["zimmerframe@1.1.2", "", {}, ""],
 
     "zod": ["zod@3.22.3", "", {}, "sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug=="],
+
+    "@atcute/leaflet/@atcute/atproto": ["@atcute/atproto@3.1.8", "", { "dependencies": { "@atcute/lexicons": "^1.2.2" } }, "sha512-Miu+S7RSgAYbmQWtHJKfSFUN5Kliqoo4YH0rILPmBtfmlZieORJgXNj9oO/Uive0/ulWkiRse07ATIcK8JxMnw=="],
+
+    "@atcute/leaflet/@atcute/lexicons": ["@atcute/lexicons@1.2.2", "", { "dependencies": { "@standard-schema/spec": "^1.0.0", "esm-env": "^1.2.2" } }, "sha512-bgEhJq5Z70/0TbK5sx+tAkrR8FsCODNiL2gUEvS5PuJfPxmFmRYNWaMGehxSPaXWpU2+Oa9ckceHiYbrItDTkA=="],
 
     "@cspotcode/source-map-support/@jridgewell/trace-mapping": ["@jridgewell/trace-mapping@0.3.9", "", { "dependencies": { "@jridgewell/resolve-uri": "^3.0.3", "@jridgewell/sourcemap-codec": "^1.4.10" } }, "sha512-3Belt6tdc8bPgAtbcmdtNJlirVoTmEb5e2gC94PnkwEW9jI6CAHUeoG85tjWP5WquqfavoMtMwiG4P926ZKKuQ=="],
 
