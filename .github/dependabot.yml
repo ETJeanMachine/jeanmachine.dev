@@ -4,8 +4,28 @@
 # https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
 version: 2
+
 updates:
-  - package-ecosystem: "bun" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: 'bun' # See documentation for possible values
+    directory: '/' # Location of package manifests
     schedule:
-      interval: "daily"
+      interval: 'daily'
+    groups:
+      atproto:
+        patterns:
+          - '@atproto/*'
+          - '@atcute/*'
+      cloudflare:
+        patterns:
+          - 'wrangler'
+      svelte:
+        patterns:
+          - '@sveltejs/*'
+          - 'prettier*'
+          - 'svelte*'
+          - 'typescript'
+          - 'vite*'
+      ui-libraries:
+        patterns:
+          - '@twemoji/*'
+          - '@lucide/*'
