@@ -25,7 +25,7 @@
   "dependencies": {
     "@atcute/bluesky": "^3.2.3",
     "@atcute/leaflet": "^1.0.11",
-    "@atcute/lexicons": "^1.1.1",
+    "@atcute/lexicons": "^1.2.2",
     "@lucide/lab": "^0.1.2",
     "@lucide/svelte": "^0.544.0",
     "@sveltejs/adapter-cloudflare": "^7.2.4",
