@@ -3,6 +3,7 @@
   import { page } from '$app/state';
   import { goto } from '$app/navigation';
   import type { PubLeafletDocument } from '@atcute/leaflet';
+  import LeafletDocument from '$lib/components/LeafletDocument.svelte';
 
   const rkey = page.params.slug;
   let document = $state<PubLeafletDocument.Main>();
@@ -24,7 +25,6 @@
 
 {#if document}
   <div class="card">
-    <h1>{document.title}</h1>
-    <h3>{document.description}</h3>
+    <LeafletDocument {document} />
   </div>
 {/if}
