@@ -13,26 +13,26 @@
     "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
   },
   "devDependencies": {
-    "@sveltejs/adapter-auto": "^6.1.1",
-    "@sveltejs/kit": "^2.46.4",
-    "@sveltejs/vite-plugin-svelte": "^5.1.1",
+    "@sveltejs/adapter-auto": "^7.0.0",
+    "@sveltejs/kit": "^2.47.2",
+    "@sveltejs/vite-plugin-svelte": "^6.2.1",
     "prettier": "^3.6.2",
-    "svelte": "^5.39.11",
+    "svelte": "^5.41.1",
     "svelte-check": "^4.3.3",
     "typescript": "^5.9.3",
-    "vite": "^6.3.6"
+    "vite": "^7.1.11"
   },
   "dependencies": {
-    "@atcute/bluesky": "^3.2.3",
+    "@atcute/bluesky": "^3.2.8",
     "@atcute/leaflet": "^1.0.11",
-    "@atcute/lexicons": "^1.1.1",
+    "@atcute/lexicons": "^1.2.2",
     "@lucide/lab": "^0.1.2",
-    "@lucide/svelte": "^0.544.0",
+    "@lucide/svelte": "^0.546.0",
     "@sveltejs/adapter-cloudflare": "^7.2.4",
     "@twemoji/api": "^16.0.1",
     "prettier-plugin-svelte": "^3.4.0",
-    "vite-plugin-devtools-json": "^0.2.1",
-    "wrangler": "^4.42.1"
+    "vite-plugin-devtools-json": "^1.0.0",
+    "wrangler": "^4.43.0"
   },
   "resolutions": {
     "rollup": "npm:@rollup/wasm-node"
