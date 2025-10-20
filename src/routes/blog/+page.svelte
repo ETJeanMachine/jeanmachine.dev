@@ -99,7 +99,7 @@
       {#each keys as key, i}
         {@const doc = documents.get(key)}
         {#if doc && doc?.publishedAt && publication}
-          <a href="https://{publication.base_path}/{key}">
+          <a href="/blog/{key}">
             <div>
               <h2>{doc.title}</h2>
               <p class="date">
