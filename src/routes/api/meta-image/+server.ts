@@ -1,18 +1,22 @@
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { PDS_URL, USER_DID, PUB_RKEY } from '$lib/constants';
+import {
+  PUBLIC_DID,
+  PUBLIC_PDS_URL,
+  PUBLIC_LEAFLET_RKEY,
+} from '$env/static/public';
 import type { PubLeafletPublication } from '@atcute/leaflet';
 import { isBlob, isLegacyBlob } from '@atcute/lexicons/interfaces';
 
 export const GET: RequestHandler = async ({ url }) => {
   const collection = 'pub.leaflet.publication';
-  const rkey = PUB_RKEY;
+  const rkey = PUBLIC_LEAFLET_RKEY;
 
   if (!collection) {
     throw error(400, 'Missing collection or rkey');
   }
 
-  const request_url = `${PDS_URL}/xrpc/com.atproto.repo.getRecord?repo=${encodeURIComponent(USER_DID)}&collection=${collection}&rkey=${rkey}`;
+  const request_url = `${PUBLIC_PDS_URL}/xrpc/com.atproto.repo.getRecord?repo=${encodeURIComponent(PUBLIC_DID)}&collection=${collection}&rkey=${rkey}`;
   const response = await fetch(request_url, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
@@ -41,7 +45,7 @@ export const GET: RequestHandler = async ({ url }) => {
     throw error(400, 'Blob error');
   }
 
-  const blobUrl = `${PDS_URL}/xrpc/com.atproto.sync.getBlob?did=${USER_DID}&cid=${cid}`;
+  const blobUrl = `${PUBLIC_PDS_URL}/xrpc/com.atproto.sync.getBlob?did=${PUBLIC_DID}&cid=${cid}`;
 
   try {
     const response = await fetch(blobUrl);
