@@ -5,6 +5,15 @@
   font-style: normal;
 }
 
+/* Style twemoji images to match text size */
+img.emoji {
+  height: 1em;
+  width: 1em;
+  margin: 0 0.05em 0 0.1em;
+  vertical-align: -0.1em;
+  display: inline;
+}
+
 /* Optimize background image rendering */
 html::before {
   content: '';
