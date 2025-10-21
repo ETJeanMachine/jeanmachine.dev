@@ -38,10 +38,12 @@ export const GET: RequestHandler = async ({ url, platform }) => {
 
       // try to cache it, but don't fail if caching doesn't work
       try {
-        await platform?.env.CACHE.put(cacheKey, blob, {
+        const arrayBuffer = await blob.arrayBuffer();
+        await platform?.env.CACHE.put(cacheKey, arrayBuffer, {
           type: `${mimetype}`,
           expirationTtl: EXPIRATION_TTL,
         });
+        console.log('Blob cached successfully');
       } catch (err) {
         console.error('Cache put failed:', err);
       }
