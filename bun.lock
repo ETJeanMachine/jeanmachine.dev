@@ -4,6 +4,7 @@
     "": {
       "name": "jeanmachine.dev",
       "dependencies": {
+        "@atcute/atproto": "^3.1.8",
         "@atcute/bluesky": "^3.2.8",
         "@atcute/leaflet": "^1.0.11",
         "@atcute/lexicons": "^1.2.2",
