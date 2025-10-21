@@ -18,6 +18,7 @@ updates:
       cloudflare:
         patterns:
           - 'wrangler'
+          - '@sveltejs/adapter-cloudflare'
       svelte:
         patterns:
           - '@sveltejs/*'
@@ -25,6 +26,8 @@ updates:
           - 'svelte*'
           - 'typescript'
           - 'vite*'
+        exclude-patterns:
+          - '@sveltejs/adapter-cloudflare'
       ui-libraries:
         patterns:
           - '@twemoji/*'
