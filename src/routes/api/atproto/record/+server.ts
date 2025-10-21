@@ -1,15 +1,17 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { PUBLIC_DID, PUBLIC_PDS_URL } from '$env/static/public';
+import { getExpirationTTL, cacheRecordBlobs } from '$lib';
 
 export const GET: RequestHandler = async ({ url, platform }) => {
   const collection = url.searchParams.get('collection');
   const rkey = url.searchParams.get('rkey');
-  const EXPIRATION_TTL = 3600;
 
   if (!collection || !rkey) {
     throw error(400, 'Missing collection or rkey');
   }
+
+  const EXPIRATION_TTL = getExpirationTTL(collection);
 
   // Use proper AT Protocol URI as cache key
   const atUri = `at://${PUBLIC_DID}/${collection}/${rkey}`;
@@ -27,7 +29,7 @@ export const GET: RequestHandler = async ({ url, platform }) => {
     return json(JSON.parse(cachedData), {
       headers: {
         'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=3600',
+        'Cache-Control': `public, max-age=${EXPIRATION_TTL}`,
       },
     });
   }
@@ -54,7 +56,7 @@ export const GET: RequestHandler = async ({ url, platform }) => {
       throw error(500, 'Received null data');
     }
 
-    // try to cache it, but don't fail if caching doesn't work
+    // try to cache the record, but don't fail if caching doesn't work
     try {
       await platform?.env.CACHE.put(atUri, JSON.stringify(data), {
         expirationTtl: EXPIRATION_TTL,
@@ -63,10 +65,15 @@ export const GET: RequestHandler = async ({ url, platform }) => {
       console.error('[Record API] Cache put failed:', err);
     }
 
+    // Cache any blobs found in the record
+    if (data.value && collection && rkey) {
+      await cacheRecordBlobs(data.value, collection, rkey, PUBLIC_DID, PUBLIC_PDS_URL, platform);
+    }
+
     return json(data, {
       headers: {
         'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=3600',
+        'Cache-Control': `public, max-age=${EXPIRATION_TTL}`,
       },
     });
   } catch (err) {

@@ -1,16 +1,18 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { PUBLIC_DID, PUBLIC_PDS_URL } from '$env/static/public';
+import { getExpirationTTL, cacheRecordBlobs } from '$lib';
 
 export const GET: RequestHandler = async ({ url, platform }) => {
   const collection = url.searchParams.get('collection');
   const cursor = url.searchParams.get('cursor');
   const limit = url.searchParams.get('limit');
-  const EXPIRATION_TTL = 3600;
 
   if (!collection) {
     throw error(400, 'Missing collection');
   }
+
+  const EXPIRATION_TTL = getExpirationTTL(collection);
 
   console.log(`[ListRecords API] Fetching list for ${collection}`);
 
@@ -54,6 +56,15 @@ export const GET: RequestHandler = async ({ url, platform }) => {
             await platform?.env.CACHE.put(record.uri, JSON.stringify(cacheData), {
               expirationTtl: EXPIRATION_TTL,
             });
+
+            // Extract rkey from URI (at://did/collection/rkey)
+            const uriParts = record.uri.split('/');
+            const rkey = uriParts[uriParts.length - 1];
+
+            // Cache any blobs found in this record
+            if (record.value && collection && rkey) {
+              await cacheRecordBlobs(record.value, collection, rkey, PUBLIC_DID, PUBLIC_PDS_URL, platform);
+            }
           } catch (err) {
             console.error(`[ListRecords API] Failed to cache record ${record.uri}:`, err);
           }
@@ -65,7 +76,7 @@ export const GET: RequestHandler = async ({ url, platform }) => {
     return json(data, {
       headers: {
         'Content-Type': 'application/json',
-        'Cache-Control': 'public, max-age=3600',
+        'Cache-Control': `public, max-age=${EXPIRATION_TTL}`,
       },
     });
   } catch (err) {

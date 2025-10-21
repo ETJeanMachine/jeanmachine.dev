@@ -14,16 +14,17 @@ export const GET: RequestHandler = async ({ url, platform }) => {
 
   const blobUrl = `${PUBLIC_PDS_URL}/xrpc/com.atproto.sync.getBlob?did=${PUBLIC_DID}&cid=${cid}`;
 
-  // attempting to fetch the cache'd blob
+  // attempting to fetch the cached blob (read-only, no caching here)
   let blob = null;
   try {
-    blob = await platform?.env.CACHE.get(cacheKey, { type: `${mimetype}` });
+    blob = await platform?.env.CACHE.get(cacheKey);
   } catch (err) {
-    console.error('Cache get failed:', err);
+    console.error('[Blob API] Cache get failed:', err);
   }
 
   // fetching directly from the PDS if not cached already
   if (!blob) {
+    console.log(`[Blob API] Cache miss for ${cacheKey} - fetching from PDS`);
     try {
       const response = await fetch(blobUrl);
 
@@ -35,22 +36,13 @@ export const GET: RequestHandler = async ({ url, platform }) => {
       if (!mimetype && response.headers.get('Content-Type')) {
         mimetype = response.headers.get('Content-Type');
       }
-
-      // try to cache it, but don't fail if caching doesn't work
-      try {
-        const arrayBuffer = await blob.arrayBuffer();
-        await platform?.env.CACHE.put(cacheKey, arrayBuffer, {
-          type: `${mimetype}`,
-          expirationTtl: EXPIRATION_TTL,
-        });
-        console.log('Blob cached successfully');
-      } catch (err) {
-        console.error('Cache put failed:', err);
-      }
+      // Note: Blobs are cached in record/listRecords endpoints, not here
     } catch (err) {
-      console.error('Blob fetch error:', err);
+      console.error('[Blob API] Blob fetch error:', err);
       throw error(500, 'Failed to fetch blob');
     }
+  } else {
+    console.log(`[Blob API] Cache hit for ${cacheKey}`);
   }
 
   return new Response(blob, {
