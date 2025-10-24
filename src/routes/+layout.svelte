@@ -12,6 +12,7 @@
   import type { PubLeafletPublication } from '@atcute/leaflet';
   import twemoji from '@twemoji/api';
   import { PUBLIC_NAME, PUBLIC_TITLE } from '$env/static/public';
+  import BlobImage from '$lib/components/BlobImage.svelte';
 
   let { children } = $props();
 
@@ -119,6 +120,13 @@
 </svelte:head>
 
 <main>
+  {#if publication?.theme?.backgroundImage?.image}
+    <BlobImage
+      blob={publication.theme.backgroundImage.image}
+      alt="Background"
+      style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; z-index: -1;"
+    />
+  {/if}
   <div class:nav-hidden={navHidden}>
     <nav class="nav-desktop">
       {#each navItems as item}

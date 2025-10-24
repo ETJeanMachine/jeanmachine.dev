@@ -40,14 +40,6 @@ export async function loadPublication(): Promise<PubLeafletPublication.Main> {
       );
     }
 
-    // Set background image
-    if (theme.backgroundImage?.image) {
-      document.documentElement.style.setProperty(
-        '--background-image',
-        `url(${blobUri(theme.backgroundImage.image)})`,
-      );
-    }
-
     // Set CSS variables for theme colors
     if (theme.primary) {
       document.documentElement.style.setProperty(
