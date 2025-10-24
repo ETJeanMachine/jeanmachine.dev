@@ -35,7 +35,7 @@
   {#if !dev}
     <!-- Low-quality blurred placeholder (only in production) -->
     <img
-      src={`/cdn-cgi/image/anim=false,quality=low${src}`}
+      src={`https://jeanmachine.dev/cdn-cgi/image/anim=false,quality=low${src}`}
       {alt}
       {style}
       class="blur-placeholder"
