@@ -15,6 +15,7 @@
   } from '$env/static/public';
   import { Butterfly } from '$lib/icons';
   import { blobUri } from '$lib';
+  import BlobImage from '../BlobImage.svelte';
 
   const publicationContext = getContext<{
     value: PubLeafletPublication.Main | null;
@@ -51,21 +52,27 @@
 
 <div class="profile">
   {#if publication && !mobile}
-    <img
-      src={blobUri(publication.icon)}
-      alt={'Leaflet Icon'}
-      class="avatar"
-      style="max-height: {iconSize}px; border-radius: {iconBorderRadius}px;"
+    <BlobImage
+      blob={publication.icon}
+      alt="Leaflet Icon"
+      style="max-height: {iconSize}px;
+      border-radius: {iconBorderRadius}px;
+      object-fit: cover;
+      border: 1px solid #000;
+      aspect-ratio: 1 / 1;"
     />
   {/if}
   <div class="info">
     <div class="name-header">
       {#if publication && mobile}
-        <img
-          src={blobUri(publication.icon)}
-          alt={'Leaflet Icon'}
-          class="avatar"
-          style="max-height: {iconSize}rem; border-radius: {iconBorderRadius}px;"
+        <BlobImage
+          blob={publication.icon}
+          alt="Leaflet Icon"
+          style="max-height: {iconSize}rem;
+          border-radius: {iconBorderRadius}px;
+          object-fit: cover;
+          border: 1px solid #000;
+          aspect-ratio: 1 / 1;"
         />
       {/if}
       <div class="name">
@@ -109,12 +116,6 @@
     flex-direction: row;
     align-items: center;
     gap: 10px;
-  }
-
-  .avatar {
-    object-fit: cover;
-    border: 1px solid #000;
-    aspect-ratio: 1 / 1;
   }
 
   .info {

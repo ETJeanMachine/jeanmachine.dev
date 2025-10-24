@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { Pin } from '@lucide/svelte';
-  import Post from './Post.svelte';
+  import { BskyPost } from '$lib/components';
   import { AppBskyActorProfile, AppBskyFeedPost } from '@atcute/bluesky';
   import { error } from '@sveltejs/kit';
 
@@ -44,7 +44,7 @@
 </h2>
 {#if post && author}
   <div class="post-container">
-    <Post {post} {author} {uri} />
+    <BskyPost {post} {author} {uri} />
   </div>
 {/if}
 

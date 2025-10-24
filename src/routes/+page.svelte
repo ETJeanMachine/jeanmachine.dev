@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Profile, Pinned, About, Github } from '$lib/components';
+  import { Profile, Pinned, About, Github } from '$lib/components/home';
 </script>
 
 <!-- <Post {rkey}></Post> -->
