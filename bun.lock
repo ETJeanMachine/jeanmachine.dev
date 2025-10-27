@@ -8,7 +8,7 @@
         "@atcute/leaflet": "^1.0.11",
         "@atcute/lexicons": "^1.2.2",
         "@lucide/lab": "^0.1.2",
-        "@lucide/svelte": "^0.546.0",
+        "@lucide/svelte": "^0.548.0",
         "@sveltejs/adapter-cloudflare": "^7.2.4",
         "@twemoji/api": "^16.0.1",
         "prettier-plugin-svelte": "^3.4.0",
@@ -161,7 +161,7 @@
 
     "@lucide/lab": ["@lucide/lab@0.1.2", "", {}, "sha512-VprF2BJa7ZuTGOhUd5cf8tHJXyL63wdxcGieAiVVoR9hO0YmPsnZO0AGqDiX2/br+/MC6n8BoJcmPilltOXIJA=="],
 
-    "@lucide/svelte": ["@lucide/svelte@0.546.0", "", { "peerDependencies": { "svelte": "^5" } }, "sha512-qFVQ+BUJH9Swns7cag3Wik7VqKZfN2hwDZ2VazbZJc8VSqI0kgOZCZ2OVwrvNxdkl8Mw9M9H1ROB0BXh/WH/sA=="],
+    "@lucide/svelte": ["@lucide/svelte@0.548.0", "", { "peerDependencies": { "svelte": "^5" } }, "sha512-Iwh5GXK8+tE1lBjYoBPfOhBiWv6/K/XinZ/Bjx/2Qys86ufZ/CbjHKacYyZeGnyWQSsjcr7P3xavkmCMhv/1RA=="],
 
     "@polka/url": ["@polka/url@1.0.0-next.29", "", {}, ""],
 
