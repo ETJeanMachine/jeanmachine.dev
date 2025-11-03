@@ -23,7 +23,7 @@
     "vite": "^7.1.11"
   },
   "dependencies": {
-    "@atcute/bluesky": "^3.2.8",
+    "@atcute/bluesky": "^3.2.9",
     "@atcute/leaflet": "^1.0.11",
     "@atcute/lexicons": "^1.2.2",
     "@lucide/lab": "^0.1.2",
