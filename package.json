@@ -27,7 +27,7 @@
     "@atcute/leaflet": "^1.0.16",
     "@atcute/lexicons": "^1.2.6",
     "@lucide/lab": "^0.1.2",
-    "@lucide/svelte": "^0.562.0",
+    "@lucide/svelte": "^0.563.1",
     "@sveltejs/adapter-cloudflare": "^7.2.5",
     "@twemoji/api": "^17.0.2",
     "prettier-plugin-svelte": "^3.4.1",
