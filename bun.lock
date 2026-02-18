@@ -12,6 +12,7 @@
         "@lucide/svelte": "^0.562.0",
         "@sveltejs/adapter-cloudflare": "^7.2.5",
         "@twemoji/api": "^17.0.2",
+        "bluesky-post-embed": "^1.0.6",
         "prettier-plugin-svelte": "^3.4.1",
         "vite-plugin-devtools-json": "^1.0.0",
         "wrangler": "^4.59.3",
@@ -35,6 +36,10 @@
     "@atcute/atproto": ["@atcute/atproto@3.1.10", "", { "dependencies": { "@atcute/lexicons": "^1.2.6" } }, "sha512-+GKZpOc0PJcdWMQEkTfg/rSNDAAHxmAUGBl60g2az15etqJn5WaUPNGFE2sB7hKpwi5Ue2h/L0OacINcE/JDDQ=="],
 
     "@atcute/bluesky": ["@atcute/bluesky@3.2.15", "", { "dependencies": { "@atcute/atproto": "^3.1.10", "@atcute/lexicons": "^1.2.6" } }, "sha512-H4RW3WffjfdKvOZ9issEUQnuSR4KfuAwwJnYu0fclA9VDa99JTJ+pa8tTl9lFeBV9DINtWJAx7rdIbICoVCstQ=="],
+
+    "@atcute/bluesky-richtext-segmenter": ["@atcute/bluesky-richtext-segmenter@2.0.4", "", { "dependencies": { "@atcute/bluesky": "^3.2.5", "@atcute/lexicons": "^1.2.2" } }, "sha512-6m5QEAv4lU3qTy5MeJXJRRG33acipYJnMW1T7W/KrMyThGhQ7jSTTh8Z48quElgivgX7MDj6o/ow1oLUsjsCKw=="],
+
+    "@atcute/client": ["@atcute/client@3.1.0", "", {}, "sha512-+rQPsHXSf0DUm8XoHoaH7Y2E8tIpbsW84djyPj7dqAyrFIjvGuJ1X1DvMufwbTIcmLerdy+dzl34iZcz/h3Vhg=="],
 
     "@atcute/leaflet": ["@atcute/leaflet@1.0.16", "", { "dependencies": { "@atcute/atproto": "^3.1.10", "@atcute/lexicons": "^1.2.6" } }, "sha512-YS0+93C+bG2AlB1M5Cvf8v7GMnP/67l5G+RUQQltXydqugcAEW6ZgasXN/ZlsTJJl5tdWBTS4HsRYwdS576SkA=="],
 
@@ -224,6 +229,8 @@
 
     "blake3-wasm": ["blake3-wasm@2.1.5", "", {}, "sha512-F1+K8EbfOZE49dtoPtmxUQrpXaBIl3ICvasLh+nJta0xkz+9kF/7uet9fLnwKqhDrmj6g+6K3Tw9yQPUg2ka5g=="],
 
+    "bluesky-post-embed": ["bluesky-post-embed@1.0.6", "", { "dependencies": { "@atcute/bluesky": "^2.1.1", "@atcute/bluesky-richtext-segmenter": "^2.0.4", "@atcute/client": "^3.1.0" } }, "sha512-gJ+HKQbpDE+Mr7iv72NAF7WRNKu9CsWDwfbdgCtcZruN2HJfAeKHdCk5pflbz1fABwMMInjwN4909HCQjMCY2w=="],
+
     "chokidar": ["chokidar@4.0.3", "", { "dependencies": { "readdirp": "^4.0.1" } }, ""],
 
     "clsx": ["clsx@2.1.1", "", {}, ""],
@@ -361,6 +368,8 @@
     "@jridgewell/gen-mapping/@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.0", "", {}, ""],
 
     "@jridgewell/trace-mapping/@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.0", "", {}, ""],
+
+    "bluesky-post-embed/@atcute/bluesky": ["@atcute/bluesky@2.1.1", "", { "peerDependencies": { "@atcute/client": "^3.0.0" } }, "sha512-wEZfFW58J6yC1SqHcVJOn4qbHENTTzjeCEWthRT5HvKovADLqk54HSMSAuXDMBUbintSTBr0khQNZQ3ZdgzDdQ=="],
 
     "esrap/@jridgewell/sourcemap-codec": ["@jridgewell/sourcemap-codec@1.5.0", "", {}, ""],
 
