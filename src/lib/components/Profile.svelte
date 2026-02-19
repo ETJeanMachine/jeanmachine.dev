@@ -27,12 +27,8 @@
   }>('publication');
   let publication = $derived(publicationContext.value);
   const { mobile = false } = $props();
-  let iconSize = $state(175);
-  let iconBorderRadius: number = $state(8);
-  if (mobile) {
-    iconBorderRadius = 4;
-    iconSize = 4.5;
-  }
+  let iconSize = $derived(mobile ? 4.5 : 175);
+  let iconBorderRadius = $derived(mobile ? 4 : 8);
 
   const socialIcons = [
     { name: 'LinkedIn', href: `${LINKEDIN_URL}`, icon: Linkedin },

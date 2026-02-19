@@ -3,6 +3,7 @@
   import { Pin } from '@lucide/svelte';
   import Post from './Post.svelte';
   import { AppBskyActorProfile, AppBskyFeedPost } from '@atcute/bluesky';
+  import type { Main as StrongRef } from '@atcute/atproto/types/repo/strongRef';
   import { error } from '@sveltejs/kit';
 
   const params = new URLSearchParams();
@@ -24,7 +25,7 @@
     if (!author.pinnedPost) {
       throw error(500, { message: 'No pinned post.' });
     }
-    uri = author.pinnedPost.uri;
+    uri = (author.pinnedPost as StrongRef).uri;
     let rkey = uri.split('/').pop();
     if (!rkey) {
       throw error(500, { message: 'Failed to fetch pinned post URI' });
