@@ -32,7 +32,7 @@
       </div>
       <div class="job-meta">
         <span class="location">Santa Clara, CA</span>
-        <span class="date">August 2025 – Present</span>
+        <span class="date">August 2025 – February 2026</span>
       </div>
     </div>
     <p class="description">
