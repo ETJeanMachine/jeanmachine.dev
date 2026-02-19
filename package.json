@@ -23,9 +23,9 @@
     "vite": "^7.3.1"
   },
   "dependencies": {
-    "@atcute/bluesky": "^3.2.15",
-    "@atcute/leaflet": "^1.0.16",
-    "@atcute/lexicons": "^1.2.6",
+    "@atcute/bluesky": "^3.2.18",
+    "@atcute/leaflet": "^1.0.18",
+    "@atcute/lexicons": "^1.2.9",
     "@lucide/lab": "^0.1.2",
     "@lucide/svelte": "^0.563.1",
     "@sveltejs/adapter-cloudflare": "^7.2.5",
