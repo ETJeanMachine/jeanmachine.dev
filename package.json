@@ -28,11 +28,11 @@
     "@atcute/lexicons": "^1.2.6",
     "@lucide/lab": "^0.1.2",
     "@lucide/svelte": "^0.563.1",
-    "@sveltejs/adapter-cloudflare": "^7.2.5",
+    "@sveltejs/adapter-cloudflare": "^7.2.8",
     "@twemoji/api": "^17.0.2",
     "prettier-plugin-svelte": "^3.4.1",
     "vite-plugin-devtools-json": "^1.0.0",
-    "wrangler": "^4.59.3"
+    "wrangler": "^4.66.0"
   },
   "resolutions": {
     "rollup": "npm:@rollup/wasm-node"
