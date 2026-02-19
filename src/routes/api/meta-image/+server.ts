@@ -1,12 +1,12 @@
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { DID, PDS_URL, LEAFLET_RKEY } from '$lib/constants';
+import { DID, PDS_URL, LEAFLET_PUB_RKEY } from '$lib/constants';
 import type { PubLeafletPublication } from '@atcute/leaflet';
 import { isBlob, isLegacyBlob } from '@atcute/lexicons/interfaces';
 
 export const GET: RequestHandler = async ({ url }) => {
   const collection = 'pub.leaflet.publication';
-  const rkey = LEAFLET_RKEY;
+  const rkey = LEAFLET_PUB_RKEY;
 
   if (!collection) {
     throw error(400, 'Missing collection or rkey');

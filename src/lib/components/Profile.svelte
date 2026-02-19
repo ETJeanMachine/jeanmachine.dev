@@ -8,7 +8,17 @@
     Send,
   } from '@lucide/svelte';
   import { PubLeafletPublication } from '@atcute/leaflet';
-  import { NAME, PRONOUNS, TITLE, LOCATION } from '$lib/constants';
+  import {
+    NAME,
+    PRONOUNS,
+    TITLE,
+    LOCATION,
+    GITHUB_USERNAME,
+    SIGNAL_URL,
+    LINKEDIN_URL,
+    EMAIL,
+    DID,
+  } from '$lib/constants';
   import { Butterfly } from '$lib/icons';
   import { blobUri } from '$lib';
 
@@ -25,23 +35,19 @@
   }
 
   const socialIcons = [
+    { name: 'LinkedIn', href: `${LINKEDIN_URL}`, icon: Linkedin },
     {
-      name: 'LinkedIn',
-      href: 'https://linkedin.com/in/etjhamilton',
-      icon: Linkedin,
+      name: 'GitHub',
+      href: `https://github.com/${GITHUB_USERNAME}`,
+      icon: Github,
     },
-    { name: 'GitHub', href: 'https://github.com/ETJeanMachine', icon: Github },
-    {
-      name: 'Signal',
-      href: 'https://signal.me/#eu/NRi1kt98GTlPfIyn2DP4faTgyElC3ufIcTcdK0fLLttDMBFxJANNhoD-Ksn30G8O',
-      icon: MessageCircleDashed,
-    },
+    { name: 'Signal', href: `${SIGNAL_URL}`, icon: MessageCircleDashed },
     {
       name: 'Bluesky',
-      href: 'https://bsky.app/profile/jeanmachine.dev',
+      href: `https://bsky.app/profile/${DID}`,
       icon: Butterfly,
     },
-    { name: 'Email', href: 'mailto:etj2206@rit.edu', icon: Send },
+    { name: 'Email', href: `mailto:${EMAIL}`, icon: Send },
   ];
 </script>
 
