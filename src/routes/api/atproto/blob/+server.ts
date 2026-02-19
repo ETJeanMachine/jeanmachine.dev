@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { PUBLIC_DID, PUBLIC_PDS_URL } from '$env/static/public';
+import { DID, PDS_URL } from '$lib/constants';
 
 export const GET: RequestHandler = async ({ url }) => {
   const cid = url.searchParams.get('cid');
@@ -10,7 +10,7 @@ export const GET: RequestHandler = async ({ url }) => {
     throw error(400, 'Missing cid');
   }
 
-  const blobUrl = `${PUBLIC_PDS_URL}/xrpc/com.atproto.sync.getBlob?did=${PUBLIC_DID}&cid=${cid}`;
+  const blobUrl = `${PDS_URL}/xrpc/com.atproto.sync.getBlob?did=${DID}&cid=${cid}`;
 
   try {
     const response = await fetch(blobUrl);

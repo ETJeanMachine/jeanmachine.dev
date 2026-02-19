@@ -8,11 +8,7 @@
     Send,
   } from '@lucide/svelte';
   import { PubLeafletPublication } from '@atcute/leaflet';
-  import {
-    PUBLIC_NAME,
-    PUBLIC_TITLE,
-    PUBLIC_LOCATION,
-  } from '$env/static/public';
+  import { NAME, PRONOUNS, TITLE, LOCATION } from '$lib/constants';
   import { Butterfly } from '$lib/icons';
   import { blobUri } from '$lib';
 
@@ -70,14 +66,14 @@
       {/if}
       <div class="name">
         <div class="woke">
-          <h1>{PUBLIC_NAME}</h1>
-          <h3><i>(any/all)</i></h3>
+          <h1>{NAME}</h1>
+          <h3><i>({PRONOUNS})</i></h3>
         </div>
         {#if !mobile}
           <div class="location">
             <MapPin size={'1.4rem'} />
             <h3>
-              {PUBLIC_LOCATION}
+              {LOCATION}
             </h3>
           </div>
         {/if}
@@ -87,11 +83,11 @@
       <div class="location">
         <MapPin size={'1.4rem'} />
         <h3>
-          {PUBLIC_LOCATION}
+          {LOCATION}
         </h3>
       </div>
     {/if}
-    <span>{PUBLIC_TITLE}</span>
+    <span>{TITLE}</span>
     <div class="social-icons">
       {#each socialIcons as item}
         {@const SocialIcon = item.icon}

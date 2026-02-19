@@ -11,7 +11,7 @@
   } from '@lucide/svelte';
   import type { PubLeafletPublication } from '@atcute/leaflet';
   import twemoji from '@twemoji/api';
-  import { PUBLIC_NAME, PUBLIC_TITLE } from '$env/static/public';
+  import { NAME, TITLE } from '$lib/constants';
 
   let { children } = $props();
 
@@ -97,21 +97,21 @@
 </script>
 
 <svelte:head>
-  <meta name="title" content={PUBLIC_NAME} />
-  <meta name="description" content={PUBLIC_TITLE} />
+  <meta name="title" content={NAME} />
+  <meta name="description" content={TITLE} />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://jeanmachine.dev" />
-  <meta property="og:title" content={PUBLIC_NAME} />
-  <meta property="og:description" content={PUBLIC_TITLE} />
+  <meta property="og:title" content={NAME} />
+  <meta property="og:description" content={TITLE} />
   <meta property="og:image" content="/api/meta-image" />
 
   <!-- X (Twitter) -->
   <meta property="twitter:card" content="summary" />
   <meta property="twitter:url" content="https://jeanmachine.dev" />
-  <meta property="twitter:title" content={PUBLIC_NAME} />
-  <meta property="twitter:description" content={PUBLIC_TITLE} />
+  <meta property="twitter:title" content={NAME} />
+  <meta property="twitter:description" content={TITLE} />
   <meta property="twitter:image" content="/api/meta-image" />
 
   <!-- Favicon -->
