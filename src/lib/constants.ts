@@ -5,5 +5,6 @@ export const LEAFLET_RKEY = '3lwddhdcemk2l';
 
 // Personal Information
 export const NAME = 'Eric Hamilton';
+export const PRONOUNS = 'any/all';
 export const TITLE = 'Software Engineer, Caffeine Addict, Transit Enthusiast.';
 export const LOCATION = 'Seattle, WA';
