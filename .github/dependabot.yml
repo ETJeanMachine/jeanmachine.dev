@@ -11,24 +11,6 @@ updates:
     schedule:
       interval: 'weekly'
     groups:
-      atproto:
+      all:
         patterns:
-          - '@atproto/*'
-          - '@atcute/*'
-      cloudflare:
-        patterns:
-          - 'wrangler'
-          - '@sveltejs/adapter-cloudflare'
-      svelte:
-        patterns:
-          - '@sveltejs/*'
-          - 'prettier*'
-          - 'svelte*'
-          - 'typescript'
-          - 'vite*'
-        exclude-patterns:
-          - '@sveltejs/adapter-cloudflare'
-      ui-libraries:
-        patterns:
-          - '@twemoji/*'
-          - '@lucide/*'
+          - '*'
