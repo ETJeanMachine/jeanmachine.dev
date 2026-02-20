@@ -7,3 +7,7 @@ compatibility_flags = ["nodejs_compat"]
 
 [site]
 bucket = "./.svelte-kit/cloudflare"
+
+[[routes]]
+pattern = "jeanmachine.dev/*"
+zone_name = "jeanmachine.dev"
