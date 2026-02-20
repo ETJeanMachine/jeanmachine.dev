@@ -43,22 +43,18 @@ export const GET: RequestHandler = async ({ url }) => {
 
   const blobUrl = `${PDS_URL}/xrpc/com.atproto.sync.getBlob?did=${DID}&cid=${cid}`;
 
-  try {
-    const response = await fetch(blobUrl);
+  const blobResponse = await fetch(blobUrl);
 
-    if (!response.ok) {
-      throw error(response.status, 'Failed to fetch blob');
-    }
-
-    const blob = await response.blob();
-
-    return new Response(blob, {
-      headers: {
-        'Content-Type': response.headers.get('Content-Type') || `${mimeType}`,
-        'Cache-Control': 'public, max-age=3600',
-      },
-    });
-  } catch (err) {
-    throw error(500, 'Failed to proxy blob');
+  if (!blobResponse.ok) {
+    throw error(blobResponse.status, 'Failed to fetch blob');
   }
+
+  const blob = await blobResponse.blob();
+
+  return new Response(blob, {
+    headers: {
+      'Content-Type': blobResponse.headers.get('Content-Type') || `${mimeType}`,
+      'Cache-Control': 'public, max-age=3600',
+    },
+  });
 };

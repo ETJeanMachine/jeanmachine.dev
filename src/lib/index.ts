@@ -22,6 +22,11 @@ export async function loadPublication(): Promise<PubLeafletPublication.Main> {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
+
+  if (!response.ok) {
+    throw new Error(`Failed to load publication: HTTP ${response.status}`);
+  }
+
   const publication: PubLeafletPublication.Main = (await response.json()).value;
   // commenting this out bc the guys over at leaflet have an invalid schema rn
   // if (!is(PubLeafletPublication.mainSchema, publication)) {

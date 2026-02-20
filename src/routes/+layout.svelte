@@ -16,6 +16,7 @@
   let { children } = $props();
 
   let publication = $state<PubLeafletPublication.Main | null>(null);
+  let publicationError = $state<string | null>(null);
   let currentPath = $state('');
   let contentDiv: HTMLDivElement | null = $state(null);
   let lastScrollTop = $state(0);
@@ -61,7 +62,13 @@
   let observer: MutationObserver | null = null;
 
   onMount(async () => {
-    publication = await loadPublication();
+    try {
+      publication = await loadPublication();
+    } catch (err) {
+      publicationError = err instanceof Error ? err.message : 'Failed to load publication';
+      console.error('Failed to load publication:', err);
+      return;
+    }
 
     // Set up MutationObserver to parse emoji whenever DOM changes (catches all dynamic content)
     observer = new MutationObserver((mutations) => {
@@ -151,6 +158,10 @@
       </nav>
     </div>
   </main>
+{:else if publicationError}
+  <div class="loading-screen">
+    <p>Failed to load: {publicationError}</p>
+  </div>
 {:else}
   <div class="loading-screen">
     <div class="spinner"></div>
