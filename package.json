@@ -28,7 +28,7 @@
     "@atcute/lexicons": "^1.2.9",
     "@lucide/lab": "^0.1.2",
     "@lucide/svelte": "^0.563.1",
-    "@sveltejs/adapter-cloudflare": "^7.2.8",
+    "@sveltejs/adapter-cloudflare-workers": "^2.9.0",
     "@twemoji/api": "^17.0.2",
     "prettier-plugin-svelte": "^3.5.0",
     "vite-plugin-devtools-json": "^1.0.0",
