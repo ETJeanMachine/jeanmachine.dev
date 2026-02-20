@@ -11,3 +11,7 @@ bucket = "./.svelte-kit/cloudflare"
 [[routes]]
 pattern = "jeanmachine.dev/*"
 zone_name = "jeanmachine.dev"
+
+[[routes]]
+pattern = "jeanmachine.dev"
+zone_name = "jeanmachine.dev"
