@@ -2,7 +2,8 @@
 # Top-level configuration
 name = "jeanmachine"
 main = "./.cloudflare/worker.js"
-compatability_date = "2026-02-19"
+compatibility_date = "2026-02-19"
+compatibility_flags = ["nodejs_compat"]
 
 [site]
 bucket = "./.svelte-kit/cloudflare"
