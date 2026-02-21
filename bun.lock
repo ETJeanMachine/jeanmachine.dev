@@ -5,24 +5,25 @@
     "": {
       "name": "jeanmachine.dev",
       "dependencies": {
-        "@atcute/bluesky": "^3.2.15",
-        "@atcute/leaflet": "^1.0.16",
-        "@atcute/lexicons": "^1.2.6",
+        "@atcute/bluesky": "^3.2.18",
+        "@atcute/leaflet": "^1.0.18",
+        "@atcute/lexicons": "^1.2.9",
         "@lucide/lab": "^0.1.2",
         "@lucide/svelte": "^0.563.1",
         "@sveltejs/adapter-cloudflare": "^7.2.8",
         "@twemoji/api": "^17.0.2",
-        "prettier-plugin-svelte": "^3.4.1",
+        "date-fns": "^4.1.0",
+        "prettier-plugin-svelte": "^3.5.0",
         "vite-plugin-devtools-json": "^1.0.0",
         "wrangler": "^4.66.0",
       },
       "devDependencies": {
         "@sveltejs/adapter-auto": "^7.0.1",
-        "@sveltejs/kit": "^2.52.0",
+        "@sveltejs/kit": "^2.52.2",
         "@sveltejs/vite-plugin-svelte": "^6.2.4",
         "prettier": "^3.8.1",
-        "svelte": "^5.51.2",
-        "svelte-check": "^4.4.0",
+        "svelte": "^5.53.0",
+        "svelte-check": "^4.4.1",
         "typescript": "^5.9.3",
         "vite": "^7.3.1",
       },
@@ -231,6 +232,8 @@
     "clsx": ["clsx@2.1.1", "", {}, ""],
 
     "cookie": ["cookie@0.6.0", "", {}, ""],
+
+    "date-fns": ["date-fns@4.1.0", "", {}, "sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg=="],
 
     "debug": ["debug@4.4.1", "", { "dependencies": { "ms": "^2.1.3" } }, ""],
 
