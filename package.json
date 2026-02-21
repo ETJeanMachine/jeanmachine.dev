@@ -14,11 +14,11 @@
   },
   "devDependencies": {
     "@sveltejs/adapter-auto": "^7.0.1",
-    "@sveltejs/kit": "^2.52.2",
+    "@sveltejs/kit": "^2.53.0",
     "@sveltejs/vite-plugin-svelte": "^6.2.4",
     "prettier": "^3.8.1",
-    "svelte": "^5.53.0",
-    "svelte-check": "^4.4.1",
+    "svelte": "^5.53.2",
+    "svelte-check": "^4.4.3",
     "typescript": "^5.9.3",
     "vite": "^7.3.1"
   },
@@ -27,13 +27,13 @@
     "@atcute/leaflet": "^1.0.18",
     "@atcute/lexicons": "^1.2.9",
     "@lucide/lab": "^0.1.2",
-    "@lucide/svelte": "^0.563.1",
+    "@lucide/svelte": "^0.575.0",
     "@sveltejs/adapter-cloudflare": "^7.2.8",
     "@twemoji/api": "^17.0.2",
     "date-fns": "^4.1.0",
     "prettier-plugin-svelte": "^3.5.0",
     "vite-plugin-devtools-json": "^1.0.0",
-    "wrangler": "^4.66.0"
+    "wrangler": "^4.67.0"
   },
   "resolutions": {
     "rollup": "npm:@rollup/wasm-node"
