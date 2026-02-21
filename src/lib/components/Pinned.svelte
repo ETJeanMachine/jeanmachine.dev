@@ -10,6 +10,9 @@
   let post = $state<AppBskyFeedPost.Main | null>(null);
   let author = $state<AppBskyActorProfile.Main | null>(null);
   let uri: string = $state('');
+  let likeCount = $state(0);
+  let repostCount = $state(0);
+  let replyCount = $state(0);
 
   onMount(async () => {
     params.append('collection', 'app.bsky.actor.profile');
@@ -37,6 +40,16 @@
       headers: { 'Content-Type': 'application/json' },
     });
     post = (await response.json()).value;
+
+    const counts_response = await fetch(
+      `/api/atproto/postview?uri=${encodeURIComponent(uri)}`,
+    );
+    if (counts_response.ok) {
+      const counts = await counts_response.json();
+      likeCount = counts.likeCount;
+      repostCount = counts.repostCount;
+      replyCount = counts.replyCount;
+    }
   });
 </script>
 
@@ -45,7 +58,7 @@
 </h2>
 {#if post && author}
   <div class="post-container">
-    <Post {post} {author} {uri} />
+    <Post {post} {author} {uri} {likeCount} {repostCount} {replyCount} />
   </div>
 {/if}
 

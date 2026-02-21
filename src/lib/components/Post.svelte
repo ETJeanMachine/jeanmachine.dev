@@ -4,11 +4,22 @@
   import { blobUri } from '$lib';
   import type { AppBskyActorProfile, AppBskyFeedPost } from '@atcute/bluesky';
   import { formatDistanceToNowStrict } from 'date-fns';
+  import { Heart, Repeat2, MessageCircle } from '@lucide/svelte';
 
-  const { post, author, uri } = $props<{
+  const {
+    post,
+    author,
+    uri,
+    likeCount = 0,
+    repostCount = 0,
+    replyCount = 0,
+  } = $props<{
     post: AppBskyFeedPost.Main;
     author: AppBskyActorProfile.Main;
     uri: string;
+    likeCount?: number;
+    repostCount?: number;
+    replyCount?: number;
   }>();
 
   function formatDate(dateString: string): string {
@@ -128,7 +139,17 @@
       </div>
 
       <div class="post-footer">
-        <a href={getPostUrl(uri)} target="_blank" rel="noopener noreferrer">
+        <div class="post-stats">
+          <span class="stat"><MessageCircle size={14} />{replyCount}</span>
+          <span class="stat"><Repeat2 size={16} />{repostCount}</span>
+          <span class="stat"><Heart size={14} />{likeCount}</span>
+        </div>
+        <a
+          href={getPostUrl(uri)}
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Open post on Bluesky"
+        >
           <Butterfly size={20} color="#1185fe" />
         </a>
       </div>
@@ -303,8 +324,21 @@
     padding-top: 12px;
     border-top: 1px solid #2e3236;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
     align-items: center;
+  }
+
+  .post-stats {
+    display: flex;
+    gap: 14px;
+  }
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: #4a5568;
   }
 
   .post-footer a {
