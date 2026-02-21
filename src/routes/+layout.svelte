@@ -170,7 +170,7 @@
     align-items: center;
     min-height: 100dvh;
     min-width: 100dvw;
-    font-family: 'CaskaydiaCove Nerd Font', sans-serif;
+    font-family: 'Maple Mono', 'Cascadia Code', 'Fira Code', 'Consolas', 'Menlo', monospace;
     color: var(--primary);
   }
 
@@ -313,7 +313,7 @@
     justify-content: center;
     min-height: 100vh;
     min-width: 100vw;
-    font-family: 'CaskaydiaCove Nerd Font', sans-serif;
+    font-family: 'Maple Mono', 'Cascadia Code', 'Fira Code', 'Consolas', 'Menlo', monospace;
     background-color: #1a1a1a;
     color: #ffffff;
   }

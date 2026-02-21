@@ -21,9 +21,9 @@
         >SvelteKit</a
       >, for both the frontend and backend. Icons are provided by
       <a href="https://lucide.dev">Lucide</a>, and the font used is
-      <a href="https://github.com/eliheuer/caskaydia-cove">Caskadyia Cove</a>, a
-      fork of the Cascadia Code font made by Microsoft. Cloudflare Pages is how
-      I host the website. You can view the website's source code on my
+      <a href="https://github.com/subframe7536/maple-font">Maple Mono</a>.
+      Cloudflare Pages is how I host the website. You can view the website's
+      source code on my
       <a href="https://github.com/ETJeanMachine/jeanmachine.dev">Github</a>.
     </p>
     <p>
