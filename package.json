@@ -27,7 +27,7 @@
     "@atcute/leaflet": "^1.0.18",
     "@atcute/lexicons": "^1.2.9",
     "@lucide/lab": "^0.1.2",
-    "@lucide/svelte": "^0.563.1",
+    "@lucide/svelte": "^0.575.0",
     "@sveltejs/adapter-cloudflare": "^7.2.8",
     "@twemoji/api": "^17.0.2",
     "date-fns": "^4.1.0",
