@@ -35,4 +35,3 @@ vite.config.ts.timestamp-*
 *.zed/
 *.vscode/
 *.claude/
-CLAUDE.md
