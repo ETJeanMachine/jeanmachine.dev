@@ -43,6 +43,23 @@
     const rkey = uri.split('/').pop();
     return `https://bsky.app/profile/${DID}/post/${rkey}`;
   }
+
+  let lightboxSrc = $state<string | null>(null);
+  let dialog = $state<HTMLDialogElement | null>(null);
+
+  function openLightbox(src: string) {
+    lightboxSrc = src;
+    dialog?.showModal();
+  }
+
+  function closeLightbox() {
+    lightboxSrc = null;
+    dialog?.close();
+  }
+
+  function handleDialogClick(e: MouseEvent) {
+    if (e.target === dialog) closeLightbox();
+  }
 </script>
 
 <div class="post">
@@ -59,103 +76,112 @@
         class="avatar"
       /></a
     >
-    <div class="post-body">
-      <div class="author-info">
-        <div class="author-top">
-          <a
-            href={`https://bsky.app/profile/${DID}`}
-            class="handle"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span class="display-name">{author.displayName}</span></a
-          >
-
-          <span class="post-date">
-            · <span
-              class="post-date-content"
-              title={formatDate(post.createdAt)}
-            >
-              {formatRelativeDate(post.createdAt)} ago
-            </span>
-          </span>
-        </div>
+    <div class="author-info">
+      <div class="author-top">
         <a
           href={`https://bsky.app/profile/${DID}`}
           class="handle"
           target="_blank"
-          rel="noopener noreferrer">@{BSKY_HANDLE}</a
-        >
-      </div>
-
-      <div class="post-content">
-        <p>{post.text}</p>
-
-        {#if post.embed}
-          {#if post.embed.$type === 'app.bsky.embed.record'}
-            <div class="quote-post">
-              <div class="quote-header">
-                <span class="quote-author">Quoted post</span>
-              </div>
-              <div class="quote-content">
-                <p class="quote-text">
-                  {post.embed.record.uri}
-                </p>
-              </div>
-            </div>
-          {:else if post.embed.$type === 'app.bsky.embed.images'}
-            <div class="images">
-              {#each post.embed.images as image}
-                <img
-                  src={blobUri(image.image)}
-                  alt={image.alt || ''}
-                  class="post-image"
-                />
-              {/each}
-            </div>
-          {:else if post.embed.$type === 'app.bsky.embed.external'}
-            <a
-              href={post.embed.external.uri}
-              class="external-link"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {#if post.embed.external.thumb}
-                <img
-                  src={blobUri(post.embed.external.thumb)}
-                  alt=""
-                  class="external-thumb"
-                />
-              {/if}
-              <div class="external-info">
-                <span class="external-title">{post.embed.external.title}</span>
-                <span class="external-description"
-                  >{post.embed.external.description}</span
-                >
-              </div>
-            </a>
-          {/if}
-        {/if}
-      </div>
-
-      <div class="post-footer">
-        <div class="post-stats">
-          <span class="stat"><MessageCircle size={14} />{replyCount}</span>
-          <span class="stat"><Repeat2 size={16} />{repostCount}</span>
-          <span class="stat"><Heart size={14} />{likeCount}</span>
-        </div>
-        <a
-          href={getPostUrl(uri)}
-          target="_blank"
           rel="noopener noreferrer"
-          title="Open post on Bluesky"
         >
-          <Butterfly size={20} color="var(--sky)" />
-        </a>
+          <span class="display-name">{author.displayName}</span></a
+        >
+
+        <span class="post-date">
+          · <span
+            class="post-date-content"
+            title={formatDate(post.createdAt)}
+          >
+            {formatRelativeDate(post.createdAt)} ago
+          </span>
+        </span>
       </div>
+      <a
+        href={`https://bsky.app/profile/${DID}`}
+        class="handle"
+        target="_blank"
+        rel="noopener noreferrer">@{BSKY_HANDLE}</a
+      >
     </div>
   </div>
+
+  <div class="post-content">
+    <p>{post.text}</p>
+
+    {#if post.embed}
+      {#if post.embed.$type === 'app.bsky.embed.record'}
+        <div class="quote-post">
+          <div class="quote-header">
+            <span class="quote-author">Quoted post</span>
+          </div>
+          <div class="quote-content">
+            <p class="quote-text">
+              {post.embed.record.uri}
+            </p>
+          </div>
+        </div>
+      {:else if post.embed.$type === 'app.bsky.embed.images'}
+        <div class="images">
+          {#each post.embed.images as image}
+            <button
+              class="image-btn"
+              onclick={() => openLightbox(blobUri(image.image))}
+            >
+              <img
+                src={blobUri(image.image)}
+                alt={image.alt || ''}
+                class="post-image"
+              />
+            </button>
+          {/each}
+        </div>
+      {:else if post.embed.$type === 'app.bsky.embed.external'}
+        <a
+          href={post.embed.external.uri}
+          class="external-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {#if post.embed.external.thumb}
+            <img
+              src={blobUri(post.embed.external.thumb)}
+              alt=""
+              class="external-thumb"
+            />
+          {/if}
+          <div class="external-info">
+            <span class="external-title">{post.embed.external.title}</span>
+            <span class="external-description"
+              >{post.embed.external.description}</span
+            >
+          </div>
+        </a>
+      {/if}
+    {/if}
+  </div>
+
+  <div class="post-footer">
+    <div class="post-stats">
+      <span class="stat"><MessageCircle size={14} />{replyCount}</span>
+      <span class="stat"><Repeat2 size={16} />{repostCount}</span>
+      <span class="stat"><Heart size={14} />{likeCount}</span>
+    </div>
+    <a
+      href={getPostUrl(uri)}
+      target="_blank"
+      rel="noopener noreferrer"
+      title="Open post on Bluesky"
+    >
+      <Butterfly size={20} color="var(--sky)" />
+    </a>
+  </div>
 </div>
+
+<dialog bind:this={dialog} class="lightbox" onclick={handleDialogClick}>
+  {#if lightboxSrc}
+    <img src={lightboxSrc} alt="" />
+  {/if}
+</dialog>
 
 <style>
   .post {
@@ -167,17 +193,16 @@
     box-sizing: border-box;
   }
 
+  .post {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
   .post-header {
     display: flex;
     align-items: flex-start;
     gap: 12px;
-  }
-
-  .post-body {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 0;
   }
 
   .avatar {
@@ -191,7 +216,6 @@
   .author-info {
     display: flex;
     flex-direction: column;
-    margin-bottom: 12px;
   }
 
   .author-top {
@@ -228,7 +252,6 @@
   }
 
   .post-content {
-    margin-bottom: 12px;
     min-width: 0;
   }
 
@@ -275,10 +298,45 @@
     margin-top: 12px;
   }
 
+  .image-btn {
+    all: unset;
+    cursor: zoom-in;
+    display: contents;
+  }
+
   .post-image {
     width: 100%;
     border-radius: 12px;
     object-fit: contain;
+    max-height: 100vh;
+  }
+
+  @media (min-width: 769px) {
+    .post-image {
+      max-height: 40vh;
+    }
+  }
+
+  .lightbox {
+    border: none;
+    background: transparent;
+    padding: 0;
+    max-width: 100vw;
+    max-height: 100vh;
+    cursor: zoom-out;
+  }
+
+  .lightbox::backdrop {
+    background-color: rgba(0, 0, 0, 0.85);
+  }
+
+  .lightbox img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+    cursor: default;
+    display: block;
   }
 
   .external-link {
