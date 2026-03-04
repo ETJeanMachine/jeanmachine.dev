@@ -10,11 +10,8 @@
     </p>
     <p>
       The format for the blog is built using <a href="leaflet.pub">Leaflet</a>
-      and it's lexicons. Additionally, the styling for the website uses Leaflet's
-      publication theme lexicon. This is so that if I make any thematic changes to
-      my Leaflet blog at
-      <a href="https://blog.jean.moe">blog.jean.moe</a>, it should be perfectly
-      mirrored here as well.
+      and it's lexicons. It is currently hosted on
+      <a href="https://blog.jean.moe">blog.jean.moe</a>.
     </p>
     <p>
       The core of the website is built using <a href="https://kit.svelte.dev"

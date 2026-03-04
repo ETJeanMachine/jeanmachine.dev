@@ -115,7 +115,7 @@
   <meta property="twitter:image" content="/api/meta-image" />
 
   <!-- Favicon -->
-  <link rel="icon" href="/api/meta-image" />
+  <link rel="icon" href="/favicon.ico" />
 </svelte:head>
 
 {#if publication}
@@ -170,7 +170,8 @@
     align-items: center;
     min-height: 100dvh;
     min-width: 100dvw;
-    font-family: 'Maple Mono', 'Cascadia Code', 'Fira Code', 'Consolas', 'Menlo', monospace;
+    font-family:
+      'Maple Mono', 'Cascadia Code', 'Fira Code', 'Consolas', 'Menlo', monospace;
     color: var(--primary);
   }
 
@@ -313,7 +314,8 @@
     justify-content: center;
     min-height: 100vh;
     min-width: 100vw;
-    font-family: 'Maple Mono', 'Cascadia Code', 'Fira Code', 'Consolas', 'Menlo', monospace;
+    font-family:
+      'Maple Mono', 'Cascadia Code', 'Fira Code', 'Consolas', 'Menlo', monospace;
     background-color: #1a1a1a;
     color: #ffffff;
   }

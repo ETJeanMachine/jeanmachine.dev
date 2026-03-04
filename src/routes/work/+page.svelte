@@ -5,7 +5,7 @@
 <div class="card">
   <div class="resume-title">
     <h1>Resume</h1>
-    <a href="/resume.pdf" download>
+    <a href="/assets/resume.pdf" download>
       <FileDown size={'2rem'} />
     </a>
   </div>
