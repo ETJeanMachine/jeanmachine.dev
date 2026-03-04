@@ -2,7 +2,7 @@
 export const PDS_URL = 'https://pds.jeanmachine.dev';
 export const DID = 'did:plc:6vxtya3serxcwvcdk5e7psvv';
 export const BSKY_HANDLE = 'jeanmachine.dev';
-export const LEAFLET_PUB_RKEY = '3lwddhdcemk2l';
+export const PUB_RKEY = '3lwddhdcemk2l';
 
 // Social URLs
 export const SIGNAL_URL = 'https://signal.jean.moe';

@@ -1,6 +1,7 @@
 <script lang="ts">
   import '../index.css';
   import { loadPublication } from '$lib';
+  import type { SiteStandardPublication } from '@atcute/standard-site';
   import { onMount, setContext } from 'svelte';
   import { page } from '$app/state';
   import {
@@ -9,13 +10,13 @@
     NotebookPen,
     Signature,
   } from '@lucide/svelte';
-  import type { PubLeafletPublication } from '@atcute/leaflet';
+
   import twemoji from '@twemoji/api';
   import { NAME, TITLE } from '$lib/constants';
 
   let { children } = $props();
 
-  let publication = $state<PubLeafletPublication.Main | null>(null);
+  let publication = $state<SiteStandardPublication.Main | null>(null);
   let currentPath = $state('');
   let contentDiv: HTMLDivElement | null = $state(null);
   let lastScrollTop = $state(0);

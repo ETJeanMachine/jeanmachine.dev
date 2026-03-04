@@ -7,7 +7,6 @@
     MessageCircleDashed,
     Send,
   } from '@lucide/svelte';
-  import { PubLeafletPublication } from '@atcute/leaflet';
   import {
     NAME,
     PRONOUNS,
@@ -21,9 +20,10 @@
   } from '$lib/constants';
   import { Butterfly } from '$lib/icons';
   import { blobUri } from '$lib';
+  import type { SiteStandardPublication } from '@atcute/standard-site';
 
   const publicationContext = getContext<{
-    value: PubLeafletPublication.Main | null;
+    value: SiteStandardPublication.Main | null;
   }>('publication');
   let publication = $derived(publicationContext.value);
   const { mobile = false } = $props();
@@ -56,7 +56,7 @@
     >
       <img
         src={blobUri(publication.icon)}
-        alt={'Leaflet Icon'}
+        alt={'Profile Icon'}
         class="avatar"
         style="max-height: {iconSize}px; border-radius: {iconBorderRadius}px; opacity: {avatarLoaded
           ? 1
@@ -80,7 +80,7 @@
           {/if}
           <img
             src={blobUri(publication.icon)}
-            alt={'Leaflet Icon'}
+            alt={'Profile Icon'}
             class="avatar"
             style="max-height: {iconSize}rem; border-radius: {iconBorderRadius}px; opacity: {avatarLoaded
               ? 1

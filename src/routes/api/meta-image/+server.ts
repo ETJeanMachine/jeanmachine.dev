@@ -1,12 +1,12 @@
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { DID, PDS_URL, LEAFLET_PUB_RKEY } from '$lib/constants';
-import type { PubLeafletPublication } from '@atcute/leaflet';
+import { DID, PDS_URL, PUB_RKEY } from '$lib/constants';
+import type { SiteStandardPublication } from '@atcute/standard-site';
 import { isBlob, isLegacyBlob } from '@atcute/lexicons/interfaces';
 
 export const GET: RequestHandler = async ({ url }) => {
-  const collection = 'pub.leaflet.publication';
-  const rkey = LEAFLET_PUB_RKEY;
+  const collection = 'site.standard.publication';
+  const rkey = PUB_RKEY;
 
   if (!collection) {
     throw error(400, 'Missing collection or rkey');
@@ -22,7 +22,7 @@ export const GET: RequestHandler = async ({ url }) => {
     throw error(response.status, 'Failed to fetch record');
   }
 
-  let data: PubLeafletPublication.Main = (await response.json()).value;
+  let data: SiteStandardPublication.Main = (await response.json()).value;
   if (data == null) {
     throw error(response.status, '');
   }
