@@ -6,8 +6,8 @@
       "name": "jeanmachine.dev",
       "dependencies": {
         "@atcute/bluesky": "^3.2.18",
-        "@atcute/leaflet": "^1.0.18",
         "@atcute/lexicons": "^1.2.9",
+        "@atcute/standard-site": "^1.0.1",
         "@lucide/lab": "^0.1.2",
         "@lucide/svelte": "^0.575.0",
         "@sveltejs/adapter-cloudflare": "^7.2.8",
@@ -37,9 +37,9 @@
 
     "@atcute/bluesky": ["@atcute/bluesky@3.2.18", "", { "dependencies": { "@atcute/atproto": "^3.1.10", "@atcute/lexicons": "^1.2.9" } }, "sha512-8S4D0YMUUtvZFchBpEEkvIk7luMu0Z3l50ppUa+EGDDNqF6P5gkgm8q0qfaqpULtDyInKHR+MqJ8fMm20xWgFg=="],
 
-    "@atcute/leaflet": ["@atcute/leaflet@1.0.18", "", { "dependencies": { "@atcute/atproto": "^3.1.10", "@atcute/lexicons": "^1.2.7" } }, "sha512-6EKNy8Pdv99BqoRloeY3Vw+JZ1NtsmgxugUjeu1n6lwk0oPXwWO+D/0JDLmqDxYgoH//E+z1vH2OqJ+TD0mOZA=="],
-
     "@atcute/lexicons": ["@atcute/lexicons@1.2.9", "", { "dependencies": { "@atcute/uint8array": "^1.1.1", "@atcute/util-text": "^1.1.1", "@standard-schema/spec": "^1.1.0", "esm-env": "^1.2.2" } }, "sha512-/RRHm2Cw9o8Mcsrq0eo8fjS9okKYLGfuFwrQ0YoP/6sdSDsXshaTLJsvLlcUcaDaSJ1YFOuHIo3zr2Om2F/16g=="],
+
+    "@atcute/standard-site": ["@atcute/standard-site@1.0.1", "", { "dependencies": { "@atcute/atproto": "^3.1.10", "@atcute/lexicons": "^1.2.7" } }, "sha512-wL4ZAvbe3p7NxC92rRgc6vbd+0feNDEAfEcBLA+68KDTUtmtEko5lr09R31P7AWlN4MVTMRj5iLb9UaTThIzWw=="],
 
     "@atcute/uint8array": ["@atcute/uint8array@1.1.1", "", {}, "sha512-3LsC8XB8TKe9q/5hOA5sFuzGaIFdJZJNewC5OKa3o/eU6+K7JR6see9Zy2JbQERNVnRl11EzbNov1efgLMAs4g=="],
 

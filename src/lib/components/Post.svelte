@@ -43,6 +43,23 @@
     const rkey = uri.split('/').pop();
     return `https://bsky.app/profile/${DID}/post/${rkey}`;
   }
+
+  let lightboxSrc = $state<string | null>(null);
+  let dialog = $state<HTMLDialogElement | null>(null);
+
+  function openLightbox(src: string) {
+    lightboxSrc = src;
+    dialog?.showModal();
+  }
+
+  function closeLightbox() {
+    lightboxSrc = null;
+    dialog?.close();
+  }
+
+  function handleDialogClick(e: MouseEvent) {
+    if (e.target === dialog) closeLightbox();
+  }
 </script>
 
 <div class="post">
@@ -59,125 +76,133 @@
         class="avatar"
       /></a
     >
-    <div class="post-body">
-      <div class="author-info">
-        <div class="author-top">
-          <a
-            href={`https://bsky.app/profile/${DID}`}
-            class="handle"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span class="display-name">{author.displayName}</span></a
-          >
-
-          <span class="post-date">
-            · <span
-              class="post-date-content"
-              title={formatDate(post.createdAt)}
-            >
-              {formatRelativeDate(post.createdAt)} ago
-            </span>
-          </span>
-        </div>
+    <div class="author-info">
+      <div class="author-top">
         <a
           href={`https://bsky.app/profile/${DID}`}
           class="handle"
           target="_blank"
-          rel="noopener noreferrer">@{BSKY_HANDLE}</a
+          rel="noopener noreferrer"
         >
+          <span class="display-name">{author.displayName}</span></a
+        >
+
+        <span class="post-date">
+          · <span
+            class="post-date-content"
+            title={formatDate(post.createdAt)}
+          >
+            {formatRelativeDate(post.createdAt)} ago
+          </span>
+        </span>
       </div>
+      <a
+        href={`https://bsky.app/profile/${DID}`}
+        class="handle"
+        target="_blank"
+        rel="noopener noreferrer">@{BSKY_HANDLE}</a
+      >
+    </div>
+  </div>
 
-      <div class="post-content">
-        <p>{post.text}</p>
+  <div class="post-content">
+    <p>{post.text}</p>
 
-        {#if post.embed}
-          {#if post.embed.$type === 'app.bsky.embed.record'}
-            <div class="quote-post">
-              <div class="quote-header">
-                <span class="quote-author">Quoted post</span>
-              </div>
-              <div class="quote-content">
-                <p class="quote-text">
-                  {post.embed.record.uri}
-                </p>
-              </div>
-            </div>
-          {:else if post.embed.$type === 'app.bsky.embed.images'}
-            <div class="images">
-              {#each post.embed.images as image}
-                <img
-                  src={blobUri(image.image)}
-                  alt={image.alt || ''}
-                  class="post-image"
-                />
-              {/each}
-            </div>
-          {:else if post.embed.$type === 'app.bsky.embed.external'}
-            <a
-              href={post.embed.external.uri}
-              class="external-link"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {#if post.embed.external.thumb}
-                <img
-                  src={blobUri(post.embed.external.thumb)}
-                  alt=""
-                  class="external-thumb"
-                />
-              {/if}
-              <div class="external-info">
-                <span class="external-title">{post.embed.external.title}</span>
-                <span class="external-description"
-                  >{post.embed.external.description}</span
-                >
-              </div>
-            </a>
-          {/if}
-        {/if}
-      </div>
-
-      <div class="post-footer">
-        <div class="post-stats">
-          <span class="stat"><MessageCircle size={14} />{replyCount}</span>
-          <span class="stat"><Repeat2 size={16} />{repostCount}</span>
-          <span class="stat"><Heart size={14} />{likeCount}</span>
+    {#if post.embed}
+      {#if post.embed.$type === 'app.bsky.embed.record'}
+        <div class="quote-post">
+          <div class="quote-header">
+            <span class="quote-author">Quoted post</span>
+          </div>
+          <div class="quote-content">
+            <p class="quote-text">
+              {post.embed.record.uri}
+            </p>
+          </div>
         </div>
+      {:else if post.embed.$type === 'app.bsky.embed.images'}
+        <div class="images">
+          {#each post.embed.images as image}
+            <button
+              class="image-btn"
+              onclick={() => openLightbox(blobUri(image.image))}
+            >
+              <img
+                src={blobUri(image.image)}
+                alt={image.alt || ''}
+                class="post-image"
+              />
+            </button>
+          {/each}
+        </div>
+      {:else if post.embed.$type === 'app.bsky.embed.external'}
         <a
-          href={getPostUrl(uri)}
+          href={post.embed.external.uri}
+          class="external-link"
           target="_blank"
           rel="noopener noreferrer"
-          title="Open post on Bluesky"
         >
-          <Butterfly size={20} color="#1185fe" />
+          {#if post.embed.external.thumb}
+            <img
+              src={blobUri(post.embed.external.thumb)}
+              alt=""
+              class="external-thumb"
+            />
+          {/if}
+          <div class="external-info">
+            <span class="external-title">{post.embed.external.title}</span>
+            <span class="external-description"
+              >{post.embed.external.description}</span
+            >
+          </div>
         </a>
-      </div>
+      {/if}
+    {/if}
+  </div>
+
+  <div class="post-footer">
+    <div class="post-stats">
+      <span class="stat"><MessageCircle size={14} />{replyCount}</span>
+      <span class="stat"><Repeat2 size={16} />{repostCount}</span>
+      <span class="stat"><Heart size={14} />{likeCount}</span>
     </div>
+    <a
+      href={getPostUrl(uri)}
+      target="_blank"
+      rel="noopener noreferrer"
+      title="Open post on Bluesky"
+    >
+      <Butterfly size={20} color="var(--sky)" />
+    </a>
   </div>
 </div>
 
+<dialog bind:this={dialog} class="lightbox" onclick={handleDialogClick}>
+  {#if lightboxSrc}
+    <img src={lightboxSrc} alt="" />
+  {/if}
+</dialog>
+
 <style>
   .post {
-    border: 1px solid #2e3236;
+    border: 1px solid var(--overlay);
     border-radius: 16px;
     padding: 16px;
-    background-color: #16191f;
+    background-color: var(--surface);
     max-width: 30rem;
     box-sizing: border-box;
+  }
+
+  .post {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 
   .post-header {
     display: flex;
     align-items: flex-start;
     gap: 12px;
-  }
-
-  .post-body {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-width: 0;
   }
 
   .avatar {
@@ -191,7 +216,6 @@
   .author-info {
     display: flex;
     flex-direction: column;
-    margin-bottom: 12px;
   }
 
   .author-top {
@@ -203,12 +227,12 @@
   .display-name {
     font-weight: bold;
     font-size: 15px;
-    color: #e7e9ea;
+    color: var(--text);
   }
 
   .post-date {
     font-size: 13px;
-    color: #4a5568;
+    color: var(--subtext);
     text-decoration: none;
   }
 
@@ -219,7 +243,7 @@
 
   .handle {
     font-size: 14px;
-    color: #7c8b9c;
+    color: var(--subtext);
     text-decoration: none;
   }
 
@@ -228,7 +252,6 @@
   }
 
   .post-content {
-    margin-bottom: 12px;
     min-width: 0;
   }
 
@@ -236,17 +259,17 @@
     margin: 0 0 12px 0;
     font-size: 15px;
     line-height: 1.5;
-    color: #e7e9ea;
+    color: var(--text);
     white-space: pre-wrap;
     word-wrap: break-word;
   }
 
   .quote-post {
-    border: 1px solid #2e3236;
+    border: 1px solid var(--overlay);
     border-radius: 12px;
     padding: 12px;
     margin-top: 12px;
-    background-color: #1c1f26;
+    background-color: var(--surface);
   }
 
   .quote-header {
@@ -255,7 +278,7 @@
 
   .quote-author {
     font-size: 13px;
-    color: #7c8b9c;
+    color: var(--subtext);
     font-weight: 500;
   }
 
@@ -265,7 +288,7 @@
 
   .quote-text {
     margin: 0;
-    color: #e7e9ea;
+    color: var(--text);
   }
 
   .images {
@@ -275,16 +298,51 @@
     margin-top: 12px;
   }
 
+  .image-btn {
+    all: unset;
+    cursor: zoom-in;
+    display: contents;
+  }
+
   .post-image {
     width: 100%;
     border-radius: 12px;
-    object-fit: cover;
+    object-fit: contain;
+    max-height: 100vh;
+  }
+
+  @media (min-width: 769px) {
+    .post-image {
+      max-height: 40vh;
+    }
+  }
+
+  .lightbox {
+    border: none;
+    background: transparent;
+    padding: 0;
+    max-width: 100vw;
+    max-height: 100vh;
+    cursor: zoom-out;
+  }
+
+  .lightbox::backdrop {
+    background-color: rgba(0, 0, 0, 0.85);
+  }
+
+  .lightbox img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 8px;
+    cursor: default;
+    display: block;
   }
 
   .external-link {
     display: flex;
     flex-direction: column;
-    border: 1px solid #2e3236;
+    border: 1px solid var(--overlay);
     border-radius: 12px;
     overflow: hidden;
     text-decoration: none;
@@ -293,7 +351,7 @@
   }
 
   .external-link:hover {
-    background-color: #1c1f26;
+    background-color: var(--surface1);
   }
 
   .external-thumb {
@@ -312,17 +370,17 @@
   .external-title {
     font-weight: 600;
     font-size: 14px;
-    color: #e7e9ea;
+    color: var(--text);
   }
 
   .external-description {
     font-size: 13px;
-    color: #7c8b9c;
+    color: var(--subtext);
   }
 
   .post-footer {
     padding-top: 12px;
-    border-top: 1px solid #2e3236;
+    border-top: 1px solid var(--overlay);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -338,7 +396,7 @@
     align-items: center;
     gap: 4px;
     font-size: 13px;
-    color: #4a5568;
+    color: var(--subtext);
   }
 
   .post-footer a {

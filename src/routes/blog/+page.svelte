@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { getContext, onMount, setContext } from 'svelte';
+  import { getContext, onMount } from 'svelte';
   import { page } from '$app/state';
   import { goto } from '$app/navigation';
-  import { PubLeafletDocument, PubLeafletPublication } from '@atcute/leaflet';
+  import { SiteStandardDocument, SiteStandardPublication } from '@atcute/standard-site';
   import {
     ChevronFirst,
     ChevronLast,
@@ -10,11 +10,11 @@
     ChevronRight,
   } from '@lucide/svelte';
 
-  let documents = $state<Map<string, PubLeafletDocument.Main>>(new Map());
+  let documents = $state<Map<string, SiteStandardDocument.Main>>(new Map());
   let leftKeys = $state<string[]>();
   let rightKeys = $state<string[]>();
   const publicationContext = getContext<{
-    value: PubLeafletPublication.Main | null;
+    value: SiteStandardPublication.Main | null;
   }>('publication');
   const publication = publicationContext.value;
   let curr_page = $state(0);
@@ -37,7 +37,7 @@
   // fetching the next 5 pages of documents when we need to.
   async function fetchDocs() {
     const urlParams = new URLSearchParams();
-    urlParams.set('collection', 'pub.leaflet.document');
+    urlParams.set('collection', 'site.standard.document');
     urlParams.set('limit', '50');
     if (cursor) {
       urlParams.set('cursor', cursor);
@@ -99,7 +99,7 @@
       {#each keys as key, i}
         {@const doc = documents.get(key)}
         {#if doc && doc?.publishedAt && publication}
-          <a href="https://{publication.base_path}/{key}">
+          <a href="{publication.url}{doc.path ?? `/${key}`}">
             <div>
               <h2>{doc.title}</h2>
               <p class="date">
@@ -195,7 +195,7 @@
   }
 
   .date {
-    color: var(--accent-text);
+    color: var(--subtext);
     font-style: italic;
   }
 
@@ -214,18 +214,18 @@
   }
 
   .paginator button:hover {
-    color: var(--accent-background);
+    color: var(--sapphire);
   }
 
   .paginator input {
     all: unset;
     width: 3ch;
     text-align: center;
-    background-color: var(--accent-background);
+    background-color: var(--sapphire);
     padding: 3px;
     border: 1px solid #000;
     border-radius: 4px;
-    color: var(--accent-text);
+    color: var(--base);
     text-decoration: underline;
   }
 
@@ -243,7 +243,7 @@
   @media (max-width: 768px) {
     .paginator {
       border: 1px solid #000;
-      background-color: var(--page-background);
+      background-color: color-mix(in srgb, var(--mantle) 80%, transparent);
       padding: 4px;
       border-radius: 4px;
       position: fixed;

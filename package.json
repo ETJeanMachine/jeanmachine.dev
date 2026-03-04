@@ -24,8 +24,8 @@
   },
   "dependencies": {
     "@atcute/bluesky": "^3.2.18",
-    "@atcute/leaflet": "^1.0.18",
     "@atcute/lexicons": "^1.2.9",
+    "@atcute/standard-site": "^1.0.1",
     "@lucide/lab": "^0.1.2",
     "@lucide/svelte": "^0.575.0",
     "@sveltejs/adapter-cloudflare": "^7.2.8",

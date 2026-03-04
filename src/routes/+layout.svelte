@@ -1,6 +1,7 @@
 <script lang="ts">
   import '../index.css';
   import { loadPublication } from '$lib';
+  import type { SiteStandardPublication } from '@atcute/standard-site';
   import { onMount, setContext } from 'svelte';
   import { page } from '$app/state';
   import {
@@ -9,13 +10,13 @@
     NotebookPen,
     Signature,
   } from '@lucide/svelte';
-  import type { PubLeafletPublication } from '@atcute/leaflet';
+
   import twemoji from '@twemoji/api';
   import { NAME, TITLE } from '$lib/constants';
 
   let { children } = $props();
 
-  let publication = $state<PubLeafletPublication.Main | null>(null);
+  let publication = $state<SiteStandardPublication.Main | null>(null);
   let currentPath = $state('');
   let contentDiv: HTMLDivElement | null = $state(null);
   let lastScrollTop = $state(0);
@@ -115,48 +116,41 @@
   <meta property="twitter:image" content="/api/meta-image" />
 
   <!-- Favicon -->
-  <link rel="icon" href="/api/meta-image" />
+  <link rel="icon" href="/favicon.ico" />
 </svelte:head>
 
-{#if publication}
-  <main>
-    <div class:nav-hidden={navHidden}>
-      <nav class="nav-desktop">
-        {#each navItems as item}
-          {@const NavIcon = item.icon}
-          {@const isActive = item.exact
-            ? currentPath === item.href
-            : currentPath.startsWith(item.href)}
-          <a href={item.href} class:active={isActive}>
-            <NavIcon size={'1rem'} />
-            {item.name}
-          </a>
-        {/each}
-      </nav>
-      <br />
-      <div bind:this={contentDiv} onscroll={handleScroll}>
-        {@render children()}
-      </div>
-      <nav class="nav-mobile" class:hidden={navHidden}>
-        {#each navItems as item}
-          {@const NavIcon = item.icon}
-          {@const isActive = item.exact
-            ? currentPath === item.href
-            : currentPath.startsWith(item.href)}
-          <a href={item.href} class:active={isActive}>
-            <NavIcon size={20} />
-            <span>{item.name}</span>
-          </a>
-        {/each}
-      </nav>
+<main>
+  <div class:nav-hidden={navHidden}>
+    <nav class="nav-desktop">
+      {#each navItems as item}
+        {@const NavIcon = item.icon}
+        {@const isActive = item.exact
+          ? currentPath === item.href
+          : currentPath.startsWith(item.href)}
+        <a href={item.href} class:active={isActive}>
+          <NavIcon size={'1rem'} />
+          {item.name}
+        </a>
+      {/each}
+    </nav>
+    <br />
+    <div bind:this={contentDiv} onscroll={handleScroll}>
+      {@render children()}
     </div>
-  </main>
-{:else}
-  <div class="loading-screen">
-    <div class="spinner"></div>
-    <p>Loading...</p>
+    <nav class="nav-mobile" class:hidden={navHidden}>
+      {#each navItems as item}
+        {@const NavIcon = item.icon}
+        {@const isActive = item.exact
+          ? currentPath === item.href
+          : currentPath.startsWith(item.href)}
+        <a href={item.href} class:active={isActive}>
+          <NavIcon size={20} />
+          <span>{item.name}</span>
+        </a>
+      {/each}
+    </nav>
   </div>
-{/if}
+</main>
 
 <style>
   :global(html, body) {
@@ -170,8 +164,9 @@
     align-items: center;
     min-height: 100dvh;
     min-width: 100dvw;
-    font-family: 'Maple Mono', 'Cascadia Code', 'Fira Code', 'Consolas', 'Menlo', monospace;
-    color: var(--primary);
+    font-family:
+      'Maple Mono', 'Cascadia Code', 'Fira Code', 'Consolas', 'Menlo', monospace;
+    color: var(--text);
   }
 
   main > div {
@@ -191,25 +186,27 @@
   }
 
   .nav-desktop > a {
-    color: var(--primary);
+    color: var(--subtext);
     display: flex;
     align-items: center;
     gap: 5px;
     text-decoration: none;
-    background-color: var(--page-background);
+    background-color: color-mix(in srgb, var(--mantle) 80%, transparent);
     padding: 5px 5px;
     border-radius: 5px;
-    border: 1px solid #000;
+    border: 1px solid var(--overlay);
     transition: all 0.2s ease;
     font-size: 16px;
   }
 
   .nav-desktop > a:hover {
-    border: 1px solid var(--accent-background);
+    border: 1px solid var(--sapphire);
+    color: var(--text);
   }
 
   .nav-desktop > a.active {
-    border: 1px solid var(--accent-background);
+    color: var(--text);
+    border: 1px solid var(--sapphire);
   }
 
   @media (min-width: 768px) {
@@ -253,8 +250,8 @@
       flex: 1;
       overflow-y: auto;
       overflow-x: hidden;
-      background-color: var(--page-background);
-      border: 1px solid #000;
+      background-color: color-mix(in srgb, var(--base) 80%, transparent);
+      border: 1px solid var(--overlay);
       border-radius: 10px;
       padding: 1rem;
       margin-top: 0.5rem;
@@ -272,8 +269,8 @@
       flex-direction: row;
       justify-content: space-around;
       align-items: center;
-      background-color: var(--page-background);
-      border: 1px solid #000;
+      background-color: color-mix(in srgb, var(--mantle) 80%, transparent);
+      border: 1px solid var(--overlay);
       border-radius: 10px 10px 0 0;
       padding: 0.25rem 0;
       padding-bottom: calc(0.25rem + env(safe-area-inset-bottom));
@@ -292,7 +289,7 @@
       align-items: center;
       justify-content: center;
       gap: 0.25rem;
-      color: var(--primary);
+      color: var(--text);
       text-decoration: none;
       border-radius: 5px;
       transition: all 0.2s ease;
@@ -302,40 +299,7 @@
 
     .nav-mobile > a:hover,
     .nav-mobile > a.active {
-      color: var(--accent-background);
+      color: var(--sapphire);
     }
-  }
-
-  .loading-screen {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    min-width: 100vw;
-    font-family: 'Maple Mono', 'Cascadia Code', 'Fira Code', 'Consolas', 'Menlo', monospace;
-    background-color: #1a1a1a;
-    color: #ffffff;
-  }
-
-  .spinner {
-    width: 50px;
-    height: 50px;
-    border: 4px solid rgba(255, 255, 255, 0.1);
-    border-top-color: #ffffff;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 1rem;
-  }
-
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  .loading-screen p {
-    font-size: 1.25rem;
-    margin: 0;
   }
 </style>

@@ -1,80 +1,18 @@
 // place files you want to import through the `$lib` alias in this folder.
-import { LEAFLET_PUB_RKEY } from '$lib/constants';
-import { PubLeafletPublication, PubLeafletThemeColor } from '@atcute/leaflet';
-import { is, type Blob, type LegacyBlob } from '@atcute/lexicons';
+import { PUB_RKEY } from '$lib/constants';
+import { SiteStandardPublication } from '@atcute/standard-site';
+import { type Blob, type LegacyBlob } from '@atcute/lexicons';
 import { isBlob, isLegacyBlob } from '@atcute/lexicons/interfaces';
 
-type Colour = PubLeafletThemeColor.Rgb | PubLeafletThemeColor.Rgba;
-
-function colorToCSS(color: Colour | undefined): string {
-  if (!color) return '';
-  if ('a' in color) {
-    return `rgba(${color.r}, ${color.g}, ${color.b}, ${color.a / 100})`;
-  }
-  return `rgb(${color.r}, ${color.g}, ${color.b})`;
-}
-
-export async function loadPublication(): Promise<PubLeafletPublication.Main> {
+export async function loadPublication(): Promise<SiteStandardPublication.Main> {
   const params = new URLSearchParams('');
-  params.append('collection', 'pub.leaflet.publication');
-  params.append('rkey', LEAFLET_PUB_RKEY);
+  params.append('collection', 'site.standard.publication');
+  params.append('rkey', PUB_RKEY);
   const response = await fetch(`/api/atproto/record?${params.toString()}`, {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
-  const publication: PubLeafletPublication.Main = (await response.json()).value;
-  // commenting this out bc the guys over at leaflet have an invalid schema rn
-  // if (!is(PubLeafletPublication.mainSchema, publication)) {
-  //   console.error('Invalid publication schema');
-  // }
-
-  const theme = publication.theme ?? {};
-
-  // Only set CSS variables if we're in the browser (not SSR)
-  if (typeof document !== 'undefined') {
-    // Set background color
-    if (theme.backgroundColor) {
-      document.documentElement.style.setProperty(
-        '--background-color',
-        colorToCSS(theme.backgroundColor),
-      );
-    }
-
-    // Set background image
-    if (theme.backgroundImage?.image) {
-      document.documentElement.style.setProperty(
-        '--background-image',
-        `url(${blobUri(theme.backgroundImage.image)})`,
-      );
-    }
-
-    // Set CSS variables for theme colors
-    if (theme.primary) {
-      document.documentElement.style.setProperty(
-        '--primary',
-        colorToCSS(theme.primary),
-      );
-    }
-    if (theme.pageBackground) {
-      document.documentElement.style.setProperty(
-        '--page-background',
-        colorToCSS(theme.pageBackground),
-      );
-    }
-    if (theme.accentBackground) {
-      document.documentElement.style.setProperty(
-        '--accent-background',
-        colorToCSS(theme.accentBackground),
-      );
-    }
-    if (theme.accentText) {
-      document.documentElement.style.setProperty(
-        '--accent-text',
-        colorToCSS(theme.accentText),
-      );
-    }
-  }
-  return publication;
+  return (await response.json()).value;
 }
 
 export function blobUri(

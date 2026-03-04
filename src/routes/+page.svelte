@@ -6,12 +6,12 @@
 
 <!-- Desktop Layout -->
 <div class="desktop-layout">
-  <div class="card">
+  <div class="card profile-card">
     <Profile />
     <hr />
     <Pinned />
   </div>
-  <div class="card">
+  <div class="card about-card">
     <About />
   </div>
 </div>
@@ -40,6 +40,12 @@
       flex-direction: row;
       gap: 15px;
       align-items: flex-start;
+    }
+
+    .profile-card {
+      container-type: inline-size;
+      container-name: profile-card;
+      min-width: 15rem;
     }
 
     .mobile-layout {
