@@ -195,7 +195,7 @@
   }
 
   .date {
-    color: var(--accent-text);
+    color: var(--subtext);
     font-style: italic;
   }
 
@@ -214,18 +214,18 @@
   }
 
   .paginator button:hover {
-    color: var(--accent-background);
+    color: var(--sapphire);
   }
 
   .paginator input {
     all: unset;
     width: 3ch;
     text-align: center;
-    background-color: var(--accent-background);
+    background-color: var(--sapphire);
     padding: 3px;
     border: 1px solid #000;
     border-radius: 4px;
-    color: var(--accent-text);
+    color: var(--base);
     text-decoration: underline;
   }
 
@@ -243,7 +243,7 @@
   @media (max-width: 768px) {
     .paginator {
       border: 1px solid #000;
-      background-color: var(--page-background);
+      background-color: color-mix(in srgb, var(--mantle) 80%, transparent);
       padding: 4px;
       border-radius: 4px;
       position: fixed;

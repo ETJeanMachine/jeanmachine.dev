@@ -135,12 +135,12 @@
   }
 
   .resume-title a {
-    color: var(--primary);
+    color: var(--text);
     transition: color 0.3s ease;
   }
 
   .resume-title a:hover {
-    color: var(--accent-background);
+    color: var(--sapphire);
   }
 
   .education {
@@ -172,7 +172,7 @@
   .title {
     margin: 0;
     font-style: italic;
-    color: var(--primary);
+    color: var(--text);
   }
 
   .job-meta {
@@ -184,12 +184,12 @@
 
   .location {
     font-size: 0.9rem;
-    color: var(--primary);
+    color: var(--text);
   }
 
   .date {
     font-size: 0.9rem;
-    color: var(--primary);
+    color: var(--text);
   }
 
   .description {
@@ -234,7 +234,7 @@
     .title,
     .location,
     .date {
-      color: var(--primary);
+      color: var(--text);
     }
 
     h2,
@@ -242,7 +242,7 @@
     p,
     strong,
     span {
-      color: var(--primary);
+      color: var(--text);
     }
   }
 </style>

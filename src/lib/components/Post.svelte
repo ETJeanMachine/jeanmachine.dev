@@ -150,7 +150,7 @@
           rel="noopener noreferrer"
           title="Open post on Bluesky"
         >
-          <Butterfly size={20} color="#1185fe" />
+          <Butterfly size={20} color="var(--sky)" />
         </a>
       </div>
     </div>
@@ -159,10 +159,10 @@
 
 <style>
   .post {
-    border: 1px solid #2e3236;
+    border: 1px solid var(--overlay);
     border-radius: 16px;
     padding: 16px;
-    background-color: #16191f;
+    background-color: var(--surface);
     max-width: 30rem;
     box-sizing: border-box;
   }
@@ -203,12 +203,12 @@
   .display-name {
     font-weight: bold;
     font-size: 15px;
-    color: #e7e9ea;
+    color: var(--text);
   }
 
   .post-date {
     font-size: 13px;
-    color: #4a5568;
+    color: var(--subtext);
     text-decoration: none;
   }
 
@@ -219,7 +219,7 @@
 
   .handle {
     font-size: 14px;
-    color: #7c8b9c;
+    color: var(--subtext);
     text-decoration: none;
   }
 
@@ -236,17 +236,17 @@
     margin: 0 0 12px 0;
     font-size: 15px;
     line-height: 1.5;
-    color: #e7e9ea;
+    color: var(--text);
     white-space: pre-wrap;
     word-wrap: break-word;
   }
 
   .quote-post {
-    border: 1px solid #2e3236;
+    border: 1px solid var(--overlay);
     border-radius: 12px;
     padding: 12px;
     margin-top: 12px;
-    background-color: #1c1f26;
+    background-color: var(--surface);
   }
 
   .quote-header {
@@ -255,7 +255,7 @@
 
   .quote-author {
     font-size: 13px;
-    color: #7c8b9c;
+    color: var(--subtext);
     font-weight: 500;
   }
 
@@ -265,7 +265,7 @@
 
   .quote-text {
     margin: 0;
-    color: #e7e9ea;
+    color: var(--text);
   }
 
   .images {
@@ -278,13 +278,13 @@
   .post-image {
     width: 100%;
     border-radius: 12px;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   .external-link {
     display: flex;
     flex-direction: column;
-    border: 1px solid #2e3236;
+    border: 1px solid var(--overlay);
     border-radius: 12px;
     overflow: hidden;
     text-decoration: none;
@@ -293,7 +293,7 @@
   }
 
   .external-link:hover {
-    background-color: #1c1f26;
+    background-color: var(--surface1);
   }
 
   .external-thumb {
@@ -312,17 +312,17 @@
   .external-title {
     font-weight: 600;
     font-size: 14px;
-    color: #e7e9ea;
+    color: var(--text);
   }
 
   .external-description {
     font-size: 13px;
-    color: #7c8b9c;
+    color: var(--subtext);
   }
 
   .post-footer {
     padding-top: 12px;
-    border-top: 1px solid #2e3236;
+    border-top: 1px solid var(--overlay);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -338,7 +338,7 @@
     align-items: center;
     gap: 4px;
     font-size: 13px;
-    color: #4a5568;
+    color: var(--subtext);
   }
 
   .post-footer a {

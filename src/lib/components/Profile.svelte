@@ -29,6 +29,7 @@
   const { mobile = false } = $props();
   let iconSize = $derived(mobile ? 4.5 : 175);
   let iconBorderRadius = $derived(mobile ? 4 : 8);
+  let avatarLoaded = $state(false);
 
   const socialIcons = [
     { name: 'LinkedIn', href: `${LINKEDIN_URL}`, icon: Linkedin },
@@ -49,22 +50,44 @@
 
 <div class="profile">
   {#if publication && !mobile}
-    <img
-      src={blobUri(publication.icon)}
-      alt={'Leaflet Icon'}
-      class="avatar"
-      style="max-height: {iconSize}px; border-radius: {iconBorderRadius}px;"
-    />
+    <div
+      class="avatar-wrapper"
+      style="width: {iconSize}px; height: {iconSize}px; border-radius: {iconBorderRadius}px;"
+    >
+      <img
+        src={blobUri(publication.icon)}
+        alt={'Leaflet Icon'}
+        class="avatar"
+        style="max-height: {iconSize}px; border-radius: {iconBorderRadius}px; opacity: {avatarLoaded
+          ? 1
+          : 0};"
+        onload={() => (avatarLoaded = true)}
+      />
+    </div>
   {/if}
   <div class="info">
     <div class="name-header">
       {#if publication && mobile}
-        <img
-          src={blobUri(publication.icon)}
-          alt={'Leaflet Icon'}
-          class="avatar"
-          style="max-height: {iconSize}rem; border-radius: {iconBorderRadius}px;"
-        />
+        <div
+          class="avatar-wrapper"
+          style="width: {iconSize}rem; height: {iconSize}rem; border-radius: {iconBorderRadius}px;"
+        >
+          {#if !avatarLoaded}
+            <div
+              class="avatar-skeleton"
+              style="border-radius: {iconBorderRadius}px;"
+            ></div>
+          {/if}
+          <img
+            src={blobUri(publication.icon)}
+            alt={'Leaflet Icon'}
+            class="avatar"
+            style="max-height: {iconSize}rem; border-radius: {iconBorderRadius}px; opacity: {avatarLoaded
+              ? 1
+              : 0};"
+            onload={() => (avatarLoaded = true)}
+          />
+        </div>
       {/if}
       <div class="name">
         <div class="woke">
@@ -111,8 +134,10 @@
 
   .avatar {
     object-fit: cover;
-    border: 1px solid #000;
     aspect-ratio: 1 / 1;
+    width: 100%;
+    height: 100%;
+    transition: opacity 0.3s ease;
   }
 
   .info {
@@ -188,11 +213,40 @@
   }
 
   .social-icons > a {
-    color: #c2c2c2;
+    color: var(--overlay);
     transition: color 0.2s ease;
   }
 
   .social-icons > a:hover {
-    color: var(--accent-background);
+    color: var(--sapphire);
+  }
+
+  .avatar-wrapper {
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+    border: 1px solid var(--overlay);
+  }
+
+  .avatar-skeleton {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      var(--surface) 25%,
+      var(--overlay) 50%,
+      var(--surface) 75%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
   }
 </style>
