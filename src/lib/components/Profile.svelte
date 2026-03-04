@@ -27,9 +27,6 @@
   }>('publication');
   let publication = $derived(publicationContext.value);
   const { mobile = false } = $props();
-  let iconSize = $derived(mobile ? 4.5 : 175);
-  let iconBorderRadius = $derived(mobile ? 4 : 8);
-  let avatarLoaded = $state(false);
 
   const socialIcons = [
     { name: 'LinkedIn', href: `${LINKEDIN_URL}`, icon: Linkedin },
@@ -50,50 +47,37 @@
 
 <div class="profile">
   {#if publication && !mobile}
-    <div
-      class="avatar-wrapper"
-      style="width: {iconSize}px; height: {iconSize}px; border-radius: {iconBorderRadius}px;"
-    >
+    <div class="avatar-wrapper">
       <img
         src={blobUri(publication.icon)}
         alt={'Profile Icon'}
         class="avatar"
-        style="max-height: {iconSize}px; border-radius: {iconBorderRadius}px; opacity: {avatarLoaded
-          ? 1
-          : 0};"
-        onload={() => (avatarLoaded = true)}
       />
     </div>
   {/if}
   <div class="info">
     <div class="name-header">
       {#if publication && mobile}
-        <div
-          class="avatar-wrapper"
-          style="width: {iconSize}rem; height: {iconSize}rem; border-radius: {iconBorderRadius}px;"
-        >
-          {#if !avatarLoaded}
-            <div
-              class="avatar-skeleton"
-              style="border-radius: {iconBorderRadius}px;"
-            ></div>
-          {/if}
+        <div class="avatar-wrapper avatar-wrapper--mobile">
           <img
             src={blobUri(publication.icon)}
             alt={'Profile Icon'}
             class="avatar"
-            style="max-height: {iconSize}rem; border-radius: {iconBorderRadius}px; opacity: {avatarLoaded
-              ? 1
-              : 0};"
-            onload={() => (avatarLoaded = true)}
+          />
+        </div>
+      {/if}
+      {#if publication && !mobile}
+        <div class="avatar-wrapper avatar-wrapper--compact">
+          <img
+            src={blobUri(publication.icon)}
+            alt={'Profile Icon'}
+            class="avatar"
           />
         </div>
       {/if}
       <div class="name">
-        <div class="woke">
-          <h1>{NAME}</h1>
-          <h3><i>({PRONOUNS})</i></h3>
-        </div>
+        <h1>{NAME}</h1>
+        <h3 class="pronouns"><i>({PRONOUNS})</i></h3>
         {#if !mobile}
           <div class="location">
             <MapPin size={'1.4rem'} />
@@ -128,16 +112,15 @@
   .profile {
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: stretch;
     gap: 10px;
   }
 
   .avatar {
     object-fit: cover;
-    aspect-ratio: 1 / 1;
     width: 100%;
     height: 100%;
-    transition: opacity 0.3s ease;
+    display: block;
   }
 
   .info {
@@ -174,23 +157,9 @@
     margin: 0px;
   }
 
-  .woke {
-    width: 100%;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    gap: 0.3rem;
-  }
-
-  @media (max-width: 768px) {
-    .woke {
-      align-items: start;
-      flex-direction: column;
-    }
-  }
-
-  .woke > * {
-    margin: 0px;
+  .pronouns {
+    color: var(--subtext);
+    margin: 0;
   }
 
   .location {
@@ -198,6 +167,7 @@
     align-items: center;
     margin: 0px;
     gap: 0.5rem;
+    color: var(--subtext);
   }
 
   .location > * {
@@ -222,31 +192,38 @@
   }
 
   .avatar-wrapper {
-    position: relative;
     flex-shrink: 0;
     overflow: hidden;
     border: 1px solid var(--overlay);
+    border-radius: 8px;
+    max-width: 175px;
+    max-height: 175px;
+    aspect-ratio: 1 / 1;
   }
 
-  .avatar-skeleton {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      90deg,
-      var(--surface) 25%,
-      var(--overlay) 50%,
-      var(--surface) 75%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+  .avatar-wrapper--mobile {
+    border-radius: 4px;
+    width: 4.5rem;
+    height: 4.5rem;
   }
 
-  @keyframes shimmer {
-    0% {
-      background-position: 200% 0;
+  .avatar-wrapper--compact {
+    display: none;
+    border-radius: 4px;
+    width: 5.5rem;
+    height: 5.5rem;
+    max-width: unset;
+    max-height: unset;
+    align-self: flex-start;
+  }
+
+  @container profile-card (max-width: 28rem) {
+    .avatar-wrapper {
+      display: none;
     }
-    100% {
-      background-position: -200% 0;
+
+    .avatar-wrapper--compact {
+      display: block;
     }
   }
 </style>
