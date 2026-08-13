@@ -11,7 +11,7 @@ export const LINKEDIN_URL = 'https://linkedin.com/in/etjhamilton';
 export const GITHUB_USERNAME = 'ETJeanMachine';
 
 // Personal Information
-export const NAME = 'Eric Hamilton';
-export const PRONOUNS = 'any/all';
+export const NAME = 'Eliza Hamilton';
+export const PRONOUNS = 'she/her';
 export const TITLE = 'Software Engineer, Caffeine Addict, Transit Enthusiast.';
 export const LOCATION = 'Seattle, WA';

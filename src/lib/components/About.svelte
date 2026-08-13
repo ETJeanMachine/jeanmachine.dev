@@ -1,6 +1,6 @@
 <h2>About Me</h2>
 <p>
-  My name's Eric, but I also go by Jean! I'm a software engineer from the
+  My name's Eliza, but I also go by Jean! I'm a software engineer from the
   Pacific Northwest with a degree in Computer Science. I love building all sorts
   of things, but in particular, the kinds of projects that get me going are the
   things that I know will positively impact people's lives.
