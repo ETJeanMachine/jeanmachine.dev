@@ -6,15 +6,21 @@
 
 <!-- Desktop Layout -->
 <div class="desktop-layout">
-  <div class="card profile-card">
-    <Profile />
-    <hr />
-    <Pinned />
+  <div class="column profile-column">
+    <div class="card profile-card">
+      <Profile />
+    </div>
+    <div class="card pinned-card">
+      <Pinned />
+    </div>
   </div>
-  <div class="card about-card">
-    <About />
-    <hr />
-    <Github />
+  <div class="column about-column">
+    <div class="card about-card">
+      <About />
+    </div>
+    <div class="card github-card">
+      <Github />
+    </div>
   </div>
 </div>
 
@@ -48,16 +54,34 @@
       align-items: flex-start;
     }
 
-    .profile-card {
-      container-type: inline-size;
-      container-name: profile-card;
+    .column {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .profile-column {
+      flex: 1 1 0;
       min-width: 15rem;
     }
 
-    /* Allow the card to shrink below the contribution calendar's intrinsic
-       width; the calendar scrolls horizontally instead. */
-    .about-card {
+    .profile-card {
+      container-type: inline-size;
+      container-name: profile-card;
+    }
+
+    /* Let the right column shrink; the contribution calendar wraps instead
+       of forcing width. */
+    .about-column {
+      flex: 1 1 0;
       min-width: 0;
+    }
+
+    /* The global .card is content-box: its width: 100% + padding made each
+       card 20px wider than its column, bleeding into the neighboring card
+       and eating the gap. */
+    .card {
+      box-sizing: border-box;
     }
 
     .mobile-layout {
