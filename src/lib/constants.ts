@@ -10,6 +10,18 @@ export const EMAIL = 'etj2206@rit.edu';
 export const LINKEDIN_URL = 'https://linkedin.com/in/etjhamilton';
 export const GITHUB_USERNAME = 'ETJeanMachine';
 
+// GitHub
+// Repos excluded from the language stats (name or owner/name, case-insensitive)
+export const GITHUB_EXCLUDED_REPOS: string[] = [
+  'job-apps',
+  'transit-data',
+];
+// Languages excluded from the language stats (name, case-insensitive)
+export const GITHUB_EXCLUDED_LANGUAGES: string[] = [
+  'mcfunction',
+  'jupyter notebook'
+];
+
 // Personal Information
 export const NAME = 'Eliza Hamilton';
 export const PRONOUNS = 'she/her';

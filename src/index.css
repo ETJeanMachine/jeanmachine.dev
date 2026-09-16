@@ -24,6 +24,18 @@
   --text: light-dark(#4c4f69, #c6d0f5);
   --sapphire: light-dark(#209fb5, #85c1dc);
   --sky: light-dark(#04a5e5, #99d1db);
+  --green: light-dark(#40a02b, #a6d189);
+  --teal: light-dark(#179299, #81c8be);
+  --blue: light-dark(#1e66f5, #8caaee);
+  --lavender: light-dark(#7287fd, #babbf1);
+  --mauve: light-dark(#8839ef, #ca9ee6);
+  --pink: light-dark(#ea76cb, #f4b8e4);
+  --flamingo: light-dark(#dd7878, #eebebe);
+  --rosewater: light-dark(#dc8a78, #f2d5cf);
+  --peach: light-dark(#fe640b, #ef9f76);
+  --maroon: light-dark(#e64553, #ea999c);
+  --red: light-dark(#d20f39, #e78284);
+  --yellow: light-dark(#df8e1d, #e5c890);
 }
 
 /* Style twemoji images to match text size */
