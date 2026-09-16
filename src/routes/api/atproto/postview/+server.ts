@@ -33,10 +33,6 @@ export const GET: RequestHandler = async ({ url }) => {
       repostCount: post.repostCount ?? 0,
       replyCount: post.replyCount ?? 0,
     },
-    {
-      headers: {
-        'Cache-Control': 'public, max-age=60',
-      },
-    },
+    { headers: { 'Cache-Control': 'public, max-age=60' } },
   );
 };

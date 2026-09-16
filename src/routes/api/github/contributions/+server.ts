@@ -13,9 +13,7 @@ export const GET: RequestHandler = async ({ setHeaders }) => {
     return json(
       {
         error:
-          err instanceof Error
-            ? err.message
-            : 'Failed to fetch contributions',
+          err instanceof Error ? err.message : 'Failed to fetch contributions',
       },
       { status: 500 },
     );

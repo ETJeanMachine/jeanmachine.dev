@@ -27,7 +27,7 @@ bun run check:watch
 
 - **There is no test suite.** `bun run check` (svelte-check, strict TS) is the primary validation for changes.
 - **`vite build` does not type-check.** Always run `bun run check` after edits — the build succeeding does not mean types are clean.
-- **Formatting:** Prettier (`.prettierrc`, `prettier-plugin-svelte`): `bun run format` to write, `bunx prettier --check .` to verify. Style: single quotes, 2-space indent (no tabs), 80 print width (150 for HTML files), trailing commas, semicolons.
+- **Formatting:** Prettier (`.prettierrc`, `prettier-plugin-svelte`): `bun run format` to write, `bunx prettier --check .` to verify. Style: single quotes, 2-space indent (no tabs), 80 print width (150 for HTML files), trailing commas, semicolons. `lexicons/` is excluded via `.prettierignore` (upstream spec files — don't reformat).
 - **No ESLint.** Don't introduce it ad hoc.
 - **Local Workers runtime (optional):** `bunx wrangler pages dev` against the adapter output. Note wrangler writes logs to `~/Library/Preferences/.wrangler/logs/` — in sandboxed environments this fails with `EPERM`, which is noisy but benign.
 
