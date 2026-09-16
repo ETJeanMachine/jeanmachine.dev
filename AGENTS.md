@@ -4,7 +4,7 @@ Guidance for AI coding agents working in this repository.
 
 ## Project Overview
 
-Personal website for Eliza Hamilton ([jeanmachine.dev](https://jeanmachine.dev)).
+Personal website for Eliza Hamilton ([jeanmachine.dev](https://jeanmachine.dev)). Also hosted at ([eliza.vg](https://eliza.vg)).
 
 - **Framework:** SvelteKit 2 + Svelte 5 (runes) + TypeScript, built with Vite 7
 - **Hosting:** Cloudflare Pages via `@sveltejs/adapter-cloudflare` (config in `svelte.config.js` and `wrangler.toml`; output goes to `.svelte-kit/cloudflare`)
