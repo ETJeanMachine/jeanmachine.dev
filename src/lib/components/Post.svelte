@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { BSKY_HANDLE, DID } from '$lib/constants';
+  import { onMount } from 'svelte';
+  import { DID } from '$lib/constants';
   import { Butterfly } from '$lib/icons';
   import { blobUri } from '$lib';
   import type { AppBskyActorProfile, AppBskyFeedPost } from '@atcute/bluesky';
@@ -46,6 +47,7 @@
 
   let lightboxSrc = $state<string | null>(null);
   let dialog = $state<HTMLDialogElement | null>(null);
+  let handle = $state('');
 
   function openLightbox(src: string) {
     lightboxSrc = src;
@@ -60,6 +62,14 @@
   function handleDialogClick(e: MouseEvent) {
     if (e.target === dialog) closeLightbox();
   }
+
+  onMount(async () => {
+    const response = await fetch('/api/atproto/resolve');
+    if (response.ok) {
+      const data = await response.json();
+      handle = data.handle;
+    }
+  });
 </script>
 
 <div class="post">
@@ -100,7 +110,7 @@
         href={`https://bsky.app/profile/${DID}`}
         class="handle"
         target="_blank"
-        rel="noopener noreferrer">@{BSKY_HANDLE}</a
+        rel="noopener noreferrer">{handle ? `@${handle}` : `@${DID}`}</a
       >
     </div>
   </div>
