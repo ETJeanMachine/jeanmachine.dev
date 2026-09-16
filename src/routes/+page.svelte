@@ -13,6 +13,8 @@
   </div>
   <div class="card about-card">
     <About />
+    <hr />
+    <Github />
   </div>
 </div>
 
@@ -26,6 +28,10 @@
   <hr />
   <div>
     <Pinned />
+  </div>
+  <hr />
+  <div>
+    <Github />
   </div>
 </div>
 
@@ -46,6 +52,12 @@
       container-type: inline-size;
       container-name: profile-card;
       min-width: 15rem;
+    }
+
+    /* Allow the card to shrink below the contribution calendar's intrinsic
+       width; the calendar scrolls horizontally instead. */
+    .about-card {
+      min-width: 0;
     }
 
     .mobile-layout {
