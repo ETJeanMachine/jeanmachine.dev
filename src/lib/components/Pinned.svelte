@@ -2,11 +2,12 @@
   import { onMount } from 'svelte';
   import { Pin } from '@lucide/svelte';
   import Post from './Post.svelte';
-  import { AppBskyActorProfile, AppBskyFeedPost } from '@atcute/bluesky';
+  import { AppBskyFeedPost } from '@atcute/bluesky';
+  import type { AppBskyActorProfile } from '@atcute/bluesky';
   import type { Main as StrongRef } from '@atcute/atproto/types/repo/strongRef';
+  import { loadProfile } from '$lib';
   import { error } from '@sveltejs/kit';
 
-  const params = new URLSearchParams();
   let post = $state<AppBskyFeedPost.Main | null>(null);
   let author = $state<AppBskyActorProfile.Main | null>(null);
   let uri: string = $state('');
@@ -15,16 +16,7 @@
   let replyCount = $state(0);
 
   onMount(async () => {
-    params.append('collection', 'app.bsky.actor.profile');
-    params.append('rkey', 'self');
-    const profile_response = await fetch(
-      `/api/atproto/record?${params.toString()}`,
-      { method: 'GET', headers: { 'Content-Type': 'application/json' } },
-    );
-    const profile_data: AppBskyActorProfile.Main = (
-      await profile_response.json()
-    ).value;
-    author = profile_data;
+    author = await loadProfile();
     if (!author.pinnedPost) {
       throw error(500, { message: 'No pinned post.' });
     }
@@ -33,8 +25,9 @@
     if (!rkey) {
       throw error(500, { message: 'Failed to fetch pinned post URI' });
     }
-    params.set('collection', 'app.bsky.feed.post');
-    params.set('rkey', rkey);
+    const params = new URLSearchParams();
+    params.append('collection', 'app.bsky.feed.post');
+    params.append('rkey', rkey);
     const response = await fetch(`/api/atproto/record?${params.toString()}`, {
       method: 'GET',
       headers: { 'Content-Type': 'application/json' },
@@ -73,9 +66,15 @@
   .post-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
     width: 100%;
     max-width: 100%;
+    min-width: 0;
     box-sizing: border-box;
+  }
+
+  /* Stretch the post to fill the card's width, overriding Post.svelte's
+     fit-content sizing and 30rem cap. */
+  .post-container :global(.post) {
+    max-width: 100%;
   }
 </style>
