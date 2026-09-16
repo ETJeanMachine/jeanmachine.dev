@@ -114,12 +114,17 @@
     return labels;
   });
 
-  function level(count: number): number {
-    if (count <= 0) return 0;
-    if (count <= 0.25 * maxDailyContributions) return 1;
-    if (count <= 0.5 * maxDailyContributions) return 2;
-    if (count <= 0.75 * maxDailyContributions) return 3;
-    return 4;
+  // Continuous shading: 30% sapphire at the smallest non-zero count,
+  // scaling linearly up to 100% at the peak day. 0 = unshaded.
+  function shade(count: number): number {
+    if (count <= 0 || maxDailyContributions <= 0) return 0;
+    return 30 + 70 * Math.sqrt(count / maxDailyContributions);
+  }
+
+  function shadeStyle(shade: number): string {
+    return shade > 0
+      ? `background-color: color-mix(in srgb, var(--sapphire) ${shade}%, var(--surface))`
+      : '';
   }
 
   // Weekday (0 = Sunday) of a YYYY-MM-DD date, used to pad the first week
@@ -183,8 +188,10 @@
             <span class="day pad"></span>
           {/each}
           {#each week.contributionDays as day}
+            {@const dayShade = shade(day.contributionCount)}
             <span
-              class="day level-{level(day.contributionCount)}"
+              class="day"
+              style={shadeStyle(dayShade)}
               title="{day.contributionCount} contribution{day.contributionCount === 1 ? '' : 's'} on {day.date}"
             ></span>
           {/each}
@@ -197,8 +204,8 @@
   </div>
   <div class="calendar-legend">
     <span>Less</span>
-    {#each [0, 1, 2, 3, 4] as lvl}
-      <span class="day level-{lvl}"></span>
+    {#each [0, 30, 53.33, 76.67, 100] as legendShade}
+      <span class="day" style={shadeStyle(legendShade)}></span>
     {/each}
     <span>More</span>
   </div>
@@ -267,22 +274,6 @@
      slots for weekday alignment but render as nothing. */
   .day.pad {
     visibility: hidden;
-  }
-
-  .level-1 {
-    background-color: color-mix(in srgb, var(--sapphire) 30%, var(--surface));
-  }
-
-  .level-2 {
-    background-color: color-mix(in srgb, var(--sapphire) 55%, var(--surface));
-  }
-
-  .level-3 {
-    background-color: color-mix(in srgb, var(--sapphire) 80%, var(--surface));
-  }
-
-  .level-4 {
-    background-color: var(--sapphire);
   }
 
   .calendar-legend {
