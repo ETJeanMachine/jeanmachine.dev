@@ -234,6 +234,7 @@
     font-size: 13px;
     color: var(--subtext);
     text-decoration: none;
+    margin-left: auto;
   }
 
   .post-date-content:hover {
@@ -289,11 +290,12 @@
   .quote-text {
     margin: 0;
     color: var(--text);
+    overflow-wrap: anywhere;
   }
 
   .images {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
     gap: 8px;
     margin-top: 12px;
   }
@@ -305,9 +307,13 @@
   }
 
   .post-image {
-    width: 100%;
+    display: block;
+    justify-self: start;
+    width: auto;
+    max-width: 100%;
     border-radius: 12px;
     object-fit: contain;
+    object-position: left center;
     max-height: 100vh;
   }
 

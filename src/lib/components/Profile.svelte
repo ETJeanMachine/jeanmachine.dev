@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getContext } from 'svelte';
+  import { onMount } from 'svelte';
   import {
     Github,
     Linkedin,
@@ -19,13 +19,15 @@
     DID,
   } from '$lib/constants';
   import { Butterfly } from '$lib/icons';
-  import { blobUri } from '$lib';
-  import type { SiteStandardPublication } from '@atcute/standard-site';
+  import { blobUri, loadProfile } from '$lib';
+  import type { AppBskyActorProfile } from '@atcute/bluesky';
 
-  const publicationContext = getContext<{
-    value: SiteStandardPublication.Main | null;
-  }>('publication');
-  let publication = $derived(publicationContext.value);
+  let profile = $state<AppBskyActorProfile.Main | null>(null);
+
+  onMount(async () => {
+    profile = await loadProfile();
+  });
+
   const { mobile = false } = $props();
 
   const socialIcons = [
@@ -46,31 +48,31 @@
 </script>
 
 <div class="profile">
-  {#if publication && !mobile}
+  {#if profile?.avatar && !mobile}
     <div class="avatar-wrapper">
       <img
-        src={blobUri(publication.icon)}
-        alt={'Profile Icon'}
+        src={blobUri(profile.avatar)}
+        alt={profile.displayName ?? 'Profile picture'}
         class="avatar"
       />
     </div>
   {/if}
   <div class="info">
     <div class="name-header">
-      {#if publication && mobile}
+      {#if profile?.avatar && mobile}
         <div class="avatar-wrapper avatar-wrapper--mobile">
           <img
-            src={blobUri(publication.icon)}
-            alt={'Profile Icon'}
+            src={blobUri(profile.avatar)}
+            alt={profile.displayName ?? 'Profile picture'}
             class="avatar"
           />
         </div>
       {/if}
-      {#if publication && !mobile}
+      {#if profile?.avatar && !mobile}
         <div class="avatar-wrapper avatar-wrapper--compact">
           <img
-            src={blobUri(publication.icon)}
-            alt={'Profile Icon'}
+            src={blobUri(profile.avatar)}
+            alt={profile.displayName ?? 'Profile picture'}
             class="avatar"
           />
         </div>
