@@ -11,6 +11,15 @@
     contributionDays: ContributionDay[];
   }
 
+  interface ContributionCalendar {
+    totalContributions: number;
+    weeks: Week[];
+  }
+
+  interface LanguageStats {
+    languages: LanguageStat[];
+  }
+
   interface LanguageStat {
     name: string;
     percent: number;
@@ -67,6 +76,7 @@
   }
 
   let totalContributions = $state(0);
+  let maxDailyContributions = $state(0);
   let weeks = $state<Week[]>([]);
   let languages = $state<LanguageStat[]>([]);
   let error = $state('');
@@ -106,9 +116,9 @@
 
   function level(count: number): number {
     if (count <= 0) return 0;
-    if (count <= 2) return 1;
-    if (count <= 4) return 2;
-    if (count <= 7) return 3;
+    if (count <= 0.25 * maxDailyContributions) return 1;
+    if (count <= 0.5 * maxDailyContributions) return 2;
+    if (count <= 0.75 * maxDailyContributions) return 3;
     return 4;
   }
 
@@ -116,6 +126,16 @@
   // down to its correct row.
   function weekday(dateString: string): number {
     return new Date(`${dateString}T00:00:00`).getDay();
+  }
+
+  // Maximum contributions we've ever made in a single day.
+  function maxContributions(calendar: ContributionCalendar): number {
+    return calendar.weeks.reduce((max, week) => {
+      return week.contributionDays.reduce(
+        (weekMax, day) => Math.max(weekMax, day.contributionCount),
+        max,
+      );
+    }, 0);
   }
 
   onMount(async () => {
@@ -127,9 +147,10 @@
       if (!calendarResponse.ok || !languagesResponse.ok) {
         throw new Error('Failed to fetch GitHub data');
       }
-      const calendar = await calendarResponse.json();
-      const languageData = await languagesResponse.json();
+      const calendar: ContributionCalendar = await calendarResponse.json();
+      const languageData: LanguageStats = await languagesResponse.json();
       totalContributions = calendar.totalContributions;
+      maxDailyContributions = maxContributions(calendar);
       weeks = calendar.weeks;
       languages = languageData.languages;
     } catch (e) {
