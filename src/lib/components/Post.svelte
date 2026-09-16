@@ -188,7 +188,7 @@
     border: 1px solid var(--overlay);
     border-radius: 16px;
     padding: 16px;
-    background-color: var(--surface);
+    background-color: color-mix(in srgb, var(--surface) 80%, transparent);
     max-width: 30rem;
     box-sizing: border-box;
   }

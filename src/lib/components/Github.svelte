@@ -238,7 +238,7 @@
     aspect-ratio: 1 / 1;
     border: 1px solid color-mix(in srgb, var(--overlay) 45%, transparent);
     border-radius: 2px;
-    background-color: var(--surface);
+    background-color: color-mix(in srgb, var(--surface) 80%, transparent);
     box-sizing: border-box;
   }
 
