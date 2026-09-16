@@ -27,6 +27,25 @@
   <div class="job">
     <div class="job-header">
       <div>
+        <h3>Jensen Hughes</h3>
+        <p class="title">Automation Engineer</p>
+      </div>
+      <div class="job-meta">
+        <span class="location">Remote, USA</span>
+        <span class="date">February 2026 - Present</span>
+      </div>
+    </div>
+    <p class="description">
+      Building workflows via Powershell, PowerAutomate, Python, and other related
+      power app tools within Microsoft environments to expedite business workflows
+      for marketing and sales teams. Exploring integrations with AI, Microsoft Dataverse,
+      PowerBI and CRM tools to allow for more complex workflows.
+    </p>
+  </div>
+
+  <div class="job">
+    <div class="job-header">
+      <div>
         <h3>Intel (UST Global)</h3>
         <p class="title">Validation Tester II</p>
       </div>
