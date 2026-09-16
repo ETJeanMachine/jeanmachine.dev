@@ -51,11 +51,20 @@ async function githubGraphQL<T>(
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
+      // GitHub rejects API requests without a User-Agent; the Workers
+      // runtime doesn't set one automatically.
+      'User-Agent': 'jeanmachine.dev',
+      'X-GitHub-Api-Version': '2022-11-28',
     },
     body: JSON.stringify({ query, variables }),
   });
   if (!response.ok) {
-    throw new Error(`GitHub API returned ${response.status}`);
+    const detail = await response.text().catch(() => '');
+    throw new Error(
+      `GitHub API returned ${response.status}${
+        detail ? `: ${detail.slice(0, 200)}` : ''
+      }`,
+    );
   }
   const payload: GraphQLResponse<T> = await response.json();
   if (payload.errors?.length) {
