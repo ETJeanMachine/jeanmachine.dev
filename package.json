@@ -39,5 +39,5 @@
   "resolutions": {
     "rollup": "npm:@rollup/wasm-node"
   },
-  "packageManager": "bun@1.2.23"
+  "packageManager": "bun@1.4.3"
 }

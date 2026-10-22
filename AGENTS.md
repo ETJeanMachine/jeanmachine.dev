@@ -14,7 +14,7 @@ Personal website for Eliza Hamilton ([jeanmachine.dev](https://jeanmachine.dev))
 
 ## Commands
 
-**Bun is the package manager** (pinned via `packageManager: bun@1.2.23`, lockfile is `bun.lock`, Dependabot uses the `bun` ecosystem). Use `bun` / `bunx`, not `npm` / `npx` / `pnpm`.
+**Bun is the package manager** (pinned via `packageManager: bun@1.4.3`, lockfile is `bun.lock`, Dependabot uses the `bun` ecosystem). Use `bun` / `bunx`, not `npm` / `npx` / `pnpm`.
 
 ```bash
 bun install        # install dependencies (runs svelte-kit sync via "prepare")
