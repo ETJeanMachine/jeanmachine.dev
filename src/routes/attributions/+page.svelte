@@ -9,18 +9,18 @@
       <a href="https://pds.jeanmachine.dev">pds.jeanmachine.dev</a>.
     </p>
     <p>
-      The blog uses <a href="https://standard.site">standard.site</a> lexicons,
+      The blog uses <a href="https://standard.site">standard.site</a> & <a href="https://leaflet.pub">Leaflet</a> lexicons,
       with schemas and types provided by
-      <a href="https://github.com/mary-ext/atcute">atcute</a>. Read the blog
-      natively
-      <a href="/blog">on this site</a>.
+      <a href="https://github.com/mary-ext/atcute">atcute</a>. It uses a custom rendering engine for this; but you can read the
+      blog as well on <a href="https://blog.jean.moe">leaflet directly</a>.
     </p>
     <p>
       The core of the website is built using <a href="https://kit.svelte.dev"
         >SvelteKit</a
       >, for both the frontend and backend. Icons are provided by
       <a href="https://lucide.dev">Lucide</a>, and the font used is
-      <a href="https://github.com/subframe7536/maple-font">Maple Mono</a>. Emoji
+      <a href="https://github.com/subframe7536/maple-font">Maple Mono</a>. Color and
+      design language is based off of <a href="https://catppuccin.com/">Catpuccin</a>. Emoji
       use Google's
       <a href="https://github.com/googlefonts/noto-emoji">Noto Color Emoji</a>,
       self-hosted directly from the official Google font under the
