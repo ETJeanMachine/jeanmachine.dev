@@ -9,8 +9,6 @@ const css: string = await file(
 const root = css.match(/:root\s*\{([^}]+)\}/)?.[1] ?? '';
 
 test('emoji presentation keeps the author font stack instead of Chromium platform fallback', () => {
-  // Helium 155 selects Apple for default emoji with unicode/emoji even when
-  // Noto is loaded. Normal selects Noto and still honors explicit selectors.
   expect(root).toMatch(/font-variant-emoji:\s*normal;/);
   expect(css).not.toMatch(/font-variant-emoji:\s*(?:unicode|emoji);/);
   expect(css).not.toContain('@fontsource/noto-color-emoji');
