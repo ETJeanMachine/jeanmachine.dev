@@ -1,7 +1,5 @@
 // @ts-ignore Bun provides its test runner without app-wide ambient types.
 import { expect, test } from 'bun:test';
-// @ts-ignore The build API is used only for isolated, in-memory route compilation.
-import { build, file } from 'bun';
 
 import { render } from 'svelte/server';
 import { is } from '@atcute/lexicons';
@@ -20,7 +18,8 @@ import {
 import { normalizeContent, type Block } from '../blog/normalize';
 import { richText } from '../blog/richtext';
 import { imageUrl, safeWebUrl } from '../blog/urls';
-import { svelteSSR, type TestBuildHooks } from '../blog/testing';
+import { svelteSSR } from '../blog/testing';
+import { isolatedModule } from '../testing';
 import { exampleArticle, exampleContent } from './blog-example';
 
 function flatten(blocks: Block[]): Block[] {
@@ -253,85 +252,32 @@ test('every facet validates and uses UTF-8 boundaries; Unicode overlap and all s
   );
 });
 
-// Compile real route sources with isolated virtual $app modules. No global
-// mock.module calls: production/dev cases cannot poison other renderer tests.
-
-async function routeModule(relativePath: string, dev: boolean, search = '') {
-  const entrypoint = new URL(relativePath, import.meta.url).pathname;
-  const result = await build({
-    entrypoints: [entrypoint],
-    target: 'bun',
-    external: ['svelte', 'svelte/*', '@sveltejs/kit'],
-    minify: { syntax: true },
-    plugins: [
-      {
-        name: 'isolated-example-routes',
-        setup(hooks: TestBuildHooks) {
-          // SvelteKit supplies dev as a compile-time constant; inline it here too.
-          hooks.onLoad({ filter: /\+page\.server\.ts$/ }, async ({ path }) => ({
-            contents: (await file(path).text()).replace(
-              "import { dev } from '$app/environment';",
-              `const dev = ${dev};`,
-            ),
-            loader: 'ts',
-          }));
-          hooks.onResolve({ filter: /^\$app\// }, ({ path }) => ({
-            path,
-            namespace: 'example-app',
-          }));
-          hooks.onLoad(
-            { filter: /.*/, namespace: 'example-app' },
-            ({ path }) => ({
-              contents:
-                path === '$app/environment'
-                  ? `export const dev = ${dev};`
-                  : path === '$app/state'
-                    ? `export const page = {url: new URL('https://local.test/blog${search}')};`
-                    : 'export const goto = () => { throw new Error("Unexpected SSR navigation"); };',
-              loader: 'js',
-            }),
-          );
-          hooks.onResolve({ filter: /^\$lib(?:\/|$)/ }, ({ path }) => ({
-            path: new URL(
-              path === '$lib'
-                ? '../index.ts'
-                : path === '$lib/blog' || path === '$lib/components/blog'
-                  ? `../${path.slice(5)}/index.ts`
-                  : `../${path.slice(5)}.ts`,
-              import.meta.url,
-            ).pathname,
-          }));
-
-          // Empty listing SSR never renders pagination icons. Keep its compilation small.
-          hooks.onResolve({ filter: /^@lucide\/svelte$/ }, () =>
-            relativePath === '../../routes/blog/+page.svelte'
-              ? { path: 'icons', namespace: 'example-icons' }
-              : undefined,
-          );
-          hooks.onLoad({ filter: /.*/, namespace: 'example-icons' }, () => ({
-            contents:
+function routeModule(relativePath: string, dev: boolean, search = '') {
+  const entrypoint = new URL(relativePath, import.meta.url);
+  return isolatedModule(entrypoint, {
+    virtual: {
+      '$app/environment': `export const dev = ${dev};`,
+      '$app/state': `export const page = {url: new URL('https://local.test/blog${search}')};`,
+      '$app/navigation':
+        'export const goto = () => { throw new Error("Unexpected SSR navigation"); };',
+      // Empty listing SSR never renders pagination icons. Keep its compilation small.
+      ...(relativePath === '../../routes/blog/+page.svelte'
+        ? {
+            '@lucide/svelte':
               'export const ChevronFirst = () => {}; export const ChevronLast = ChevronFirst; export const ChevronLeft = ChevronFirst; export const ChevronRight = ChevronFirst;',
-            loader: 'js',
-          }));
-        },
-      },
-      svelteSSR(),
-    ],
+          }
+        : {}),
+    },
+    // SvelteKit supplies dev as a compile-time constant; inline it here too.
+    transform: entrypoint.pathname.endsWith('.server.ts')
+      ? (source) =>
+          source.replace(
+            "import { dev } from '$app/environment';",
+            `const dev = ${dev};`,
+          )
+      : undefined,
+    plugins: [svelteSSR()],
   });
-  if (!result.success) throw new Error(String(result.logs));
-  const code = (await result.outputs[0].text()).replace(
-    /(['"])(svelte(?:\/[^'"]*)?|@sveltejs\/kit)\1/g,
-    (_match: string, _quote: string, specifier: string) =>
-      JSON.stringify(import.meta.resolve(specifier)),
-  );
-  const url = URL.createObjectURL(
-    new Blob([code], { type: 'text/javascript' }),
-  );
-  try {
-    return { code, module: await import(url) };
-  } finally {
-    URL.revokeObjectURL(url);
-  }
 }
 
 test('reserved example route is local/no-store in dev and 404 before any PDS fetch in production', async () => {

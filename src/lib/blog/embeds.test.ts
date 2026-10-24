@@ -7,6 +7,7 @@ import { DID, PUB_RKEY } from '../constants';
 import { embedDate, embedTarget, loadEmbed, postPreview } from './embeds';
 import { recordUrl } from './urls';
 import { svelteSSR } from './testing';
+import { documentFixture, publicationFixture } from './fixtures';
 
 plugin(
   svelteSSR(
@@ -17,13 +18,12 @@ const documentUri = `at://${DID}/site.standard.document/3m4omt5rj5c2i`;
 const publicationUri = `at://${DID}/site.standard.publication/${PUB_RKEY}`;
 const postUri = `at://${DID}/app.bsky.feed.post/3m4omtcysns2i`;
 const date = '2025-11-02T23:09:58.075Z';
-const document = {
-  $type: 'site.standard.document',
+const document = documentFixture({
   site: publicationUri,
   title: '"Bad Weather"',
   description: 'A weird little ramble on what I value in a climate.',
   publishedAt: date,
-};
+});
 const cid = 'bafkreifdkkuhnfrsz35uibzth7wractnc755xgydmxnv3wxpjhjs5rbrr4';
 const cdn = (kind: string) =>
   `https://cdn.bsky.app/img/${kind}/plain/${DID}/${cid}@jpeg`;
@@ -227,12 +227,11 @@ test('owned article/publication metadata is validated and fetched only from the 
   });
   const publication = mockFetch({
     uri: publicationUri,
-    value: {
-      $type: 'site.standard.publication',
+    value: publicationFixture({
       name: 'Actual publication',
       description: 'Actual description',
       url: 'https://jeanmachine.dev',
-    },
+    }),
   });
   expect(
     await loadEmbed(publicationUri, 'record', publication.fetcher, signal()),
@@ -648,12 +647,7 @@ test('owned document covers and publication icons use only the existing PDS imag
     expect(cover.calls).toHaveLength(1);
     const publication = mockFetch({
       uri: publicationUri,
-      value: {
-        $type: 'site.standard.publication',
-        name: 'Blog',
-        url: 'https://jeanmachine.dev',
-        icon: blob,
-      },
+      value: publicationFixture({ url: 'https://jeanmachine.dev', icon: blob }),
     });
     expect(
       await loadEmbed(publicationUri, 'record', publication.fetcher, signal()),
@@ -675,12 +669,7 @@ test('owned document covers and publication icons use only the existing PDS imag
     expect(preview?.image).toBeUndefined();
     const publication = mockFetch({
       uri: publicationUri,
-      value: {
-        $type: 'site.standard.publication',
-        name: 'Blog',
-        url: 'https://jeanmachine.dev',
-        icon: blob,
-      },
+      value: publicationFixture({ url: 'https://jeanmachine.dev', icon: blob }),
     });
     expect(
       (await loadEmbed(publicationUri, 'record', publication.fetcher, signal()))

@@ -27,6 +27,15 @@
     { name: 'Credits', href: '/attributions', icon: Signature, exact: false },
   ];
 
+  const navigation = $derived(
+    navItems.map((item) => ({
+      ...item,
+      active: item.exact
+        ? currentPath === item.href
+        : currentPath.startsWith(item.href),
+    })),
+  );
+
   $effect(() => {
     // Track pathname changes to reset scroll to top on navigation.
     currentPath;
@@ -82,12 +91,9 @@
 <main>
   <div class:nav-hidden={navHidden}>
     <nav class="nav-desktop">
-      {#each navItems as item}
+      {#each navigation as item}
         {@const NavIcon = item.icon}
-        {@const isActive = item.exact
-          ? currentPath === item.href
-          : currentPath.startsWith(item.href)}
-        <a href={item.href} class:active={isActive}>
+        <a href={item.href} class:active={item.active}>
           <NavIcon size={'1rem'} />
           {item.name}
         </a>
@@ -98,12 +104,9 @@
       {@render children()}
     </div>
     <nav class="nav-mobile" class:hidden={navHidden}>
-      {#each navItems as item}
+      {#each navigation as item}
         {@const NavIcon = item.icon}
-        {@const isActive = item.exact
-          ? currentPath === item.href
-          : currentPath.startsWith(item.href)}
-        <a href={item.href} class:active={isActive}>
+        <a href={item.href} class:active={item.active}>
           <NavIcon size={20} />
           <span>{item.name}</span>
         </a>

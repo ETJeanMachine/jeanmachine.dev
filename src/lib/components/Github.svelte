@@ -1,30 +1,15 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import { Github as GithubIcon } from '@lucide/svelte';
+  import type { ContributionCalendar, LanguageStat } from '$lib/github';
+  import type { HomeState } from '$lib/home';
 
-  interface ContributionDay {
-    date: string;
-    contributionCount: number;
-  }
+  type DisplayLanguage = Pick<LanguageStat, 'name' | 'percent' | 'color'>;
 
-  interface Week {
-    contributionDays: ContributionDay[];
-  }
-
-  interface ContributionCalendar {
-    totalContributions: number;
-    weeks: Week[];
-  }
-
-  interface LanguageStats {
-    languages: LanguageStat[];
-  }
-
-  interface LanguageStat {
-    name: string;
-    percent: number;
-    color: string | null;
-  }
+  const {
+    calendar,
+    languageData,
+  }: { calendar: HomeState['calendar']; languageData: HomeState['languages'] } =
+    $props();
 
   const TOP_LANGUAGES = 8;
 
@@ -67,22 +52,22 @@
     dockerfile: 'var(--sky)',
   };
 
-  function langColor(lang: LanguageStat): string {
+  function langColor(lang: DisplayLanguage): string {
     return (
-      LANGUAGE_COLORS[lang.name.toLowerCase()] ??
-      lang.color ??
-      'var(--overlay)'
+      LANGUAGE_COLORS[lang.name.toLowerCase()] ?? lang.color ?? 'var(--overlay)'
     );
   }
 
-  let totalContributions = $state(0);
-  let maxDailyContributions = $state(0);
-  let weeks = $state<Week[]>([]);
-  let languages = $state<LanguageStat[]>([]);
-  let error = $state('');
+  const totalContributions = $derived(calendar.data?.totalContributions ?? 0);
+  const maxDailyContributions = $derived(
+    calendar.data ? maxContributions(calendar.data) : 0,
+  );
+  const weeks = $derived(calendar.data?.weeks ?? []);
+  const languages = $derived(languageData.data?.languages ?? []);
 
-  let displayed = $derived.by(() => {
+  const displayed: DisplayLanguage[] = $derived.by(() => {
     const top = languages.slice(0, TOP_LANGUAGES);
+    if (top.length === 0) return [];
     const rest = 100 - top.reduce((sum, lang) => sum + lang.percent, 0);
     return rest > 0.05
       ? [...top, { name: 'Other', percent: rest, color: null }]
@@ -142,76 +127,73 @@
       );
     }, 0);
   }
-
-  onMount(async () => {
-    try {
-      const [calendarResponse, languagesResponse] = await Promise.all([
-        fetch('/api/github/contributions'),
-        fetch('/api/github/languages'),
-      ]);
-      if (!calendarResponse.ok || !languagesResponse.ok) {
-        throw new Error('Failed to fetch GitHub data');
-      }
-      const calendar: ContributionCalendar = await calendarResponse.json();
-      const languageData: LanguageStats = await languagesResponse.json();
-      totalContributions = calendar.totalContributions;
-      maxDailyContributions = maxContributions(calendar);
-      weeks = calendar.weeks;
-      languages = languageData.languages;
-    } catch (e) {
-      error = e instanceof Error ? e.message : 'Something went wrong';
-    }
-  });
 </script>
 
 <h2>
   <GithubIcon size={'1.25rem'} strokeWidth={2.5} /> GitHub
 </h2>
-{#if error}
-  <p class="error">{error}</p>
-{:else if weeks.length === 0 || languages.length === 0}
-  <p>Loading…</p>
+{#if calendar.error}
+  <p class="error">{calendar.error}</p>
+{:else if calendar.status === 'loading'}
+  <p>Loading contributions…</p>
 {:else}
   <p class="total">{totalContributions} contributions in the last year</p>
-  <div class="calendar">
-    {#each weeks as week, i}
-      {@const leading =
-        i === 0 && week.contributionDays[0]
-          ? weekday(week.contributionDays[0].date)
-          : 0}
-      {@const trailing =
-        Math.max(0, 7 - week.contributionDays.length - leading)}
-      <div class="week-col">
-        <span class="month-label">{weekLabels[i] ?? ''}</span>
-        <div class="week">
-          {#each Array(leading) as _}
-            <span class="day pad"></span>
-          {/each}
-          {#each week.contributionDays as day}
-            {@const dayShade = shade(day.contributionCount)}
-            <span
-              class="day"
-              style={shadeStyle(dayShade)}
-              title="{day.contributionCount} contribution{day.contributionCount === 1 ? '' : 's'} on {day.date}"
-            ></span>
-          {/each}
-          {#each Array(trailing) as _}
-            <span class="day pad"></span>
-          {/each}
+  {#if weeks.length === 0}
+    <p>No contribution activity available.</p>
+  {:else}
+    <div class="calendar">
+      {#each weeks as week, i}
+        {@const leading =
+          i === 0 && week.contributionDays[0]
+            ? weekday(week.contributionDays[0].date)
+            : 0}
+        {@const trailing = Math.max(
+          0,
+          7 - week.contributionDays.length - leading,
+        )}
+        <div class="week-col">
+          <span class="month-label">{weekLabels[i] ?? ''}</span>
+          <div class="week">
+            {#each Array(leading) as _}
+              <span class="day pad"></span>
+            {/each}
+            {#each week.contributionDays as day}
+              {@const dayShade = shade(day.contributionCount)}
+              <span
+                class="day"
+                style={shadeStyle(dayShade)}
+                title="{day.contributionCount} contribution{day.contributionCount ===
+                1
+                  ? ''
+                  : 's'} on {day.date}"
+              ></span>
+            {/each}
+            {#each Array(trailing) as _}
+              <span class="day pad"></span>
+            {/each}
+          </div>
         </div>
-      </div>
-    {/each}
-  </div>
-  <div class="calendar-legend">
-    <span>Less</span>
-    {#each [0, 30, 53.33, 76.67, 100] as legendShade}
-      <span class="day" style={shadeStyle(legendShade)}></span>
-    {/each}
-    <span>More</span>
-  </div>
+      {/each}
+    </div>
+    <div class="calendar-legend">
+      <span>Less</span>
+      {#each [0, 30, 53.33, 76.67, 100] as legendShade}
+        <span class="day" style={shadeStyle(legendShade)}></span>
+      {/each}
+      <span>More</span>
+    </div>
+  {/if}
+{/if}
 
-  <hr />
+<hr />
 
+{#if languageData.error}
+  <p class="error">{languageData.error}</p>
+{:else if languageData.status === 'loading'}
+  <p>Loading languages…</p>
+{:else if languages.length === 0}
+  <p>No language data available.</p>
+{:else}
   <div class="lang-bar" role="img" aria-label="Most used languages">
     {#each displayed as lang}
       <span
@@ -224,9 +206,7 @@
   <ul class="lang-legend">
     {#each displayed as lang}
       <li>
-        <span
-          class="dot"
-          style="background: {langColor(lang)}"></span>
+        <span class="dot" style="background: {langColor(lang)}"></span>
         {lang.name}
         <span class="pct">{lang.percent.toFixed(1)}%</span>
       </li>

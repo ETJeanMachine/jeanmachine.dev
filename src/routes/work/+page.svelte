@@ -1,5 +1,56 @@
 <script lang="ts">
   import { FileDown } from '@lucide/svelte';
+
+  interface Job {
+    company: string;
+    title: string;
+    location: string;
+    date: string;
+    description: string;
+  }
+
+  const jobs: Job[] = [
+    {
+      company: 'Jensen Hughes',
+      title: 'Automation Engineer',
+      location: 'Remote, USA',
+      date: 'February 2026 - Present',
+      description:
+        'Building workflows via Powershell, PowerAutomate, Python, and other related power app tools within Microsoft environments to expedite business workflows for marketing and sales teams. Exploring integrations with AI, Microsoft Dataverse, PowerBI and CRM tools to allow for more complex workflows.',
+    },
+    {
+      company: 'Intel (UST Global)',
+      title: 'Validation Tester II',
+      location: 'Santa Clara, CA',
+      date: 'August 2025 – February 2026',
+      description:
+        "Smoke testing for Chromebook SOC's; Linux Sysadmin work, setting up, updating host machines and maintaining network infrastructure for effective testing. Worked on automation of testing in bash, ansible, for tasks related to ensuring that the SOC's operate as intended – networking, sleep related tasks, and debugging via ADB.",
+    },
+    {
+      company: 'Xerox Corporation',
+      title: 'Software Engineer',
+      location: 'Webster, NY',
+      date: 'September 2022 – December 2022',
+      description:
+        'Integrated backend SQL database systems with PowerBI workflows for data visualization of software products for management to better assess priorities. Worked on software development for a front-end printer application, Workflow Central, in improving backend systems and integrating usage data into new Power BI environments.',
+    },
+    {
+      company: 'Corning Optical Communications',
+      title: 'Software Engineer',
+      location: 'Hickory, NC',
+      date: 'May 2022 – August 2022',
+      description:
+        'Worked on testing software deployment and development; upgraded test software in PowerShell, LabView. Improved testing speed 10x. Worked in C# and Postgres for internal database upgrades for future products.',
+    },
+    {
+      company: 'Sensored Life',
+      title: 'Software Engineer',
+      location: 'Rochester, NY',
+      date: 'January 2022 – May 2022',
+      description:
+        'Deployed a new CRM system, VTiger, company-wide and integrated frontend website systems with new CRM backend, while migrating customer data and resources. Set up automatic workflows for the new CRM product for company use.',
+    },
+  ];
 </script>
 
 <div class="work-page">
@@ -26,102 +77,21 @@
   <section class="card" aria-labelledby="experience-heading">
     <h2 id="experience-heading">Experience</h2>
 
-    <div class="job">
-      <div class="job-header">
-        <div>
-          <h3>Jensen Hughes</h3>
-          <p class="title">Automation Engineer</p>
+    {#each jobs as job}
+      <div class="job">
+        <div class="job-header">
+          <div>
+            <h3>{job.company}</h3>
+            <p class="title">{job.title}</p>
+          </div>
+          <div class="job-meta">
+            <span class="location">{job.location}</span>
+            <span class="date">{job.date}</span>
+          </div>
         </div>
-        <div class="job-meta">
-          <span class="location">Remote, USA</span>
-          <span class="date">February 2026 - Present</span>
-        </div>
+        <p class="description">{job.description}</p>
       </div>
-      <p class="description">
-        Building workflows via Powershell, PowerAutomate, Python, and other
-        related power app tools within Microsoft environments to expedite
-        business workflows for marketing and sales teams. Exploring integrations
-        with AI, Microsoft Dataverse, PowerBI and CRM tools to allow for more
-        complex workflows.
-      </p>
-    </div>
-
-    <div class="job">
-      <div class="job-header">
-        <div>
-          <h3>Intel (UST Global)</h3>
-          <p class="title">Validation Tester II</p>
-        </div>
-        <div class="job-meta">
-          <span class="location">Santa Clara, CA</span>
-          <span class="date">August 2025 – February 2026</span>
-        </div>
-      </div>
-      <p class="description">
-        Smoke testing for Chromebook SOC's; Linux Sysadmin work, setting up,
-        updating host machines and maintaining network infrastructure for
-        effective testing. Worked on automation of testing in bash, ansible, for
-        tasks related to ensuring that the SOC's operate as intended –
-        networking, sleep related tasks, and debugging via ADB.
-      </p>
-    </div>
-
-    <div class="job">
-      <div class="job-header">
-        <div>
-          <h3>Xerox Corporation</h3>
-          <p class="title">Software Engineer</p>
-        </div>
-        <div class="job-meta">
-          <span class="location">Webster, NY</span>
-          <span class="date">September 2022 – December 2022</span>
-        </div>
-      </div>
-      <p class="description">
-        Integrated backend SQL database systems with PowerBI workflows for data
-        visualization of software products for management to better assess
-        priorities. Worked on software development for a front-end printer
-        application, Workflow Central, in improving backend systems and
-        integrating usage data into new Power BI environments.
-      </p>
-    </div>
-
-    <div class="job">
-      <div class="job-header">
-        <div>
-          <h3>Corning Optical Communications</h3>
-          <p class="title">Software Engineer</p>
-        </div>
-        <div class="job-meta">
-          <span class="location">Hickory, NC</span>
-          <span class="date">May 2022 – August 2022</span>
-        </div>
-      </div>
-      <p class="description">
-        Worked on testing software deployment and development; upgraded test
-        software in PowerShell, LabView. Improved testing speed 10x. Worked in
-        C# and Postgres for internal database upgrades for future products.
-      </p>
-    </div>
-
-    <div class="job">
-      <div class="job-header">
-        <div>
-          <h3>Sensored Life</h3>
-          <p class="title">Software Engineer</p>
-        </div>
-        <div class="job-meta">
-          <span class="location">Rochester, NY</span>
-          <span class="date">January 2022 – May 2022</span>
-        </div>
-      </div>
-      <p class="description">
-        Deployed a new CRM system, VTiger, company-wide and integrated frontend
-        website systems with new CRM backend, while migrating customer data and
-        resources. Set up automatic workflows for the new CRM product for
-        company use.
-      </p>
-    </div>
+    {/each}
   </section>
 
   <section class="card" aria-labelledby="skills-heading">
@@ -173,9 +143,9 @@
     color: var(--sapphire);
   }
 
-  .education {
+  .education,
+  .job-header {
     display: flex;
-    flex-direction: row;
     justify-content: space-between;
     align-items: flex-start;
   }
@@ -189,9 +159,6 @@
   }
 
   .job-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
     margin-bottom: 0.5rem;
   }
 
@@ -212,11 +179,7 @@
     text-align: right;
   }
 
-  .location {
-    font-size: 0.9rem;
-    color: var(--text);
-  }
-
+  .location,
   .date {
     font-size: 0.9rem;
     color: var(--text);
@@ -242,10 +205,7 @@
   }
 
   @media (max-width: 768px) {
-    .education {
-      flex-direction: column;
-    }
-
+    .education,
     .job-header {
       flex-direction: column;
     }
@@ -254,12 +214,6 @@
       align-items: flex-start;
       text-align: left;
       margin-top: 0.25rem;
-    }
-
-    .title,
-    .location,
-    .date {
-      color: var(--text);
     }
 
     h2,

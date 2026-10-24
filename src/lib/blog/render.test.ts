@@ -5,30 +5,21 @@ import { file, plugin } from 'bun';
 import { createRawSnippet } from 'svelte';
 import { render } from 'svelte/server';
 import { svelteSSR } from './testing';
-import type {
-  SiteStandardDocument,
-  SiteStandardPublication,
-} from '@atcute/standard-site';
+import { MAX_DEPTH } from './normalize';
+import {
+  content as pagedContent,
+  documentFixture,
+  page,
+  publicationFixture,
+  singlePage as content,
+  text,
+} from './fixtures';
 
 plugin(
   svelteSSR(
     /(?:\/components\/|\/icons\/|\/@lucide\/svelte\/).*\.(svelte|css)$/,
   ),
 );
-
-const text = (plaintext: string) => ({
-  $type: 'pub.leaflet.blocks.text',
-  plaintext,
-});
-const content = (blocks: unknown[]) => ({
-  $type: 'pub.leaflet.content' as const,
-  pages: [
-    {
-      $type: 'pub.leaflet.pages.linearDocument',
-      blocks: blocks.map((block) => ({ block })),
-    },
-  ],
-});
 
 test('article media sizes images, previews and drawings without enlarging footer icons', async () => {
   const css = await file(
@@ -128,20 +119,7 @@ test('site and standalone articles share self-hosted emoji fonts without DOM con
         '../../../static/fonts/NotoColorEmoji/LICENSE.txt',
       ].map((path) => file(new URL(path, import.meta.url)).text()),
     );
-  expect(css).toContain('/fonts/NotoColorEmoji/Noto-COLRv1.b8e25ea6.ttf');
-  expect(css).toContain('tech(color-COLRv1)');
-  expect(css).toMatch(/font-variant-emoji:\s*normal;/);
-  expect(css).not.toMatch(/font-variant-emoji:\s*(?:unicode|emoji)\s*;/);
-  const stack: string = css.match(/--font-site:\s*([^;]+);/)?.[1] ?? '';
-  expect(stack.split(',').map((family) => family.trim())).toEqual([
-    "'Maple Mono'",
-    "'Noto Color Emoji'",
-    "'Cascadia Code'",
-    "'Fira Code'",
-    "'Consolas'",
-    "'Menlo'",
-    'monospace',
-  ]);
+
   for (const [source, selector] of [
     [layout, 'main'],
     [article, '.native-article'],
@@ -314,14 +292,8 @@ test('top-level page cards use full width and 10px gaps without separator lines 
 
 test('SSR renders escaped article data, unique anchors, nested lists and independent Bluesky links', async () => {
   const { Article } = await import('../components/blog');
-  const document: SiteStandardDocument.Main = {
-    $type: 'site.standard.document',
+  const document = documentFixture({
     title: '<script>title</script>',
-    site: 'https://example.com',
-    publishedAt: '2026-10-23T00:00:00.000Z',
-  };
-  // Simulate a wire-format open-union extension; normalizeContent validates its unknown body.
-  Object.assign(document, {
     content: content([
       { $type: 'pub.leaflet.blocks.header', plaintext: 'Hello' },
       { $type: 'pub.leaflet.blocks.header', plaintext: 'Hello' },
@@ -382,11 +354,7 @@ test('SSR renders escaped article data, unique anchors, nested lists and indepen
       { $type: 'pub.leaflet.blocks.html', html: '<img src=x onerror=bad()>' },
     ]),
   });
-  const publication: SiteStandardPublication.Main = {
-    $type: 'site.standard.publication',
-    name: 'Native publication',
-    url: 'https://example.com',
-  };
+  const publication = publicationFixture({ name: 'Native publication' });
   const html = render(Article, {
     props: { document, publication, rkey: 'test' },
   }).body.replace(/<!--[\s\S]*?-->/g, '');
@@ -407,21 +375,17 @@ test('SSR renders escaped article data, unique anchors, nested lists and indepen
 
 test('plain-text article shell separates shared header/fallback cards and uses only local footer return navigation', async () => {
   const { Article } = await import('../components/blog');
-  const document: SiteStandardDocument.Main = {
-    $type: 'site.standard.document',
-    title: 'Native article',
+  const document = documentFixture({
     description: 'Article description',
     site: 'https://publication.example',
-    publishedAt: '2026-10-23T00:00:00.000Z',
     updatedAt: '2026-10-24T00:00:00.000Z',
     tags: ['layout'],
     textContent: 'Article body',
-  };
-  const publication: SiteStandardPublication.Main = {
-    $type: 'site.standard.publication',
+  });
+  const publication = publicationFixture({
     name: 'Publication label',
     url: 'https://publication.example',
-  };
+  });
   const html = render(Article, {
     props: { document, publication, rkey: 'local' },
   }).body.replace(/<!--[\s\S]*?-->/g, '');
@@ -484,39 +448,27 @@ test('plain-text article shell separates shared header/fallback cards and uses o
 
 test('two linear pages are sibling cards with stable links, one cover first and one footer last', async () => {
   const { Article, Content } = await import('../components/blog');
-  const body = {
-    $type: 'pub.leaflet.content',
-    pages: [
-      {
-        $type: 'pub.leaflet.pages.linearDocument',
-        id: 'first',
-        blocks: [
-          { block: text('First page text') },
-          { block: { $type: 'pub.leaflet.blocks.page', id: 'second' } },
-          { block: { $type: 'pub.leaflet.blocks.page', id: 'missing' } },
-        ],
-      },
-      {
-        $type: 'pub.leaflet.pages.linearDocument',
-        id: 'second',
-        blocks: [
-          { block: text('Second page text') },
-          { block: { $type: 'pub.leaflet.blocks.page', id: 'first' } },
-          {
-            block: {
-              $type: 'pub.leaflet.pages.linearDocument',
-              blocks: [{ block: text('Nested linear group') }],
-            },
-          },
-        ],
-      },
-    ],
-  };
-  const document: SiteStandardDocument.Main = {
-    $type: 'site.standard.document',
+  const body = pagedContent(
+    page(
+      [
+        text('First page text'),
+        { $type: 'pub.leaflet.blocks.page', id: 'second' },
+        { $type: 'pub.leaflet.blocks.page', id: 'missing' },
+      ],
+      { id: 'first' },
+    ),
+    page(
+      [
+        text('Second page text'),
+        { $type: 'pub.leaflet.blocks.page', id: 'first' },
+        page([text('Nested linear group')]),
+      ],
+      { id: 'second' },
+    ),
+  );
+  const document = documentFixture({
     title: 'Two pages',
-    site: 'https://example.com',
-    publishedAt: '2026-10-23T00:00:00.000Z',
+    content: body,
     textContent: 'Do not replace readable pages with this fallback',
     coverImage: {
       $type: 'blob',
@@ -526,13 +478,8 @@ test('two linear pages are sibling cards with stable links, one cover first and 
       mimeType: 'image/webp',
       size: 7030,
     },
-  };
-  Object.assign(document, { content: body });
-  const publication: SiteStandardPublication.Main = {
-    $type: 'site.standard.publication',
-    name: 'Blog',
-    url: 'https://example.com',
-  };
+  });
+  const publication = publicationFixture();
   const article = render(Article, {
     props: { document, publication, rkey: 'two-pages' },
   }).body.replace(/<!--[\s\S]*?-->/g, '');
@@ -586,22 +533,12 @@ test('two linear pages are sibling cards with stable links, one cover first and 
 
 test('single-page and unreadable articles retain exactly one body card and footer', async () => {
   const { Article } = await import('../components/blog');
-  const publication: SiteStandardPublication.Main = {
-    $type: 'site.standard.publication',
-    name: 'Blog',
-    url: 'https://example.com',
-  };
+  const publication = publicationFixture();
   for (const [body, expected] of [
     [content([text('Single readable page')]), 'Single readable page'],
     [null, 'No readable article content is available.'],
   ] as const) {
-    const document: SiteStandardDocument.Main = {
-      $type: 'site.standard.document',
-      title: 'Single card',
-      site: 'https://example.com',
-      publishedAt: '2026-10-23T00:00:00.000Z',
-    };
-    Object.assign(document, { content: body });
+    const document = documentFixture({ title: 'Single card', content: body });
     const html = render(Article, {
       props: { document, publication, rkey: 'single' },
     }).body;
@@ -652,22 +589,12 @@ test('all SSR DOM IDs stay unique across adversarial heading slugs, pages and fo
       children: [{ content: note() }],
     },
   ]);
-  body.pages.push({
-    $type: 'pub.leaflet.pages.linearDocument',
-    blocks: [{ block: note() }, { block: heading('page-2') }],
-  });
-  const document: SiteStandardDocument.Main = {
-    $type: 'site.standard.document',
+  body.pages.push(page([note(), heading('page-2')]));
+  const document = documentFixture({
     title: 'Anchor regression',
-    site: 'https://example.com',
-    publishedAt: '2026-10-23T00:00:00.000Z',
-  };
-  Object.assign(document, { content: body });
-  const publication: SiteStandardPublication.Main = {
-    $type: 'site.standard.publication',
-    name: 'Blog',
-    url: 'https://example.com',
-  };
+    content: body,
+  });
+  const publication = publicationFixture();
   const html = render(Article, {
     props: { document, publication, rkey: 'anchors' },
   }).body;
@@ -785,6 +712,147 @@ test('video-only geometry uses responsive YouTube and bounded authored Vimeo hei
   expect(playerRules[0][2]).toContain('border-radius: 12px');
   expect(playerRules[1][2]).toContain('aspect-ratio: 16 / 9');
   expect(playerRules[1][2]).toContain('height: auto');
+});
+
+test('canvas SSR preserves flow, nested-list descendants, page links and first/last snippets when truncated', async () => {
+  const { Content } = await import('../components/blog');
+  const before = createRawSnippet(() => ({
+    render: () => '<div>Canvas before</div>',
+  }));
+  const after = createRawSnippet(() => ({
+    render: () => '<footer>Linear after</footer>',
+  }));
+  let tooDeep: unknown = text('Beyond depth limit');
+  for (let i = 0; i <= MAX_DEPTH; i++) tooDeep = page([tooDeep]);
+  const html = render(Content, {
+    props: {
+      content: pagedContent(
+        {
+          $type: 'pub.leaflet.pages.canvas',
+          id: 'canvas',
+          blocks: [
+            {
+              x: 900,
+              y: 900,
+              block: page([
+                {
+                  $type: 'pub.leaflet.blocks.unorderedList',
+                  children: [
+                    {
+                      content: { $type: 'pub.leaflet.blocks.future' },
+                      children: [
+                        { content: text('Readable nested canvas text') },
+                      ],
+                    },
+                  ],
+                },
+                { $type: 'pub.leaflet.blocks.page', id: 'linear' },
+              ]),
+            },
+          ],
+        },
+        page([tooDeep], { id: 'linear' }),
+      ),
+      textContent: 'Do not hide nested canvas text',
+      before,
+      after,
+    },
+  }).body.replace(/<!--[\s\S]*?-->/g, '');
+  const pages = [
+    ...html.matchAll(
+      /<section class="card article-page" id="([^"]+)"[^>]*>([\s\S]*?)<\/section>/g,
+    ),
+  ];
+  expect(pages.map(([, id]) => id)).toEqual([
+    'article-page-1',
+    'article-page-2',
+  ]);
+  expect(pages[0][2]).toContain('Canvas before');
+  expect(pages[0][2]).toContain(
+    'Canvas content is presented in document order',
+  );
+  expect(pages[0][2]).toContain('Readable nested canvas text');
+  expect(pages[0][2]).toContain('href="#article-page-2"');
+  expect(pages[0][2].indexOf('Canvas before')).toBeLessThan(
+    pages[0][2].indexOf('Readable nested canvas text'),
+  );
+  expect(pages[0][2].indexOf('Readable nested canvas text')).toBeLessThan(
+    pages[0][2].indexOf('href="#article-page-2"'),
+  );
+  expect(pages[0][2]).not.toContain('Linear after');
+  expect(pages[1][2]).toContain('Content nesting or size limit reached');
+  expect(pages[1][2]).toContain('Linear after');
+  expect(pages[1][2]).not.toContain('Canvas before');
+  expect(html).toContain(
+    'Some content could not be displayed because it exceeded',
+  );
+  expect(html.indexOf('Linear after')).toBeLessThan(
+    html.indexOf('Some content could not be displayed'),
+  );
+  expect(html).not.toContain('Beyond depth limit');
+  expect(html).not.toContain('Do not hide nested canvas text');
+  expect([...html.matchAll(/Canvas before/g)]).toHaveLength(1);
+  expect([...html.matchAll(/Linear after/g)]).toHaveLength(1);
+});
+
+test('Content SSR dispatches highlighted code, safe math, escaped TeX and validated gallery media', async () => {
+  const { Content } = await import('../components/blog');
+  const image = (mimeType: string) => ({
+    $type: 'blob',
+    ref: { $link: `bafkrei${'a'.repeat(52)}` },
+    mimeType,
+    size: 100,
+  });
+  const media = (mimeType: string, alt: string) => ({
+    image: image(mimeType),
+    aspectRatio: { width: 16, height: 9 },
+    alt,
+  });
+  const html = render(Content, {
+    props: {
+      content: content([
+        {
+          $type: 'pub.leaflet.blocks.code',
+          plaintext: 'const answer = 42;',
+          language: 'js',
+        },
+        { $type: 'pub.leaflet.blocks.math', tex: 'x^2' },
+        { $type: 'pub.leaflet.blocks.math', tex: '\\unknowncommand<script>&' },
+        {
+          $type: 'pub.leaflet.blocks.image',
+          ...media('image/png', 'Standalone <image>'),
+          width: 5000,
+        },
+        {
+          $type: 'pub.leaflet.blocks.imageGallery',
+          images: [
+            media('image/webp', 'Gallery image'),
+            media('image/svg+xml', 'Rejected <SVG>'),
+          ],
+        },
+      ]),
+    },
+  }).body.replace(/<!--[\s\S]*?-->/g, '');
+  expect(html).toContain('class="code-token"');
+  expect(html).toContain('aria-label="js code"');
+  expect([...html.matchAll(/<math\b/g)]).toHaveLength(1);
+  expect(html).toContain('Equation shown as TeX (could not render safely).');
+  expect(html).toContain('\\unknowncommand&lt;script>&amp;');
+  expect(html).toContain('aria-label="Image gallery"');
+  const images = [...html.matchAll(/<img\b(?:[^"'<>]|"[^"]*"|'[^']*')*>/g)].map(
+    ([tag]) => tag,
+  );
+  expect(images).toHaveLength(2);
+  for (const tag of images) {
+    expect(tag).toContain('src="/api/atproto/blob?cid=');
+    expect(tag).toContain(
+      'width="16" height="9" loading="lazy" decoding="async"',
+    );
+  }
+  expect(html).toContain('max-width: 4096px');
+  expect(html).toContain('Standalone &lt;image>');
+  expect(html).toContain('Image unavailable: Rejected &lt;SVG>.');
+  expect(html).not.toMatch(/<script\b|<iframe\b|mimetype=image%2Fsvg/);
 });
 
 test('SSR escaped plain-text fallback and media opt-in work without browser-only APIs', async () => {

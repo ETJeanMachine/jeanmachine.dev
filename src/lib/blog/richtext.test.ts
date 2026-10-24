@@ -1,6 +1,6 @@
 // @ts-ignore Bun supplies bun:test at runtime; no global Bun types are needed by the app.
 import { describe, expect, test } from 'bun:test';
-import { cleanFacets, richText } from './richtext';
+import { cleanFacets, MAX_FACETS, richText } from './richtext';
 import {
   blueskyProfileUrl,
   blueskyUrl,
@@ -124,6 +124,84 @@ describe('UTF-8 rich text', () => {
     const cyclic = { ...note, contentFacets: [] as unknown[] };
     cyclic.contentFacets.push(facet(0, 1, [cyclic]));
     expect(richText('a', [facet(0, 1, [cyclic])]).footnotes).toHaveLength(1);
+  });
+  test('facet and feature budgets bound raw entries rather than searching past invalid input', () => {
+    const valid = facet(0, 1, [feature('bold')]);
+    const atLimit = cleanFacets(Array(MAX_FACETS).fill(valid));
+    expect(atLimit).toHaveLength(MAX_FACETS);
+    const overLimit = cleanFacets([
+      ...Array(MAX_FACETS).fill(valid),
+      facet(0, 1, [feature('italic')]),
+    ]);
+    expect(overLimit).toHaveLength(MAX_FACETS);
+    expect(
+      overLimit.every((item) =>
+        item.features.every(
+          (value) => value.$type === 'pub.leaflet.richtext.facet#bold',
+        ),
+      ),
+    ).toBe(true);
+    expect(cleanFacets([...Array(MAX_FACETS).fill(null), valid])).toEqual([]);
+    const features = cleanFacets([
+      facet(0, 1, [...Array(30).fill(feature('bold')), feature('italic')]),
+    ]);
+    expect(features[0].features).toHaveLength(30);
+    expect(
+      richText('a', [facet(0, 1, [...Array(30).fill(null), feature('bold')])])
+        .segments[0].marks,
+    ).toEqual([]);
+    // Adjacent accepted facets remain usable at the boundary, without clipping text.
+    const result = richText('ab', [
+      ...Array(MAX_FACETS - 1).fill(facet(0, 1, [feature('bold')])),
+      facet(1, 2, [feature('italic')]),
+      facet(0, 2, [feature('code')]),
+    ]);
+    expect(result.segments).toEqual([
+      { text: 'a', marks: ['bold'], href: null, notes: [] },
+      { text: 'b', marks: ['italic'], href: null, notes: [] },
+    ]);
+  });
+  test('zero-length, reversed, fractional, non-finite and out-of-range byte offsets are ignored losslessly', () => {
+    const text = 'a🦋é';
+    const result = richText(text, [
+      ...[
+        [0, 0],
+        [5, 1],
+        [-1, 1],
+        [0.5, 1],
+        [0, NaN],
+        [0, Infinity],
+        [0, 8],
+        [2, 5],
+      ].map(([start, end]) => facet(start, end, [feature('italic')])),
+      facet(1, 5, [feature('bold')]),
+    ]);
+    expect(result.segments).toEqual([
+      { text: 'a', marks: [], href: null, notes: [] },
+      { text: '🦋', marks: ['bold'], href: null, notes: [] },
+      { text: 'é', marks: [], href: null, notes: [] },
+    ]);
+    expect(result.segments.map((item) => item.text).join('')).toBe(text);
+  });
+  test('repeated footnote identities allocate one note at the first endpoint with separate scoped IDs', () => {
+    const note = feature('footnote', {
+      footnoteId: 'same',
+      contentPlaintext: 'first note',
+    });
+    const facets = [
+      facet(0, 1, [note]),
+      facet(1, 3, [{ ...note, contentPlaintext: 'ignored duplicate' }]),
+    ];
+    const result = richText('abc', facets, 'first');
+    expect(result.footnotes).toEqual([
+      { id: 'footnote:first:1', text: 'first note', facets: [] },
+    ]);
+    expect(result.segments.flatMap((item) => item.notes)).toEqual([
+      'footnote:first:1',
+    ]);
+    expect(richText('abc', facets, 'second').footnotes[0].id).toBe(
+      'footnote:second:1',
+    );
   });
   test('empty text and facets inside emoji do not produce replacement characters', () => {
     expect(richText('', []).segments).toEqual([]);

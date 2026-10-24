@@ -1,17 +1,36 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { Profile, Pinned, About, Github } from '$lib/components';
-</script>
+  import { createHomeState, loadHome } from '$lib/home';
 
-<!-- <Post {rkey}></Post> -->
+  let home = $state(createHomeState());
+
+  onMount(() => {
+    const controller = new AbortController();
+    void loadHome({
+      fetch,
+      signal: controller.signal,
+      onChange: (state) => {
+        home = state;
+      },
+    });
+    return () => controller.abort();
+  });
+</script>
 
 <!-- Desktop Layout -->
 <div class="desktop-layout">
   <div class="column profile-column">
     <div class="card profile-card">
-      <Profile />
+      <Profile profile={home.profile.data} error={home.profile.error} />
     </div>
     <div class="card pinned-card">
-      <Pinned />
+      <Pinned
+        author={home.profile.data}
+        pinned={home.pinned}
+        counts={home.counts}
+        handle={home.handle}
+      />
     </div>
   </div>
   <div class="column about-column">
@@ -19,29 +38,46 @@
       <About />
     </div>
     <div class="card github-card">
-      <Github />
+      <Github calendar={home.calendar} languageData={home.languages} />
     </div>
   </div>
 </div>
 
 <!-- Mobile Layout -->
 <div class="mobile-layout">
-  <Profile mobile={true} />
+  <Profile
+    mobile={true}
+    profile={home.profile.data}
+    error={home.profile.error}
+  />
   <hr />
   <div>
     <About />
   </div>
   <hr />
   <div>
-    <Pinned />
+    <Pinned
+      author={home.profile.data}
+      pinned={home.pinned}
+      counts={home.counts}
+      handle={home.handle}
+    />
   </div>
   <hr />
   <div>
-    <Github />
+    <Github calendar={home.calendar} languageData={home.languages} />
   </div>
 </div>
 
 <style>
+  .desktop-layout :global(.home-heading),
+  .mobile-layout :global(.home-heading) {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+  }
+
   .desktop-layout {
     display: none;
   }

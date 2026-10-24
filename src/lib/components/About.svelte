@@ -1,8 +1,8 @@
 <script>
-  import { Info } from "@lucide/svelte";
-
+  import { Info } from '@lucide/svelte';
 </script>
-<h2>
+
+<h2 class="home-heading">
   <Info size={'1.25rem'} strokeWidth={2.5} />About Me
 </h2>
 <p>
@@ -17,12 +17,3 @@
   in my community at all times - because I believe that staying involved is what
   enables me to make a better impact on the world.
 </p>
-
-<style>
-  h2 {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    align-items: center;
-  }
-</style>

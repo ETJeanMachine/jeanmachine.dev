@@ -1,5 +1,6 @@
 // @ts-ignore Bun supplies test/runtime modules without app-wide ambient types.
-import { afterEach, expect, spyOn, test } from 'bun:test';
+import { expect, test } from 'bun:test';
+import { useFetchMock } from '../testing';
 import { GET } from '../../routes/api/atproto/postview/+server';
 import { DID } from '../constants';
 
@@ -19,14 +20,9 @@ const post = {
   replyCount: 1,
   viewer: { like: 'private-state' },
 };
-let restore = () => {};
-afterEach(() => restore());
+const fetchMock = useFetchMock();
 function upstream(value: unknown, status = 200) {
-  const mock = spyOn(globalThis, 'fetch').mockImplementation(async () =>
-    Response.json(value, { status }),
-  );
-  restore = () => mock.mockRestore();
-  return mock;
+  return fetchMock(() => Response.json(value, { status }));
 }
 function request(value = uri, preview = false) {
   const url = new URL('https://jeanmachine.dev/api/atproto/postview');
@@ -145,7 +141,6 @@ test('preview rejects mismatched URI, invalid record, and invalid or mismatched 
   ]) {
     upstream({ posts: [invalid] });
     await expect(request(uri, true)).rejects.toMatchObject({ status: 502 });
-    restore();
   }
 });
 
@@ -276,7 +271,6 @@ test('preview retains real suffixless avatar and external thumbnail URLs alongsi
     });
     expect(response.headers.get('cache-control')).toBe('public, max-age=60');
     expect(mock).toHaveBeenCalledTimes(1);
-    restore();
   }
 });
 
@@ -322,6 +316,44 @@ test('preview normalizes invalid counts without changing ordinary counts behavio
     replyCount: 0,
     post: { author, text: post.record.text, createdAt },
   });
+});
+
+test('malformed/null envelopes and malformed post entries deliberately return 502 in both modes', async () => {
+  for (const body of [
+    'not json',
+    'null',
+    '[]',
+    '{}',
+    '{"posts":null}',
+    '{"posts":{}}',
+    '{"posts":[null]}',
+    '{"posts":[42]}',
+    '{"posts":[[]]}',
+  ]) {
+    fetchMock(() => new Response(body));
+    await expect(request()).rejects.toMatchObject({ status: 502 });
+    await expect(request(uri, true)).rejects.toMatchObject({ status: 502 });
+  }
+});
+
+test('network failures deliberately return 502 in both modes', async () => {
+  fetchMock(() => {
+    throw new TypeError('Network unavailable');
+  });
+  await expect(request()).rejects.toMatchObject({ status: 502 });
+  await expect(request(uri, true)).rejects.toMatchObject({ status: 502 });
+});
+
+test('counts-only URI handling stays permissive while query encoding prevents injection', async () => {
+  const mock = upstream({ posts: [{}] });
+  const value = 'opaque +?uri=other&extra=1#fragment';
+  expect(await (await request(value)).json()).toEqual({
+    likeCount: 0,
+    repostCount: 0,
+    replyCount: 0,
+  });
+  const target = new URL(String(mock.mock.calls[0][0]));
+  expect([...target.searchParams]).toEqual([['uris', value]]);
 });
 
 test('missing URI and upstream failures retain their existing API errors', async () => {

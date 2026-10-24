@@ -1,5 +1,6 @@
 <script lang="ts">
   import { Heart, Repeat2, MessageCircle } from '@lucide/svelte';
+  import type { HTMLImgAttributes } from 'svelte/elements';
   import Butterfly from '../../icons/Butterfly.svelte';
   import { blueskyProfileUrl } from '$lib/blog/urls';
   import '../post-card.css';
@@ -79,6 +80,16 @@
   });
 </script>
 
+{#snippet remoteImage(attributes: HTMLImgAttributes)}
+  <img
+    {...attributes}
+    loading="lazy"
+    decoding="async"
+    referrerpolicy="no-referrer"
+    onerror={imageFailed}
+  />
+{/snippet}
+
 <aside class="embed-card native-embed post-card" aria-label={label}>
   <div class="embed-header">
     {#if preview?.author && profile}
@@ -90,17 +101,13 @@
         aria-label={`View @${preview.author.handle} on Bluesky`}
       >
         {#if preview.author.avatar && !failedImages.includes(preview.author.avatar)}
-          <img
-            class="embed-avatar"
-            src={preview.author.avatar}
-            alt=""
-            width="48"
-            height="48"
-            loading="lazy"
-            decoding="async"
-            referrerpolicy="no-referrer"
-            onerror={imageFailed}
-          />
+          {@render remoteImage({
+            class: 'embed-avatar',
+            src: preview.author.avatar,
+            alt: '',
+            width: 48,
+            height: 48,
+          })}
         {:else}
           <span class="embed-avatar embed-avatar-fallback" aria-hidden="true"
             ><Butterfly size={24} color="var(--sky)" /></span
@@ -109,17 +116,13 @@
       </a>
     {:else if standard}
       {#if preview?.icon && !failedImages.includes(preview.icon)}
-        <img
-          class="embed-avatar embed-publication-icon"
-          src={preview.icon}
-          alt=""
-          width="48"
-          height="48"
-          loading="lazy"
-          decoding="async"
-          referrerpolicy="no-referrer"
-          onerror={imageFailed}
-        />
+        {@render remoteImage({
+          class: 'embed-avatar embed-publication-icon',
+          src: preview.icon,
+          alt: '',
+          width: 48,
+          height: 48,
+        })}
       {:else}
         <img
           class="embed-avatar embed-publication-icon"
@@ -187,32 +190,14 @@
             rel="noopener noreferrer"
             aria-label={image.alt || 'Open post image'}
           >
-            <img
-              class="embed-media-preview"
-              src={image.src}
-              alt={image.alt}
-              width={image.width}
-              height={image.height}
-              loading="lazy"
-              decoding="async"
-              referrerpolicy="no-referrer"
-              onerror={imageFailed}
-            />
+            {@render remoteImage({ class: 'embed-media-preview', ...image })}
           </a>
         {/if}
       {/each}
     </div>
   {/if}
   {#if preview?.image && !failedImages.includes(preview.image.src)}
-    <img
-      class="embed-media-preview"
-      src={preview.image.src}
-      alt={preview.image.alt}
-      loading="lazy"
-      decoding="async"
-      referrerpolicy="no-referrer"
-      onerror={imageFailed}
-    />
+    {@render remoteImage({ class: 'embed-media-preview', ...preview.image })}
   {/if}
   {#if preview?.external}
     <a
@@ -222,15 +207,11 @@
       rel="noopener noreferrer"
     >
       {#if preview.external.image && !failedImages.includes(preview.external.image)}
-        <img
-          class="embed-external-preview"
-          src={preview.external.image}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          referrerpolicy="no-referrer"
-          onerror={imageFailed}
-        />
+        {@render remoteImage({
+          class: 'embed-external-preview',
+          src: preview.external.image,
+          alt: '',
+        })}
       {/if}
       <span class="embed-external-info">
         <strong>{preview.external.title}</strong>

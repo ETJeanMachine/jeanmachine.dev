@@ -139,6 +139,19 @@ test('code, line, line-count and token limits fall back instead of truncating', 
   );
 });
 
+test('exact code-unit and line-count boundaries remain eligible for lossless highlighting', () => {
+  const codeUnitLimit =
+    Array(10)
+      .fill('//' + 'x'.repeat(1_997))
+      .join('\n') + '\n';
+  expect(codeUnitLimit).toHaveLength(HIGHLIGHT_LIMITS.codeUnits);
+  expect(reconstruct(codeUnitLimit)).toBe(codeUnitLimit);
+  expect(highlightCode(codeUnitLimit + 'x', 'js')).toBeNull();
+  const lineLimit = Array(HIGHLIGHT_LIMITS.lines).fill('// x').join('\r\n');
+  expect(reconstruct(lineLimit)).toBe(lineLimit);
+  expect(highlightCode(lineLimit + '\r\n// x', 'js')).toBeNull();
+});
+
 test('token cache is bounded and recently used entries survive eviction', () => {
   const oldest = highlightCode('// cache-oldest', 'js');
   const recent = highlightCode('// cache-recent', 'js');
@@ -200,6 +213,12 @@ test('SSR fallback retains all escaped source and escapes an untrusted caption',
   const { default: Code } = await import('../components/blog/Code.svelte');
   for (const [source, language] of [
     ['<script>alert(1)</script>&\t\n\n', undefined],
+    [
+      '// <script>&\n' +
+        Array(100).fill('x+=1;'.repeat(25)).join('\n') +
+        '\n\n',
+      'js',
+    ],
     ['<img src=x onerror=alert(1)>\n', '\"><script>alert(1)</script>'],
     [
       '<script>"&"</script>\n' + 'x'.repeat(HIGHLIGHT_LIMITS.lineCodeUnits + 1),

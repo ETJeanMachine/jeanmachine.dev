@@ -17,20 +17,35 @@ export const GET: RequestHandler = async ({ url }) => {
   }
 
   const request_url = `${APPVIEW_URL}/xrpc/app.bsky.feed.getPosts?uris=${encodeURIComponent(uri)}`;
-  const response = await fetch(request_url, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
+  let response: Response;
+  try {
+    response = await fetch(request_url, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+  } catch {
+    throw error(502, 'Failed to fetch post view');
+  }
 
   if (!response.ok) {
     throw error(response.status, 'Failed to fetch post view');
   }
 
-  const data = await response.json();
-  const post = data.posts?.[0];
-
-  if (!post) {
+  let data;
+  try {
+    data = await response.json();
+  } catch {
+    throw error(502, 'Invalid upstream post view');
+  }
+  if (typeof data !== 'object' || data === null || !Array.isArray(data.posts)) {
+    throw error(502, 'Invalid upstream post view');
+  }
+  if (data.posts.length === 0) {
     throw error(404, 'Post not found');
+  }
+  const post = data.posts[0];
+  if (typeof post !== 'object' || post === null || Array.isArray(post)) {
+    throw error(502, 'Invalid upstream post view');
   }
 
   const metadata = preview ? postPreview(post, uri) : null;

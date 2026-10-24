@@ -112,9 +112,13 @@ export function highlightCode(
       if (endings[index]) {
         output.push({ text: endings[index], light, dark });
       }
-      if (output.length > HIGHLIGHT_LIMITS.tokens) return null;
+      if (output.length > HIGHLIGHT_LIMITS.tokens) break;
     }
-    if (output.map((token) => token.text).join('') === source) result = output;
+    if (
+      output.length <= HIGHLIGHT_LIMITS.tokens &&
+      output.map((token) => token.text).join('') === source
+    )
+      result = output;
   } catch {
     // Unsupported engine constructs or grammar errors must not hide the code.
   }

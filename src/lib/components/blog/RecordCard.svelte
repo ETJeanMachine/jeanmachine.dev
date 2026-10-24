@@ -1,10 +1,14 @@
 <script lang="ts">
   import NativeEmbed from './NativeEmbed.svelte';
-  let { uri, label }: { uri: string; label: string } = $props();
+  let {
+    uri,
+    label,
+    intent = 'record',
+  }: { uri: string; label: string; intent?: 'record' | 'poll' } = $props();
 </script>
 
 <NativeEmbed
   {uri}
   {label}
-  kind={label.startsWith('Poll') ? 'fallback' : 'record'}
+  kind={intent === 'poll' ? 'fallback' : 'record'}
 />

@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import {
     Github,
     Linkedin,
@@ -19,16 +18,18 @@
     DID,
   } from '$lib/constants';
   import { Butterfly } from '$lib/icons';
-  import { blobUri, loadProfile } from '$lib';
+  import { blobUri } from '$lib';
   import type { AppBskyActorProfile } from '@atcute/bluesky';
 
-  let profile = $state<AppBskyActorProfile.Main | null>(null);
-
-  onMount(async () => {
-    profile = await loadProfile();
-  });
-
-  const { mobile = false } = $props();
+  const {
+    mobile = false,
+    profile,
+    error = null,
+  }: {
+    mobile?: boolean;
+    profile: AppBskyActorProfile.Main | null;
+    error?: string | null;
+  } = $props();
 
   const socialIcons = [
     { name: 'LinkedIn', href: `${LINKEDIN_URL}`, icon: Linkedin },
@@ -47,9 +48,13 @@
   ];
 </script>
 
-<div class="profile">
-  {#if profile?.avatar && !mobile}
-    <div class="avatar-wrapper">
+{#snippet avatar(variant: 'default' | 'mobile' | 'compact' = 'default')}
+  {#if profile?.avatar}
+    <div
+      class="avatar-wrapper"
+      class:avatar-wrapper--mobile={variant === 'mobile'}
+      class:avatar-wrapper--compact={variant === 'compact'}
+    >
       <img
         src={blobUri(profile.avatar)}
         alt={profile.displayName ?? 'Profile picture'}
@@ -57,46 +62,32 @@
       />
     </div>
   {/if}
+{/snippet}
+
+{#snippet location()}
+  <div class="location">
+    <MapPin size={'1.4rem'} />
+    <h3>{LOCATION}</h3>
+  </div>
+{/snippet}
+
+<div class="profile">
+  {#if !mobile}
+    {@render avatar()}
+  {/if}
   <div class="info">
     <div class="name-header">
-      {#if profile?.avatar && mobile}
-        <div class="avatar-wrapper avatar-wrapper--mobile">
-          <img
-            src={blobUri(profile.avatar)}
-            alt={profile.displayName ?? 'Profile picture'}
-            class="avatar"
-          />
-        </div>
-      {/if}
-      {#if profile?.avatar && !mobile}
-        <div class="avatar-wrapper avatar-wrapper--compact">
-          <img
-            src={blobUri(profile.avatar)}
-            alt={profile.displayName ?? 'Profile picture'}
-            class="avatar"
-          />
-        </div>
-      {/if}
+      {@render avatar(mobile ? 'mobile' : 'compact')}
       <div class="name">
         <h1>{NAME}</h1>
         <h3 class="pronouns"><i>({PRONOUNS})</i></h3>
         {#if !mobile}
-          <div class="location">
-            <MapPin size={'1.4rem'} />
-            <h3>
-              {LOCATION}
-            </h3>
-          </div>
+          {@render location()}
         {/if}
       </div>
     </div>
     {#if mobile}
-      <div class="location">
-        <MapPin size={'1.4rem'} />
-        <h3>
-          {LOCATION}
-        </h3>
-      </div>
+      {@render location()}
     {/if}
     <span>{TITLE}</span>
     <div class="social-icons">
@@ -109,6 +100,9 @@
     </div>
   </div>
 </div>
+{#if error}
+  <p>{error}</p>
+{/if}
 
 <style>
   .profile {

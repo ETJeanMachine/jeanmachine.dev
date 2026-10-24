@@ -1,29 +1,17 @@
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { DID, PDS_URL, PUB_RKEY } from '$lib/constants';
+import { DID, PUB_RKEY } from '$lib/constants';
+import { pdsBlob, pdsJson } from '$lib/server/pds';
 import { SiteStandardPublication } from '@atcute/standard-site';
 import { is } from '@atcute/lexicons';
 import { isBlob, isLegacyBlob } from '@atcute/lexicons/interfaces';
 
-export const GET: RequestHandler = async ({ url }) => {
-  const collection = 'site.standard.publication';
-  const rkey = PUB_RKEY;
-
-  if (!collection) {
-    throw error(400, 'Missing collection or rkey');
-  }
-
-  const request_url = `${PDS_URL}/xrpc/com.atproto.repo.getRecord?repo=${encodeURIComponent(DID)}&collection=${collection}&rkey=${rkey}`;
-  const response = await fetch(request_url, {
-    method: 'GET',
-    headers: { 'Content-Type': 'application/json' },
-  });
-
-  if (!response.ok) {
-    throw error(response.status, 'Failed to fetch record');
-  }
-
-  const { value: data } = await response.json();
+export const GET: RequestHandler = async () => {
+  const { value: data } = await pdsJson(
+    'com.atproto.repo.getRecord',
+    { repo: DID, collection: 'site.standard.publication', rkey: PUB_RKEY },
+    'Failed to fetch record',
+  );
   if (!is(SiteStandardPublication.mainSchema, data)) {
     throw error(502, 'Invalid site.standard.publication record');
   }
@@ -42,24 +30,5 @@ export const GET: RequestHandler = async ({ url }) => {
     throw error(400, 'Blob error');
   }
 
-  const blobUrl = `${PDS_URL}/xrpc/com.atproto.sync.getBlob?did=${DID}&cid=${cid}`;
-
-  try {
-    const response = await fetch(blobUrl);
-
-    if (!response.ok) {
-      throw error(response.status, 'Failed to fetch blob');
-    }
-
-    const blob = await response.blob();
-
-    return new Response(blob, {
-      headers: {
-        'Content-Type': response.headers.get('Content-Type') || `${mimeType}`,
-        'Cache-Control': 'public, max-age=3600',
-      },
-    });
-  } catch (err) {
-    throw error(500, 'Failed to proxy blob');
-  }
+  return pdsBlob(cid, mimeType);
 };

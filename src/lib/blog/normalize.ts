@@ -263,7 +263,10 @@ export function normalizeContent(
     if (block.kind === 'unsupported') return false;
     if (block.kind === 'group') return block.blocks.some(meaningful);
     if (block.kind === 'list')
-      return block.items.some((item) => meaningful(item.block));
+      return block.items.some(
+        (item) =>
+          meaningful(item.block) || (item.nested && meaningful(item.nested)),
+      );
     return !['postHeader', 'html'].includes(block.kind);
   }
   return {

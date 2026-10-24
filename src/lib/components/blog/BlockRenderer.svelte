@@ -60,6 +60,7 @@
   />
 {:else if block.kind === 'poll'}<RecordCard
     uri={block.value.pollRef.uri}
+    intent="poll"
     label="Poll (interactive voting is unavailable)"
   />
 {:else if block.kind === 'unsupported'}<Unsupported label={block.label} />

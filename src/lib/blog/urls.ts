@@ -1,4 +1,5 @@
 import { isBlob, isLegacyBlob } from '@atcute/lexicons/interfaces';
+import { blobUrl } from '../blob';
 
 /** No protocol-relative URLs, credentials, control characters, or executable schemes. */
 export function safeLink(value: unknown): string | null {
@@ -57,7 +58,7 @@ export function imageUrl(value: unknown): string | null {
     ].includes(value.mimeType)
   )
     return null;
-  return `/api/atproto/blob?${new URLSearchParams({ cid: isBlob(value) ? value.ref.$link : value.cid, mimetype: value.mimeType })}`;
+  return blobUrl(value);
 }
 
 function encodePathSegment(value: string): string {

@@ -3,35 +3,21 @@ import {
   GITHUB_EXCLUDED_REPOS,
 } from '$lib/constants';
 import { env } from '$env/dynamic/private';
+import type {
+  ContributionCalendar,
+  ContributionWeek,
+  LanguageStat,
+  LanguageStats,
+} from '$lib/github';
+export type {
+  ContributionDay,
+  ContributionWeek,
+  ContributionCalendar,
+  LanguageStat,
+  LanguageStats,
+} from '$lib/github';
 
 const GITHUB_GRAPHQL_ENDPOINT = 'https://api.github.com/graphql';
-
-export interface ContributionDay {
-  date: string;
-  contributionCount: number;
-}
-
-export interface ContributionWeek {
-  contributionDays: ContributionDay[];
-}
-
-export interface ContributionCalendar {
-  totalContributions: number;
-  weeks: ContributionWeek[];
-}
-
-export interface LanguageStat {
-  name: string;
-  size: number;
-  color: string | null;
-  percent: number;
-}
-
-export interface LanguageStats {
-  languages: LanguageStat[];
-  totalSize: number;
-  reposAnalyzed: number;
-}
 
 interface GraphQLResponse<T> {
   data?: T;
@@ -66,11 +52,11 @@ async function githubGraphQL<T>(
       }`,
     );
   }
-  const payload: GraphQLResponse<T> = await response.json();
-  if (payload.errors?.length) {
+  const payload: GraphQLResponse<T> | null = await response.json();
+  if (payload?.errors?.length) {
     throw new Error(payload.errors[0].message);
   }
-  if (!payload.data) {
+  if (!payload?.data) {
     throw new Error('GitHub API returned no data');
   }
   return payload.data;
@@ -165,6 +151,7 @@ export async function getLanguageStats(): Promise<LanguageStats> {
   let reposAnalyzed = 0;
   let cursor: string | undefined;
   let hasNextPage = true;
+  const seenCursors = new Set<string>();
 
   while (hasNextPage) {
     const data = await githubGraphQL<{
@@ -201,6 +188,12 @@ export async function getLanguageStats(): Promise<LanguageStats> {
 
     hasNextPage = repositories.pageInfo.hasNextPage;
     cursor = repositories.pageInfo.endCursor;
+    if (hasNextPage) {
+      if (!cursor || seenCursors.has(cursor)) {
+        throw new Error('GitHub repository pagination made no progress');
+      }
+      seenCursors.add(cursor);
+    }
   }
 
   const totalSize = [...sizes.values()].reduce(
