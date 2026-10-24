@@ -22,26 +22,6 @@ async function handleFromPDS(did: string): Promise<string | null> {
   return data?.handle ?? null;
 }
 
-// Verify a candidate handle via its .well-known/atproto-did file, which must
-// contain the DID it claims to represent.
-async function verifyWellKnown(
-  did: string,
-  handle: string,
-): Promise<string | null> {
-  try {
-    const response = await fetch(
-      `https://${encodeURIComponent(handle)}/.well-known/atproto-did`,
-    );
-    if (!response.ok) {
-      return null;
-    }
-    const text = (await response.text()).trim();
-    return text === did ? handle : null;
-  } catch {
-    return null;
-  }
-}
-
 // Resolve a DID to its handle via the PLC directory's alsoKnownAs entries.
 async function handleFromPLC(did: string): Promise<string | null> {
   const data = (await fetchJson(
@@ -51,8 +31,8 @@ async function handleFromPLC(did: string): Promise<string | null> {
   return entry ? entry.slice('at://'.length) : null;
 }
 
-// Resolve a handle to its DID via the handle domain's .well-known file.
-async function didFromWellKnown(handle: string): Promise<string | null> {
+// Read the handle domain's .well-known file for resolution or DID verification.
+async function fetchWellKnown(handle: string): Promise<string | null> {
   try {
     const response = await fetch(
       `https://${encodeURIComponent(handle)}/.well-known/atproto-did`,
@@ -60,8 +40,7 @@ async function didFromWellKnown(handle: string): Promise<string | null> {
     if (!response.ok) {
       return null;
     }
-    const text = (await response.text()).trim();
-    return text.startsWith('did:') ? text : null;
+    return (await response.text()).trim();
   } catch {
     return null;
   }
@@ -74,8 +53,8 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
 
   // ?handle=... — reverse resolution: handle → DID via .well-known.
   if (handle) {
-    const resolvedDid = await didFromWellKnown(handle);
-    if (!resolvedDid) {
+    const resolvedDid = await fetchWellKnown(handle);
+    if (!resolvedDid?.startsWith('did:')) {
       throw error(404, 'Could not resolve DID for handle');
     }
     return json({ handle, did: resolvedDid });
@@ -87,11 +66,8 @@ export const GET: RequestHandler = async ({ url, setHeaders }) => {
   // 1. The PDS knows the account's current handle...
   const pdsHandle = await handleFromPDS(subject);
   // 2. ...confirm it against the handle domain's .well-known/atproto-did.
-  if (pdsHandle) {
-    const verified = await verifyWellKnown(subject, pdsHandle);
-    if (verified) {
-      return json({ did: subject, handle: verified });
-    }
+  if (pdsHandle && (await fetchWellKnown(pdsHandle)) === subject) {
+    return json({ did: subject, handle: pdsHandle });
   }
 
   // 3. Fall back to the PLC directory, the source of truth for DIDs.

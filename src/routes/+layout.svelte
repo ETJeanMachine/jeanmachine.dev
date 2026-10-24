@@ -1,8 +1,6 @@
 <script lang="ts">
   import '../index.css';
-  import { loadPublication } from '$lib';
-  import type { SiteStandardPublication } from '@atcute/standard-site';
-  import { onMount, setContext } from 'svelte';
+
   import { page } from '$app/state';
   import {
     HouseIcon,
@@ -11,13 +9,13 @@
     Signature,
   } from '@lucide/svelte';
 
-  import twemoji from '@twemoji/api';
   import { NAME, TITLE } from '$lib/constants';
 
   let { children } = $props();
 
-  let publication = $state<SiteStandardPublication.Main | null>(null);
-  let currentPath = $state('');
+  const isReading = $derived(page.route.id === '/blog/[rkey]');
+
+  const currentPath = $derived(page.url.pathname);
   let contentDiv: HTMLDivElement | null = $state(null);
   let lastScrollTop = $state(0);
   let navHidden = $state(false);
@@ -29,15 +27,9 @@
     { name: 'Credits', href: '/attributions', icon: Signature, exact: false },
   ];
 
-  setContext('publication', {
-    get value() {
-      return publication;
-    },
-  });
-
   $effect(() => {
-    currentPath = page.url.pathname;
-    // Reset scroll to top on navigation
+    // Track pathname changes to reset scroll to top on navigation.
+    currentPath;
     if (contentDiv) {
       contentDiv.scrollTop = 0;
     }
@@ -58,66 +50,34 @@
 
     lastScrollTop = scrollTop;
   }
-
-  let observer: MutationObserver | null = null;
-
-  onMount(async () => {
-    publication = await loadPublication();
-
-    // Set up MutationObserver to parse emoji whenever DOM changes (catches all dynamic content)
-    observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.addedNodes.length) {
-          mutation.addedNodes.forEach((node) => {
-            if (node.nodeType === Node.ELEMENT_NODE) {
-              twemoji.parse(node as HTMLElement, {
-                folder: 'svg',
-                ext: '.svg',
-              });
-            }
-          });
-        }
-      });
-    });
-
-    // Observe the entire document for changes
-    observer.observe(document.body, { childList: true, subtree: true });
-
-    // Initial parse of existing content
-    twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });
-  });
-
-  // Cleanup on unmount using $effect
-  $effect(() => {
-    return () => {
-      if (observer) {
-        observer.disconnect();
-      }
-    };
-  });
 </script>
 
 <svelte:head>
-  <meta name="title" content={NAME} />
-  <meta name="description" content={TITLE} />
+  {#if !isReading}
+    <title>{NAME}</title>
+    <meta name="title" content={NAME} />
+    <meta name="description" content={TITLE} />
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://jeanmachine.dev" />
-  <meta property="og:title" content={NAME} />
-  <meta property="og:description" content={TITLE} />
-  <meta property="og:image" content="/api/meta-image" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://jeanmachine.dev" />
+    <meta property="og:title" content={NAME} />
+    <meta property="og:description" content={TITLE} />
+    <meta property="og:image" content="/api/meta-image" />
 
-  <!-- X (Twitter) -->
-  <meta property="twitter:card" content="summary" />
-  <meta property="twitter:url" content="https://jeanmachine.dev" />
-  <meta property="twitter:title" content={NAME} />
-  <meta property="twitter:description" content={TITLE} />
-  <meta property="twitter:image" content="/api/meta-image" />
+    <!-- X (Twitter) -->
+    <meta property="twitter:card" content="summary" />
+    <meta property="twitter:url" content="https://jeanmachine.dev" />
+    <meta property="twitter:title" content={NAME} />
+    <meta property="twitter:description" content={TITLE} />
+    <meta property="twitter:image" content="/api/meta-image" />
+  {/if}
 
   <!-- Favicon -->
   <link rel="icon" href="/favicon.ico" />
 </svelte:head>
+
+<div class="site-background" class:reading={isReading} aria-hidden="true"></div>
 
 <main>
   <div class:nav-hidden={navHidden}>
@@ -164,8 +124,7 @@
     align-items: center;
     min-height: 100dvh;
     min-width: 100dvw;
-    font-family:
-      'Maple Mono', 'Cascadia Code', 'Fira Code', 'Consolas', 'Menlo', monospace;
+    font-family: var(--font-site);
     color: var(--text);
   }
 
@@ -234,8 +193,6 @@
     main > div {
       width: 90vw;
       height: 100dvh;
-      display: flex;
-      flex-direction: column;
       position: relative;
       box-sizing: border-box;
       padding-bottom: 65px;

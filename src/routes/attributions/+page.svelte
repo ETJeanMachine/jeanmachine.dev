@@ -11,16 +11,20 @@
     <p>
       The blog uses <a href="https://standard.site">standard.site</a> lexicons,
       with schemas and types provided by
-      <a href="https://github.com/mary-ext/atcute">atcute</a>. It is currently
-      hosted on
-      <a href="https://blog.jean.moe">blog.jean.moe</a>.
+      <a href="https://github.com/mary-ext/atcute">atcute</a>. Read the blog
+      natively
+      <a href="/blog">on this site</a>.
     </p>
     <p>
       The core of the website is built using <a href="https://kit.svelte.dev"
         >SvelteKit</a
       >, for both the frontend and backend. Icons are provided by
       <a href="https://lucide.dev">Lucide</a>, and the font used is
-      <a href="https://github.com/subframe7536/maple-font">Maple Mono</a>.
+      <a href="https://github.com/subframe7536/maple-font">Maple Mono</a>. Emoji
+      use Google's
+      <a href="https://github.com/googlefonts/noto-emoji">Noto Color Emoji</a>,
+      self-hosted directly from the official Google font under the
+      <a href="/fonts/NotoColorEmoji/LICENSE.txt">SIL Open Font License 1.1</a>.
       Cloudflare Pages is how I host the website. You can view the website's
       source code on my
       <a href="https://github.com/ETJeanMachine/jeanmachine.dev">Github</a>.

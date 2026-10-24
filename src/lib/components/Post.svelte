@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import './post-card.css';
   import { DID } from '$lib/constants';
   import { Butterfly } from '$lib/icons';
   import { blobUri } from '$lib';
@@ -14,14 +15,14 @@
     likeCount = 0,
     repostCount = 0,
     replyCount = 0,
-  } = $props<{
+  }: {
     post: AppBskyFeedPost.Main;
     author: AppBskyActorProfile.Main;
     uri: string;
     likeCount?: number;
     repostCount?: number;
     replyCount?: number;
-  }>();
+  } = $props();
 
   function formatDate(dateString: string): string {
     const date = new Date(dateString);
@@ -72,7 +73,7 @@
   });
 </script>
 
-<div class="post">
+<div class="post post-card">
   <div class="post-header">
     <a
       href={`https://bsky.app/profile/${DID}`}
@@ -98,10 +99,7 @@
         >
 
         <span class="post-date">
-          · <span
-            class="post-date-content"
-            title={formatDate(post.createdAt)}
-          >
+          · <span class="post-date-content" title={formatDate(post.createdAt)}>
             {formatRelativeDate(post.createdAt)} ago
           </span>
         </span>
@@ -195,18 +193,7 @@
 
 <style>
   .post {
-    border: 1px solid var(--overlay);
-    border-radius: 16px;
-    padding: 16px;
-    background-color: color-mix(in srgb, var(--surface) 80%, transparent);
     max-width: 30rem;
-    box-sizing: border-box;
-  }
-
-  .post {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
   }
 
   .post-header {
