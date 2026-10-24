@@ -1,0 +1,10 @@
+.post-card {
+  border: 1px solid var(--overlay);
+  border-radius: 16px;
+  padding: 16px;
+  background-color: color-mix(in srgb, var(--surface) 80%, transparent);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
