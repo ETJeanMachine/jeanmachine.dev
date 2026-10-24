@@ -2,7 +2,7 @@
 import { PUB_RKEY } from '$lib/constants';
 import { SiteStandardPublication } from '@atcute/standard-site';
 import { AppBskyActorProfile } from '@atcute/bluesky';
-import { type Blob, type LegacyBlob } from '@atcute/lexicons';
+import { is, type Blob, type LegacyBlob } from '@atcute/lexicons';
 import { isBlob, isLegacyBlob } from '@atcute/lexicons/interfaces';
 
 export async function loadPublication(): Promise<SiteStandardPublication.Main> {
@@ -13,7 +13,14 @@ export async function loadPublication(): Promise<SiteStandardPublication.Main> {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
   });
-  return (await response.json()).value;
+  if (!response.ok) {
+    throw new Error('Failed to fetch publication');
+  }
+  const { value } = await response.json();
+  if (!is(SiteStandardPublication.mainSchema, value)) {
+    throw new Error('Invalid site.standard.publication record');
+  }
+  return value;
 }
 
 export async function loadProfile(): Promise<AppBskyActorProfile.Main> {

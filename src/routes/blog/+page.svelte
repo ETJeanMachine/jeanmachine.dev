@@ -2,7 +2,11 @@
   import { getContext, onMount } from 'svelte';
   import { page } from '$app/state';
   import { goto } from '$app/navigation';
-  import { SiteStandardDocument, SiteStandardPublication } from '@atcute/standard-site';
+  import {
+    SiteStandardDocument,
+    type SiteStandardPublication,
+  } from '@atcute/standard-site';
+  import { is } from '@atcute/lexicons';
   import {
     ChevronFirst,
     ChevronLast,
@@ -16,7 +20,7 @@
   const publicationContext = getContext<{
     value: SiteStandardPublication.Main | null;
   }>('publication');
-  const publication = publicationContext.value;
+  const publication = $derived(publicationContext.value);
   let curr_page = $state(0);
 
   $effect(() => {
@@ -42,7 +46,7 @@
     if (cursor) {
       urlParams.set('cursor', cursor);
     }
-    const response_map = new Map<string, PubLeafletDocument.Main>();
+    const response_map = new Map<string, SiteStandardDocument.Main>();
     // fetching records
     const records = await fetch(
       `/api/atproto/listRecords?${urlParams.toString()}`,
@@ -51,8 +55,9 @@
     // going through the records we retrieved (they should be reverse-chronological)
     for (const record of response.records) {
       const rkey = record.uri.split('/').pop();
-      // if (is(PubLeafletDocument.mainSchema, record.value)) {
-      response_map.set(rkey, record.value);
+      if (rkey && is(SiteStandardDocument.mainSchema, record.value)) {
+        response_map.set(rkey, record.value);
+      }
     }
     cursor = response.cursor;
     documents = new Map([...documents, ...response_map]);

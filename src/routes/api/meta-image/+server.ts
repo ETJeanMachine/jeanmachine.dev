@@ -1,7 +1,8 @@
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
 import { DID, PDS_URL, PUB_RKEY } from '$lib/constants';
-import type { SiteStandardPublication } from '@atcute/standard-site';
+import { SiteStandardPublication } from '@atcute/standard-site';
+import { is } from '@atcute/lexicons';
 import { isBlob, isLegacyBlob } from '@atcute/lexicons/interfaces';
 
 export const GET: RequestHandler = async ({ url }) => {
@@ -22,9 +23,9 @@ export const GET: RequestHandler = async ({ url }) => {
     throw error(response.status, 'Failed to fetch record');
   }
 
-  let data: SiteStandardPublication.Main = (await response.json()).value;
-  if (data == null) {
-    throw error(response.status, '');
+  const { value: data } = await response.json();
+  if (!is(SiteStandardPublication.mainSchema, data)) {
+    throw error(502, 'Invalid site.standard.publication record');
   }
 
   if (!data.icon) {

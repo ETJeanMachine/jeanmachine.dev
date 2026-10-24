@@ -9,7 +9,7 @@ Personal website for Eliza Hamilton ([jeanmachine.dev](https://jeanmachine.dev))
 - **Framework:** SvelteKit 2 + Svelte 5 (runes) + TypeScript, built with Vite 7
 - **Hosting:** Cloudflare Pages via `@sveltejs/adapter-cloudflare` (config in `svelte.config.js` and `wrangler.toml`; output goes to `.svelte-kit/cloudflare`)
 - **Integrations:**
-  - **AT Protocol:** proxies to the owner's PDS (`pds.jeanmachine.dev`) under `src/routes/api/atproto/*`; blog content is stored as `pub.leaflet.*` records (Leaflet) on the PDS. Lexicon JSON schemas live in `lexicons/pub/leaflet/`. Uses `@atcute/*` lexicon libraries.
+  - **AT Protocol:** proxies to the owner's PDS (`pds.jeanmachine.dev`) under `src/routes/api/atproto/*`; blog publications and documents are stored as `site.standard.*` records on the PDS. Schemas and types come from `@atcute/standard-site`, validated with `@atcute/lexicons`; no local lexicon copies are needed.
   - **GitHub:** contribution calendar + language stats via the GitHub GraphQL API (`src/lib/server/github.ts`), served from `src/routes/api/github/*`.
 
 ## Commands
@@ -27,7 +27,7 @@ bun run check:watch
 
 - **There is no test suite.** `bun run check` (svelte-check, strict TS) is the primary validation for changes.
 - **`vite build` does not type-check.** Always run `bun run check` after edits — the build succeeding does not mean types are clean.
-- **Formatting:** Prettier (`.prettierrc`, `prettier-plugin-svelte`): `bun run format` to write, `bunx prettier --check .` to verify. Style: single quotes, 2-space indent (no tabs), 80 print width (150 for HTML files), trailing commas, semicolons. `lexicons/` is excluded via `.prettierignore` (upstream spec files — don't reformat).
+- **Formatting:** Prettier (`.prettierrc`, `prettier-plugin-svelte`): `bun run format` to write, `bunx prettier --check .` to verify. Style: single quotes, 2-space indent (no tabs), 80 print width (150 for HTML files), trailing commas, semicolons.
 - **No ESLint.** Don't introduce it ad hoc.
 - **Local Workers runtime (optional):** `bunx wrangler pages dev` against the adapter output. Note wrangler writes logs to `~/Library/Preferences/.wrangler/logs/` — in sandboxed environments this fails with `EPERM`, which is noisy but benign.
 
@@ -47,7 +47,7 @@ bun run check:watch
 - `src/lib/constants.ts` — central config: PDS URL, DID, publication rkey, social links, GitHub username, and repo/language exclusion lists for the language stats.
 - `src/lib/server/*` — server-only modules (GitHub GraphQL client).
 - `src/routes/api/atproto/*` — thin GET proxies to PDS XRPC methods (`blob`, `listRecords`, `record`, `resolve`, `postview`). Some set `Cache-Control: public, max-age=3600`; the GitHub endpoints use `no-store` in dev and `max-age=1800` in prod. Preserve these cache headers.
-- `src/routes/blog/*` — blog listing + reader backed by `pub.leaflet.*` records fetched from the PDS.
+- `src/routes/blog/*` — blog listing backed by `site.standard.document` and `site.standard.publication` records fetched from the PDS.
 - `src/lib/components`, `src/lib/icons` — UI components and single-file Svelte icons; re-exported via `index.ts` barrels.
 - `src/routes/blog/[slug]/+page.svelte` is currently an empty file (work in progress) — do not "fix" or delete it unasked.
 - `.gitignore` entries for `static/backgrounds/` ("Protected Assets") and `*.zed/` / `*.vscode/` / `*.claude/` are leftovers from an earlier iteration; nothing in `src/` references them.
@@ -56,5 +56,4 @@ bun run check:watch
 ## Known Quirks
 
 - `package.json` has `"resolutions": { "rollup": "npm:@rollup/wasm-node" }`. The original reason is unclear, but it **is active** (Bun resolves `rollup` to the WASM build) and builds/deploys work with it — leave it in place unless deliberately reworking build tooling.
-- Known pre-existing `svelte-check` error: `Cannot find namespace 'PubLeafletDocument'` in `src/routes/blog/+page.svelte`. It predates current work; don't treat a single pre-existing failure as regression noise, but do fix failures you introduce.
 - No CI workflows exist — only Dependabot (weekly, all deps grouped). Validation happens locally via `bun run check` and `bun run build`.

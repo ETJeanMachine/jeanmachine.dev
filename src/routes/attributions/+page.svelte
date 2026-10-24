@@ -9,8 +9,10 @@
       <a href="https://pds.jeanmachine.dev">pds.jeanmachine.dev</a>.
     </p>
     <p>
-      The format for the blog is built using <a href="leaflet.pub">Leaflet</a>
-      and it's lexicons. It is currently hosted on
+      The blog uses <a href="https://standard.site">standard.site</a> lexicons,
+      with schemas and types provided by
+      <a href="https://github.com/mary-ext/atcute">atcute</a>. It is currently
+      hosted on
       <a href="https://blog.jean.moe">blog.jean.moe</a>.
     </p>
     <p>
