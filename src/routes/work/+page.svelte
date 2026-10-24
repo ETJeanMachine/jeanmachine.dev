@@ -2,151 +2,162 @@
   import { FileDown } from '@lucide/svelte';
 </script>
 
-<div class="card">
-  <div class="resume-title">
-    <h1>Resume</h1>
-    <a href="/assets/resume.pdf" download>
-      <FileDown size={'2rem'} />
-    </a>
-  </div>
-  <hr />
-
-  <h2>Education</h2>
-  <div class="education">
-    <div>
-      <h3>Rochester Institute of Technology</h3>
-      <p>B.S. in Computer Science, Cum Laude</p>
+<div class="work-page">
+  <header class="card">
+    <div class="resume-title">
+      <h1>Resume</h1>
+      <a href="/assets/resume.pdf" download aria-label="Download resume PDF">
+        <FileDown size={'2rem'} />
+      </a>
     </div>
-    <span class="date">August 2019 - May 2023</span>
-  </div>
+  </header>
 
-  <hr />
-
-  <h2>Experience</h2>
-
-  <div class="job">
-    <div class="job-header">
+  <section class="card" aria-labelledby="education-heading">
+    <h2 id="education-heading">Education</h2>
+    <div class="education">
       <div>
-        <h3>Jensen Hughes</h3>
-        <p class="title">Automation Engineer</p>
+        <h3>Rochester Institute of Technology</h3>
+        <p>B.S. in Computer Science, Cum Laude</p>
       </div>
-      <div class="job-meta">
-        <span class="location">Remote, USA</span>
-        <span class="date">February 2026 - Present</span>
-      </div>
+      <span class="date">August 2019 - May 2023</span>
     </div>
-    <p class="description">
-      Building workflows via Powershell, PowerAutomate, Python, and other related
-      power app tools within Microsoft environments to expedite business workflows
-      for marketing and sales teams. Exploring integrations with AI, Microsoft Dataverse,
-      PowerBI and CRM tools to allow for more complex workflows.
-    </p>
-  </div>
+  </section>
 
-  <div class="job">
-    <div class="job-header">
-      <div>
-        <h3>Intel (UST Global)</h3>
-        <p class="title">Validation Tester II</p>
-      </div>
-      <div class="job-meta">
-        <span class="location">Santa Clara, CA</span>
-        <span class="date">August 2025 – February 2026</span>
-      </div>
-    </div>
-    <p class="description">
-      Smoke testing for Chromebook SOC's; Linux Sysadmin work, setting up,
-      updating host machines and maintaining network infrastructure for
-      effective testing. Worked on automation of testing in bash, ansible, for
-      tasks related to ensuring that the SOC's operate as intended – networking,
-      sleep related tasks, and debugging via ADB.
-    </p>
-  </div>
+  <section class="card" aria-labelledby="experience-heading">
+    <h2 id="experience-heading">Experience</h2>
 
-  <div class="job">
-    <div class="job-header">
-      <div>
-        <h3>Xerox Corporation</h3>
-        <p class="title">Software Engineer</p>
+    <div class="job">
+      <div class="job-header">
+        <div>
+          <h3>Jensen Hughes</h3>
+          <p class="title">Automation Engineer</p>
+        </div>
+        <div class="job-meta">
+          <span class="location">Remote, USA</span>
+          <span class="date">February 2026 - Present</span>
+        </div>
       </div>
-      <div class="job-meta">
-        <span class="location">Webster, NY</span>
-        <span class="date">September 2022 – December 2022</span>
-      </div>
+      <p class="description">
+        Building workflows via Powershell, PowerAutomate, Python, and other
+        related power app tools within Microsoft environments to expedite
+        business workflows for marketing and sales teams. Exploring integrations
+        with AI, Microsoft Dataverse, PowerBI and CRM tools to allow for more
+        complex workflows.
+      </p>
     </div>
-    <p class="description">
-      Integrated backend SQL database systems with PowerBI workflows for data
-      visualization of software products for management to better assess
-      priorities. Worked on software development for a front-end printer
-      application, Workflow Central, in improving backend systems and
-      integrating usage data into new Power BI environments.
-    </p>
-  </div>
 
-  <div class="job">
-    <div class="job-header">
-      <div>
-        <h3>Corning Optical Communications</h3>
-        <p class="title">Software Engineer</p>
+    <div class="job">
+      <div class="job-header">
+        <div>
+          <h3>Intel (UST Global)</h3>
+          <p class="title">Validation Tester II</p>
+        </div>
+        <div class="job-meta">
+          <span class="location">Santa Clara, CA</span>
+          <span class="date">August 2025 – February 2026</span>
+        </div>
       </div>
-      <div class="job-meta">
-        <span class="location">Hickory, NC</span>
-        <span class="date">May 2022 – August 2022</span>
-      </div>
+      <p class="description">
+        Smoke testing for Chromebook SOC's; Linux Sysadmin work, setting up,
+        updating host machines and maintaining network infrastructure for
+        effective testing. Worked on automation of testing in bash, ansible, for
+        tasks related to ensuring that the SOC's operate as intended –
+        networking, sleep related tasks, and debugging via ADB.
+      </p>
     </div>
-    <p class="description">
-      Worked on testing software deployment and development; upgraded test
-      software in PowerShell, LabView. Improved testing speed 10x. Worked in C#
-      and Postgres for internal database upgrades for future products.
-    </p>
-  </div>
 
-  <div class="job">
-    <div class="job-header">
-      <div>
-        <h3>Sensored Life</h3>
-        <p class="title">Software Engineer</p>
+    <div class="job">
+      <div class="job-header">
+        <div>
+          <h3>Xerox Corporation</h3>
+          <p class="title">Software Engineer</p>
+        </div>
+        <div class="job-meta">
+          <span class="location">Webster, NY</span>
+          <span class="date">September 2022 – December 2022</span>
+        </div>
       </div>
-      <div class="job-meta">
-        <span class="location">Rochester, NY</span>
-        <span class="date">January 2022 – May 2022</span>
+      <p class="description">
+        Integrated backend SQL database systems with PowerBI workflows for data
+        visualization of software products for management to better assess
+        priorities. Worked on software development for a front-end printer
+        application, Workflow Central, in improving backend systems and
+        integrating usage data into new Power BI environments.
+      </p>
+    </div>
+
+    <div class="job">
+      <div class="job-header">
+        <div>
+          <h3>Corning Optical Communications</h3>
+          <p class="title">Software Engineer</p>
+        </div>
+        <div class="job-meta">
+          <span class="location">Hickory, NC</span>
+          <span class="date">May 2022 – August 2022</span>
+        </div>
+      </div>
+      <p class="description">
+        Worked on testing software deployment and development; upgraded test
+        software in PowerShell, LabView. Improved testing speed 10x. Worked in
+        C# and Postgres for internal database upgrades for future products.
+      </p>
+    </div>
+
+    <div class="job">
+      <div class="job-header">
+        <div>
+          <h3>Sensored Life</h3>
+          <p class="title">Software Engineer</p>
+        </div>
+        <div class="job-meta">
+          <span class="location">Rochester, NY</span>
+          <span class="date">January 2022 – May 2022</span>
+        </div>
+      </div>
+      <p class="description">
+        Deployed a new CRM system, VTiger, company-wide and integrated frontend
+        website systems with new CRM backend, while migrating customer data and
+        resources. Set up automatic workflows for the new CRM product for
+        company use.
+      </p>
+    </div>
+  </section>
+
+  <section class="card" aria-labelledby="skills-heading">
+    <h2 id="skills-heading">Skills</h2>
+    <div class="skills">
+      <div class="skill-category">
+        <strong>Languages:</strong>
+        <span
+          >Rust, Python, Java, C#, C/C++, Bash, SQL, PowerShell, PHP, HTML5/CSS</span
+        >
+      </div>
+      <div class="skill-category">
+        <strong>Technologies:</strong>
+        <span>Git, Power BI, MacOS, Windows, Linux, Docker, PostgreSQL</span>
+      </div>
+      <div class="skill-category">
+        <strong>Frameworks:</strong>
+        <span>Svelte, React</span>
       </div>
     </div>
-    <p class="description">
-      Deployed a new CRM system, VTiger, company-wide and integrated frontend
-      website systems with new CRM backend, while migrating customer data and
-      resources. Set up automatic workflows for the new CRM product for company
-      use.
-    </p>
-  </div>
-
-  <hr />
-
-  <h2>Skills</h2>
-  <div class="skills">
-    <div class="skill-category">
-      <strong>Languages:</strong>
-      <span
-        >Rust, Python, Java, C#, C/C++, Bash, SQL, PowerShell, PHP, HTML5/CSS</span
-      >
-    </div>
-    <div class="skill-category">
-      <strong>Technologies:</strong>
-      <span>Git, Power BI, MacOS, Windows, Linux, Docker, PostgreSQL</span>
-    </div>
-    <div class="skill-category">
-      <strong>Frameworks:</strong>
-      <span>Svelte, React</span>
-    </div>
-  </div>
+  </section>
 </div>
 
 <style>
-  .card {
-    max-height: calc(100vh - 150px);
-    overflow-y: auto;
+  .work-page {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
+  .work-page,
+  .work-page > .card {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
   .resume-title {
     display: flex;
     align-items: center;
@@ -231,11 +242,6 @@
   }
 
   @media (max-width: 768px) {
-    .card {
-      max-height: none;
-      overflow-y: visible;
-    }
-
     .education {
       flex-direction: column;
     }

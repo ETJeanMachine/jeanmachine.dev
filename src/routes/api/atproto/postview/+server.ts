@@ -1,5 +1,6 @@
 import { error, json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
+import { embedTarget, postPreview } from '$lib/blog/embeds';
 
 const APPVIEW_URL = 'https://public.api.bsky.app';
 
@@ -8,6 +9,11 @@ export const GET: RequestHandler = async ({ url }) => {
 
   if (!uri) {
     throw error(400, 'Missing uri');
+  }
+
+  const preview = url.searchParams.get('preview') === '1';
+  if (preview && !embedTarget(uri, 'bluesky').request) {
+    throw error(400, 'Invalid post uri');
   }
 
   const request_url = `${APPVIEW_URL}/xrpc/app.bsky.feed.getPosts?uris=${encodeURIComponent(uri)}`;
@@ -27,11 +33,31 @@ export const GET: RequestHandler = async ({ url }) => {
     throw error(404, 'Post not found');
   }
 
+  const metadata = preview ? postPreview(post, uri) : null;
+  if (preview && !metadata) {
+    throw error(502, 'Invalid upstream post preview');
+  }
+
   return json(
     {
-      likeCount: post.likeCount ?? 0,
-      repostCount: post.repostCount ?? 0,
-      replyCount: post.replyCount ?? 0,
+      ...(preview
+        ? (metadata?.stats ?? { likeCount: 0, repostCount: 0, replyCount: 0 })
+        : {
+            likeCount: post.likeCount ?? 0,
+            repostCount: post.repostCount ?? 0,
+            replyCount: post.replyCount ?? 0,
+          }),
+      ...(metadata
+        ? {
+            post: {
+              author: metadata.author,
+              text: metadata.text,
+              createdAt: metadata.date,
+              ...(metadata.images ? { images: metadata.images } : {}),
+              ...(metadata.external ? { external: metadata.external } : {}),
+            },
+          }
+        : {}),
     },
     { headers: { 'Cache-Control': 'public, max-age=60' } },
   );
