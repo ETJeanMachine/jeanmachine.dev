@@ -18,8 +18,7 @@
     DID,
   } from '$lib/constants';
   import { Butterfly } from '$lib/icons';
-  import { blobUri } from '$lib';
-  import type { AppBskyActorProfile } from '@atcute/bluesky';
+  import type { BlueskyProfile } from '$lib/bluesky';
 
   const {
     mobile = false,
@@ -27,9 +26,21 @@
     error = null,
   }: {
     mobile?: boolean;
-    profile: AppBskyActorProfile.Main | null;
+    profile: BlueskyProfile | null;
     error?: string | null;
   } = $props();
+
+  let failedAvatars = $state<string[]>([]);
+  const avatarSrc = $derived(
+    [profile?.avatar?.src, profile?.avatar?.fallback].find(
+      (src) => src && !failedAvatars.includes(src),
+    ),
+  );
+  function avatarFailed(event: Event & { currentTarget: Element }) {
+    const src = event.currentTarget.getAttribute('src');
+    if (src && !failedAvatars.includes(src))
+      failedAvatars = [...failedAvatars, src];
+  }
 
   const socialIcons = [
     { name: 'LinkedIn', href: `${LINKEDIN_URL}`, icon: Linkedin },
@@ -49,16 +60,21 @@
 </script>
 
 {#snippet avatar(variant: 'default' | 'mobile' | 'compact' = 'default')}
-  {#if profile?.avatar}
+  {#if avatarSrc}
     <div
       class="avatar-wrapper"
       class:avatar-wrapper--mobile={variant === 'mobile'}
       class:avatar-wrapper--compact={variant === 'compact'}
     >
       <img
-        src={blobUri(profile.avatar)}
-        alt={profile.displayName ?? 'Profile picture'}
+        src={avatarSrc}
+        alt={profile?.displayName ?? 'Profile picture'}
         class="avatar"
+        width="175"
+        height="175"
+        decoding="async"
+        referrerpolicy="no-referrer"
+        onerror={avatarFailed}
       />
     </div>
   {/if}

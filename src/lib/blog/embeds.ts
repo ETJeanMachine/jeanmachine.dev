@@ -88,7 +88,10 @@ export function embedTarget(uri: string, kind: EmbedKind) {
 }
 
 /** AppView images only: no arbitrary hosts, ports, credentials or URL normalization tricks. */
-function blueskyImage(value: unknown, kind: 'avatar' | 'feed'): string | null {
+export function blueskyImage(
+  value: unknown,
+  kind: 'avatar' | 'feed',
+): string | null {
   if (
     typeof value !== 'string' ||
     !value.startsWith('https://cdn.bsky.app/') ||

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Pin } from '@lucide/svelte';
   import Post from './Post.svelte';
-  import type { AppBskyActorProfile } from '@atcute/bluesky';
+  import type { BlueskyProfile } from '$lib/bluesky';
   import type { HomeState } from '$lib/home';
 
   const {
@@ -10,7 +10,7 @@
     counts,
     handle,
   }: {
-    author: AppBskyActorProfile.Main | null;
+    author: BlueskyProfile | null;
     pinned: HomeState['pinned'];
     counts: HomeState['counts'];
     handle: HomeState['handle'];
@@ -27,9 +27,8 @@
 {:else if pinned.data && author}
   <div class="post-container">
     <Post
-      post={pinned.data.post}
+      post={pinned.data}
       {author}
-      uri={pinned.data.uri}
       likeCount={counts.data?.likeCount ?? 0}
       repostCount={counts.data?.repostCount ?? 0}
       replyCount={counts.data?.replyCount ?? 0}

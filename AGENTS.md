@@ -26,10 +26,18 @@ bun run check:watch
 ```
 
 - **Focused blog tests:** `bun test src/lib/blog src/lib/server/blog.test.ts src/lib/server/blog-example.test.ts`. `bun run check` (svelte-check, strict TS) remains the primary validation gate.
+- **Focused homepage/Bluesky tests:** `bun test src/lib/home.test.ts src/lib/home-render.test.ts src/lib/bluesky.test.ts src/lib/server/bluesky.test.ts`.
 - **`vite build` does not type-check.** Always run `bun run check` after edits — the build succeeding does not mean types are clean.
 - **Formatting:** Prettier (`.prettierrc`, `prettier-plugin-svelte`): `bun run format` to write, `bunx prettier --check .` to verify. Style: single quotes, 2-space indent (no tabs), 80 print width (150 for HTML files), trailing commas, semicolons.
 - **No ESLint.** Don't introduce it ad hoc.
 - **Local Workers runtime (optional):** `bunx wrangler pages dev` against the adapter output. Note wrangler writes logs to `~/Library/Preferences/.wrangler/logs/` — in sandboxed environments this fails with `EPERM`, which is noisy but benign.
+
+## Performance Work
+
+- **Concrete before/after evidence is required for every speed optimization.** Capture and present a baseline before editing, then repeat the same measurements after the change and report the results during the work, not only when asked afterward.
+- Measure the user-relevant outcome (for example, data readiness, visible content, image completion, or interaction latency), not just automated test runtime or request counts. Report absolute timings, sample counts, median/range, and relevant request/byte totals; distinguish measured results from estimates.
+- Keep before/after conditions comparable: the same workload, environment, cache state, network settings, and measurement boundaries. Use repeated, interleaved runs where practical. Separate cold/warm results and component/upstream timings from full-page browser metrics; do not add overlapping phases or imply a production/LCP improvement from a local loader benchmark.
+- Retain enough benchmark commands, fixtures, baseline revision, and results to make the comparison reproducible without reverting user work. If tools, access, or a valid baseline are unavailable, disclose that before implementation and label performance claims as unverified; never substitute an after-only sample for a before/after comparison.
 
 ## Deployment
 
@@ -47,6 +55,7 @@ bun run check:watch
 - `src/lib/constants.ts` — central config: PDS URL, DID, publication rkey, social links, GitHub username, and repo/language exclusion lists for the language stats.
 - `src/lib/server/*` — server-only modules (GitHub GraphQL client).
 - `src/routes/api/atproto/*` — thin GET proxies to PDS XRPC methods (`blob`, `listRecords`, `record`, `resolve`, `postview`). Some set `Cache-Control: public, max-age=3600`; the GitHub endpoints use `no-store` in dev and `max-age=1800` in prod. Preserve these cache headers.
+- Homepage Bluesky — `src/lib/home.ts` owns loading once for both responsive layouts. Its `/api/atproto/home` fast path projects a fixed public AppView author-feed request into the URL-based display types in `src/lib/bluesky.ts`. Select only the explicit `reasonPin` item with the owner's post URI and author DID, never the latest feed item. The request has a 2.5-second whole-response deadline and 512 KiB decoded-byte limit; success uses `public, max-age=60` in production, while development and failures use `no-store`. Missing, invalid or unavailable AppView data falls back to the existing PDS profile/post/counts and verified-handle endpoints, with bounded client waits and navigation cancellation. AppView identity/pin data is eventually consistent. Cards use validated CDN thumbnails/avatars with original PDS image fallbacks; fullsize photos load only on lightbox activation. Preserve plain-text AT-record references, safe media URLs, public-field-only projection, and independent GitHub progress. Do not cast AppView profiles into PDS blob types or introduce global client state.
 - `src/routes/blog/*` — blog listing and native article reader backed by `site.standard.document` and `site.standard.publication` records fetched from the PDS. This website is the primary, canonical blog, not a read-only mirror of Leaflet. Leaflet supplies the document body extension, not the source of truth or publication styling; the reader uses this site's styles.
 - `src/lib/components`, `src/lib/icons` — UI components and single-file Svelte icons; re-exported via `index.ts` barrels.
 - `src/routes/blog/[rkey]/+page.svelte` — native article route keyed by document record key; the route owns article head metadata and uses this website's article URL as canonical. The route-to-`Article` contract is `{ document, publication, rkey }`, without an `originalUrl` prop or an external-source link. The root layout suppresses default title/description/OG/Twitter metadata on this route, restores `<title>{NAME}</title>` on non-reader routes, and keeps the favicon global.
