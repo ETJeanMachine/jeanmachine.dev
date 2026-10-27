@@ -1,27 +1,33 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import './post-card.css';
   import { DID } from '$lib/constants';
   import { Butterfly } from '$lib/icons';
-  import { blobUri } from '$lib';
-  import type { AppBskyActorProfile, AppBskyFeedPost } from '@atcute/bluesky';
+  import type {
+    BlueskyImage,
+    BlueskyMedia,
+    BlueskyPost,
+    BlueskyProfile,
+  } from '$lib/bluesky';
   import { formatDistanceToNowStrict } from 'date-fns';
   import { Heart, Repeat2, MessageCircle } from '@lucide/svelte';
 
   const {
     post,
     author,
-    uri,
     likeCount = 0,
     repostCount = 0,
     replyCount = 0,
-  } = $props<{
-    post: AppBskyFeedPost.Main;
-    author: AppBskyActorProfile.Main;
-    uri: string;
+    handle = '',
+  }: {
+    post: BlueskyPost;
+    author: BlueskyProfile;
     likeCount?: number;
     repostCount?: number;
     replyCount?: number;
-  }>();
+    handle?: string;
+  } = $props();
+
+  const displayName = $derived(author.displayName || handle || DID);
 
   function formatDate(dateString: string): string {
     const date = new Date(dateString);
@@ -45,47 +51,67 @@
     return `https://bsky.app/profile/${DID}/post/${rkey}`;
   }
 
-  let lightboxSrc = $state<string | null>(null);
-  let dialog = $state<HTMLDialogElement | null>(null);
-  let handle = $state('');
+  let failedImages = $state<string[]>([]);
+  function mediaSrc(media: BlueskyMedia | undefined) {
+    return [media?.src, media?.fallback].find(
+      (src) => src && !failedImages.includes(src),
+    );
+  }
+  function imageFailed(event: Event & { currentTarget: Element }) {
+    const src = event.currentTarget.getAttribute('src');
+    if (src && !failedImages.includes(src))
+      failedImages = [...failedImages, src];
+  }
 
-  function openLightbox(src: string) {
-    lightboxSrc = src;
+  let lightboxSrc = $state<string | null>(null);
+  let lightboxFallback = $state<string | null>(null);
+  let dialog = $state<HTMLDialogElement | null>(null);
+
+  function openLightbox(image: BlueskyImage) {
+    lightboxSrc = image.fullsize;
+    lightboxFallback = image.fallback ?? null;
     dialog?.showModal();
   }
 
   function closeLightbox() {
     lightboxSrc = null;
+    lightboxFallback = null;
     dialog?.close();
+  }
+
+  function lightboxFailed() {
+    if (lightboxFallback && lightboxSrc !== lightboxFallback) {
+      lightboxSrc = lightboxFallback;
+      lightboxFallback = null;
+    } else closeLightbox();
   }
 
   function handleDialogClick(e: MouseEvent) {
     if (e.target === dialog) closeLightbox();
   }
-
-  onMount(async () => {
-    const response = await fetch('/api/atproto/resolve');
-    if (response.ok) {
-      const data = await response.json();
-      handle = data.handle;
-    }
-  });
 </script>
 
-<div class="post">
+<div class="post post-card">
   <div class="post-header">
-    <a
-      href={`https://bsky.app/profile/${DID}`}
-      class="handle"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <img
-        src={blobUri(author.avatar)}
-        alt={author.displayName}
-        class="avatar"
-      /></a
-    >
+    {#if mediaSrc(author.avatar)}
+      <a
+        href={`https://bsky.app/profile/${DID}`}
+        class="handle"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <img
+          src={mediaSrc(author.avatar)}
+          alt={displayName}
+          class="avatar"
+          width="48"
+          height="48"
+          decoding="async"
+          referrerpolicy="no-referrer"
+          onerror={imageFailed}
+        />
+      </a>
+    {/if}
     <div class="author-info">
       <div class="author-top">
         <a
@@ -94,14 +120,11 @@
           target="_blank"
           rel="noopener noreferrer"
         >
-          <span class="display-name">{author.displayName}</span></a
+          <span class="display-name">{displayName}</span></a
         >
 
         <span class="post-date">
-          · <span
-            class="post-date-content"
-            title={formatDate(post.createdAt)}
-          >
+          · <span class="post-date-content" title={formatDate(post.createdAt)}>
             {formatRelativeDate(post.createdAt)} ago
           </span>
         </span>
@@ -118,55 +141,63 @@
   <div class="post-content">
     <p>{post.text}</p>
 
-    {#if post.embed}
-      {#if post.embed.$type === 'app.bsky.embed.record'}
-        <div class="quote-post">
-          <div class="quote-header">
-            <span class="quote-author">Quoted post</span>
-          </div>
-          <div class="quote-content">
-            <p class="quote-text">
-              {post.embed.record.uri}
-            </p>
-          </div>
+    {#if post.quoteUri}
+      <div class="quote-post">
+        <div class="quote-header">
+          <span class="quote-author">Quoted post</span>
         </div>
-      {:else if post.embed.$type === 'app.bsky.embed.images'}
-        <div class="images">
-          {#each post.embed.images as image}
+        <div class="quote-content">
+          <p class="quote-text">{post.quoteUri}</p>
+        </div>
+      </div>
+    {/if}
+    {#if post.images?.length}
+      <div class="images">
+        {#each post.images as image}
+          {#if mediaSrc(image)}
             <button
               class="image-btn"
-              onclick={() => openLightbox(blobUri(image.image))}
+              aria-label={image.alt || 'Open post image'}
+              onclick={() => openLightbox(image)}
             >
               <img
-                src={blobUri(image.image)}
-                alt={image.alt || ''}
+                src={mediaSrc(image)}
+                alt={image.alt}
+                width={image.width}
+                height={image.height}
                 class="post-image"
+                loading="lazy"
+                decoding="async"
+                referrerpolicy="no-referrer"
+                onerror={imageFailed}
               />
             </button>
-          {/each}
-        </div>
-      {:else if post.embed.$type === 'app.bsky.embed.external'}
-        <a
-          href={post.embed.external.uri}
-          class="external-link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          {#if post.embed.external.thumb}
-            <img
-              src={blobUri(post.embed.external.thumb)}
-              alt=""
-              class="external-thumb"
-            />
           {/if}
-          <div class="external-info">
-            <span class="external-title">{post.embed.external.title}</span>
-            <span class="external-description"
-              >{post.embed.external.description}</span
-            >
-          </div>
-        </a>
-      {/if}
+        {/each}
+      </div>
+    {:else if post.external}
+      <a
+        href={post.external.href}
+        class="external-link"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {#if mediaSrc(post.external.thumb)}
+          <img
+            src={mediaSrc(post.external.thumb)}
+            alt=""
+            class="external-thumb"
+            loading="lazy"
+            decoding="async"
+            referrerpolicy="no-referrer"
+            onerror={imageFailed}
+          />
+        {/if}
+        <div class="external-info">
+          <span class="external-title">{post.external.title}</span>
+          <span class="external-description">{post.external.description}</span>
+        </div>
+      </a>
     {/if}
   </div>
 
@@ -177,7 +208,7 @@
       <span class="stat"><Heart size={14} />{likeCount}</span>
     </div>
     <a
-      href={getPostUrl(uri)}
+      href={getPostUrl(post.uri)}
       target="_blank"
       rel="noopener noreferrer"
       title="Open post on Bluesky"
@@ -189,24 +220,19 @@
 
 <dialog bind:this={dialog} class="lightbox" onclick={handleDialogClick}>
   {#if lightboxSrc}
-    <img src={lightboxSrc} alt="" />
+    <img
+      src={lightboxSrc}
+      alt=""
+      decoding="async"
+      referrerpolicy="no-referrer"
+      onerror={lightboxFailed}
+    />
   {/if}
 </dialog>
 
 <style>
   .post {
-    border: 1px solid var(--overlay);
-    border-radius: 16px;
-    padding: 16px;
-    background-color: color-mix(in srgb, var(--surface) 80%, transparent);
     max-width: 30rem;
-    box-sizing: border-box;
-  }
-
-  .post {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
   }
 
   .post-header {
@@ -320,6 +346,7 @@
     display: block;
     justify-self: start;
     width: auto;
+    height: auto;
     max-width: 100%;
     border-radius: 12px;
     object-fit: contain;

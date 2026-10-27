@@ -1,11 +1,9 @@
 <script lang="ts">
-  import { getContext, onMount } from 'svelte';
+  import { onMount } from 'svelte';
+  import { dev } from '$app/environment';
   import { page } from '$app/state';
   import { goto } from '$app/navigation';
-  import {
-    SiteStandardDocument,
-    type SiteStandardPublication,
-  } from '@atcute/standard-site';
+  import { SiteStandardDocument } from '@atcute/standard-site';
   import { is } from '@atcute/lexicons';
   import {
     ChevronFirst,
@@ -15,27 +13,13 @@
   } from '@lucide/svelte';
 
   let documents = $state<Map<string, SiteStandardDocument.Main>>(new Map());
-  let leftKeys = $state<string[]>();
-  let rightKeys = $state<string[]>();
-  const publicationContext = getContext<{
-    value: SiteStandardPublication.Main | null;
-  }>('publication');
-  const publication = $derived(publicationContext.value);
-  let curr_page = $state(0);
-
-  $effect(() => {
-    curr_page = parseInt(page.url.searchParams.get('page') ?? '0');
-    if (documents && documents.size > 0) {
-      const startIndex = curr_page * 10;
-      const keyArray = Array.from(documents.keys());
-
-      // Get first 5 items for left column
-      leftKeys = keyArray.slice(startIndex, startIndex + 5);
-
-      // Get next 5 items for right column (only if we have more than 5 items)
-      rightKeys = keyArray.slice(startIndex + 5, startIndex + 10);
-    }
-  });
+  const curr_page = $derived(
+    parseInt(page.url.searchParams.get('page') ?? '0'),
+  );
+  const keys = $derived(Array.from(documents.keys()));
+  const startIndex = $derived(curr_page * 10);
+  const leftKeys = $derived(keys.slice(startIndex, startIndex + 5));
+  const rightKeys = $derived(keys.slice(startIndex + 5, startIndex + 10));
 
   let cursor = $state('');
   // fetching the next 5 pages of documents when we need to.
@@ -100,53 +84,61 @@
 
 <div class="blog-layout">
   {#snippet documentList(keys: string[])}
-    <div class="card">
-      {#each keys as key, i}
+    <div class="blog-column">
+      {#each keys as key (key)}
         {@const doc = documents.get(key)}
-        {#if doc && doc?.publishedAt && publication}
-          <a href="{publication.url}{doc.path ?? `/${key}`}">
-            <div>
-              <h2>{doc.title}</h2>
-              <p class="date">
-                {new Date(doc.publishedAt).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </p>
-            </div>
-            <p>{doc.description}</p>
-          </a>
-        {/if}
-        {#if i < keys.length - 1}
-          <hr />
+        {#if doc && doc.publishedAt}
+          <article class="card blog-post">
+            <a href="/blog/{key}">
+              <div>
+                <h2>{doc.title}</h2>
+                <p class="date">
+                  {new Date(doc.publishedAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </p>
+              </div>
+              <p>{doc.description}</p>
+            </a>
+          </article>
         {/if}
       {/each}
     </div>
   {/snippet}
 
+  {#if dev && curr_page === 0}
+    <article class="card blog-post">
+      <a href="/blog/example">
+        <div><h2>Example post — development only</h2></div>
+        <p>Local Leaflet component rendering examples. Not a published post.</p>
+      </a>
+    </article>
+  {/if}
+
   {#if documents.size > 0}
-    <div class="blog-header"></div>
     <div class="blog-container">
-      {#if leftKeys}
-        {@render documentList(leftKeys)}
-      {/if}
-      {#if rightKeys && rightKeys.length > 0}
+      {@render documentList(leftKeys)}
+      {#if rightKeys.length > 0}
         {@render documentList(rightKeys)}
       {/if}
     </div>
     <div class="paginator card">
-      {#if curr_page == 0}
-        <ChevronFirst strokeWidth={0.5} color="grey" />
-        <ChevronLeft strokeWidth={0.5} color="grey" />
-      {:else}
-        <button onclick={() => navigateToPage(0)}>
-          <ChevronFirst />
-        </button>
-        <button onclick={() => navigateToPage(curr_page - 1)}>
-          <ChevronLeft />
-        </button>
-      {/if}
+      {#snippet pageControls(backwards: boolean)}
+        {@const disabled = backwards
+          ? curr_page === 0
+          : curr_page >= Math.floor(documents.size / 10) - 2}
+        {@const targets = backwards ? [0, curr_page - 1] : [curr_page + 1, -1]}
+        {#each backwards ? [ChevronFirst, ChevronLeft] : [ChevronRight, ChevronLast] as Icon, i}
+          {#if disabled}
+            <Icon strokeWidth={0.5} color="grey" />
+          {:else}
+            <button onclick={() => navigateToPage(targets[i])}><Icon /></button>
+          {/if}
+        {/each}
+      {/snippet}
+      {@render pageControls(true)}
       <input
         type="number"
         value={curr_page + 1}
@@ -154,17 +146,7 @@
         max={99}
         onchange={(e) => navigateToPage(parseInt(e.currentTarget.value) - 1)}
       />
-      {#if curr_page >= Math.floor(documents.size / 10) - 2}
-        <ChevronRight strokeWidth={0.5} color="grey" />
-        <ChevronLast strokeWidth={0.5} color="grey" />
-      {:else}
-        <button onclick={() => navigateToPage(curr_page + 1)}>
-          <ChevronRight />
-        </button>
-        <button onclick={() => navigateToPage(-1)}>
-          <ChevronLast />
-        </button>
-      {/if}
+      {@render pageControls(false)}
     </div>
   {/if}
 </div>
@@ -175,11 +157,38 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+  }
+
+  .blog-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .blog-column {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    gap: 10px;
+  }
+
+  .blog-post {
+    box-sizing: border-box;
+    width: 100%;
   }
 
   .blog-layout a {
     all: unset;
+    display: block;
     cursor: pointer;
+  }
+
+  .blog-layout a:focus-visible {
+    outline: 2px solid var(--sapphire);
+    outline-offset: 4px;
   }
 
   .blog-layout a:hover {
@@ -246,6 +255,16 @@
   }
 
   @media (max-width: 768px) {
+    .blog-layout > .blog-post {
+      margin-bottom: 10px;
+    }
+
+    .blog-post {
+      border: 1px solid var(--overlay);
+      border-radius: 20px;
+      padding: 10px;
+    }
+
     .paginator {
       border: 1px solid #000;
       background-color: color-mix(in srgb, var(--mantle) 80%, transparent);
@@ -265,17 +284,11 @@
 
   @media (min-width: 769px) {
     .blog-layout {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       gap: 10px;
     }
 
     .blog-container {
-      display: flex;
-      gap: 10px;
-      width: 100%;
+      flex-direction: row;
     }
   }
 </style>

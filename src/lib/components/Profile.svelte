@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
   import {
     Github,
     Linkedin,
@@ -19,16 +18,29 @@
     DID,
   } from '$lib/constants';
   import { Butterfly } from '$lib/icons';
-  import { blobUri, loadProfile } from '$lib';
-  import type { AppBskyActorProfile } from '@atcute/bluesky';
+  import type { BlueskyProfile } from '$lib/bluesky';
 
-  let profile = $state<AppBskyActorProfile.Main | null>(null);
+  const {
+    mobile = false,
+    profile,
+    error = null,
+  }: {
+    mobile?: boolean;
+    profile: BlueskyProfile | null;
+    error?: string | null;
+  } = $props();
 
-  onMount(async () => {
-    profile = await loadProfile();
-  });
-
-  const { mobile = false } = $props();
+  let failedAvatars = $state<string[]>([]);
+  const avatarSrc = $derived(
+    [profile?.avatar?.src, profile?.avatar?.fallback].find(
+      (src) => src && !failedAvatars.includes(src),
+    ),
+  );
+  function avatarFailed(event: Event & { currentTarget: Element }) {
+    const src = event.currentTarget.getAttribute('src');
+    if (src && !failedAvatars.includes(src))
+      failedAvatars = [...failedAvatars, src];
+  }
 
   const socialIcons = [
     { name: 'LinkedIn', href: `${LINKEDIN_URL}`, icon: Linkedin },
@@ -47,56 +59,51 @@
   ];
 </script>
 
-<div class="profile">
-  {#if profile?.avatar && !mobile}
-    <div class="avatar-wrapper">
+{#snippet avatar(variant: 'default' | 'mobile' | 'compact' = 'default')}
+  {#if avatarSrc}
+    <div
+      class="avatar-wrapper"
+      class:avatar-wrapper--mobile={variant === 'mobile'}
+      class:avatar-wrapper--compact={variant === 'compact'}
+    >
       <img
-        src={blobUri(profile.avatar)}
-        alt={profile.displayName ?? 'Profile picture'}
+        src={avatarSrc}
+        alt={profile?.displayName ?? 'Profile picture'}
         class="avatar"
+        width="175"
+        height="175"
+        decoding="async"
+        referrerpolicy="no-referrer"
+        onerror={avatarFailed}
       />
     </div>
   {/if}
+{/snippet}
+
+{#snippet location()}
+  <div class="location">
+    <MapPin size={'1.4rem'} />
+    <h3>{LOCATION}</h3>
+  </div>
+{/snippet}
+
+<div class="profile">
+  {#if !mobile}
+    {@render avatar()}
+  {/if}
   <div class="info">
     <div class="name-header">
-      {#if profile?.avatar && mobile}
-        <div class="avatar-wrapper avatar-wrapper--mobile">
-          <img
-            src={blobUri(profile.avatar)}
-            alt={profile.displayName ?? 'Profile picture'}
-            class="avatar"
-          />
-        </div>
-      {/if}
-      {#if profile?.avatar && !mobile}
-        <div class="avatar-wrapper avatar-wrapper--compact">
-          <img
-            src={blobUri(profile.avatar)}
-            alt={profile.displayName ?? 'Profile picture'}
-            class="avatar"
-          />
-        </div>
-      {/if}
+      {@render avatar(mobile ? 'mobile' : 'compact')}
       <div class="name">
         <h1>{NAME}</h1>
         <h3 class="pronouns"><i>({PRONOUNS})</i></h3>
         {#if !mobile}
-          <div class="location">
-            <MapPin size={'1.4rem'} />
-            <h3>
-              {LOCATION}
-            </h3>
-          </div>
+          {@render location()}
         {/if}
       </div>
     </div>
     {#if mobile}
-      <div class="location">
-        <MapPin size={'1.4rem'} />
-        <h3>
-          {LOCATION}
-        </h3>
-      </div>
+      {@render location()}
     {/if}
     <span>{TITLE}</span>
     <div class="social-icons">
@@ -109,6 +116,9 @@
     </div>
   </div>
 </div>
+{#if error}
+  <p>{error}</p>
+{/if}
 
 <style>
   .profile {
